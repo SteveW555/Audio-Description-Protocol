@@ -204,4 +204,62 @@ Dataset aggregates:
 - Enable modular dataset composition
 - Support distributed file organization
 
-**Status**: Data model complete, ready for contract generation
+### MusicalAnnotation
+
+**Purpose**: Enhanced annotation with comprehensive musical analysis including theory, semantics, and instrumentation
+
+**Fields**:
+- Inherits core fields from Annotation: `id`, `clip_id`, `time_range`, `provenance`, `schema_version`
+- `musical_analysis` (object, required): Rich musical analysis data
+  - `protocol_version` (string, required): Musical analysis protocol version
+  - `theory` (object, optional): Music theory analysis
+    - `bpm` (number, optional): Beats per minute (40-300 range)
+    - `key` (string, optional): Musical key (e.g., "F#", "Bb")
+    - `scale` (string, optional): Scale type (major, minor, modes)
+    - `key_confidence` (number, optional): Key detection confidence [0.0, 1.0]
+    - `chords` (array, optional): Time-stamped chord progression
+      - `time` (number): Chord onset time in seconds
+      - `chord` (string): Chord symbol (e.g., "F#:min", "D:maj")
+      - `confidence` (number): Chord detection confidence [0.0, 1.0]
+    - `roman_numerals` (array, optional): Roman numeral harmonic analysis
+  - `semantic_description` (object, optional): Semantic musical characteristics
+    - `attributes` (object, optional): Musical descriptors
+      - `mood` (array, optional): Emotional characteristics (energetic, calm, etc.)
+      - `energy` (array, optional): Energy level descriptors (high-energy, driving, etc.)
+      - `texture` (array, optional): Timbral characteristics (bright, warm, etc.)
+    - `genre` (object, optional): Genre classification
+      - `primary` (string, required): Primary genre
+      - `secondary` (array, optional): Secondary genre classifications
+      - `subgenres` (array, optional): Specific subgenre classifications
+    - `instrumentation` (array, optional): Detailed instrument analysis
+      - `instrument` (string, required): Instrument name
+      - `role` (string, required): Instrument role (lead, rhythm, bass, etc.)
+      - `descriptors` (array, optional): Instrument-specific descriptive terms
+    - `vocals` (object, optional): Vocal analysis
+      - `presence` (string, required): Vocal presence type (none, lead, backing, etc.)
+      - `gender` (string, optional): Vocal gender classification
+      - `style` (string, optional): Vocal style characteristics
+- `labels` (array, optional): Traditional ADP labels for backward compatibility
+- `free_text` (string, optional): Additional description
+- `metadata` (object, optional): Additional key-value pairs
+
+**Relationships**:
+- Extends core Annotation structure
+- References AudioClipReference via `clip_id`
+- Optional references to DictionaryEntry via `labels[].entry_id`
+
+**Validation Rules**:
+- Inherits all core Annotation validation rules
+- `musical_analysis.protocol_version` required for schema evolution
+- BPM must be in realistic range 40-300 BPM
+- Chord symbols must follow standard notation (root:quality format)
+- All confidence scores must be in [0.0, 1.0] range
+- Time values in chord progressions must be non-negative
+
+**Usage Scenarios**:
+1. **AI Music Analysis**: Automated extraction of musical features from audio
+2. **Human Annotation**: Expert musicologists providing detailed analysis
+3. **Hybrid Annotation**: Combining AI-detected features with human interpretation
+4. **Research Applications**: Large-scale musical corpus analysis
+
+**Status**: Enhanced data model complete, ready for contract generation

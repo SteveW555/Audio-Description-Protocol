@@ -47,6 +47,53 @@
 - Separate hierarchy schema: Rejected due to added complexity for v1
 - Tag-based grouping: Rejected as insufficient for true hierarchical relationships
 
+### Musical Analysis Protocol Design
+
+**Decision**: Extend core annotation schema with musical_analysis object structure
+**Rationale**:
+- Maintains backward compatibility with simple annotations
+- Provides rich musical analysis capabilities for specialized use cases
+- Modular design allows optional musical analysis without breaking core functionality
+- Structured approach to music theory, semantic description, and instrumentation
+- Protocol versioning enables future enhancements to musical analysis features
+
+**Alternatives Considered**:
+- Separate musical annotation entity: Rejected due to duplication of core annotation fields
+- Flat schema with musical fields at root: Rejected due to schema complexity and unclear separation
+- Plugin-based analysis: Deferred to future versions due to implementation complexity
+
+### Music Theory Validation Standards
+
+**Decision**: Use standard chord symbol notation (root:quality format) and realistic BPM ranges
+**Rationale**:
+- Industry-standard chord symbol notation (e.g., "F#:min", "D:maj") is widely recognized
+- BPM range validation (40-300) covers realistic musical tempo ranges
+- Confidence scoring [0.0, 1.0] provides quantified uncertainty measures
+- Roman numeral analysis supports harmonic function understanding
+- JSON Schema pattern validation ensures consistent formatting
+
+**Alternatives Considered**:
+- Nashville notation: Rejected due to less widespread adoption
+- ABC notation: Rejected as too complex for chord symbols
+- Unlimited BPM range: Rejected to catch obvious analysis errors
+- Integer confidence scores: Rejected in favor of decimal precision
+
+### Semantic Description Taxonomy
+
+**Decision**: Use controlled vocabularies for mood, energy, texture, and genre attributes
+**Rationale**:
+- Controlled vocabularies ensure consistency across annotators
+- Hierarchical genre classification (primary/secondary/subgenres) captures musical complexity
+- Multi-value attributes (arrays) allow nuanced descriptions
+- Extensible design enables future vocabulary expansion
+- JSON Schema enum validation prevents typos and inconsistencies
+
+**Alternatives Considered**:
+- Free-text descriptions: Rejected due to inconsistency and analysis difficulty
+- Numerical scales: Rejected as less interpretable than semantic labels
+- Single-value attributes: Rejected as insufficiently expressive for musical complexity
+- External ontology references: Deferred due to added complexity
+
 ### Performance and Scale Architecture
 
 **Decision**: File-based approach with in-memory validation for 10K scale

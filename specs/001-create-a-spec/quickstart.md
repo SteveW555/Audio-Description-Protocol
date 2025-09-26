@@ -95,6 +95,93 @@ adp validate-references annotation-001.json --dictionary-dir ./dictionary/
 
 **Expected Result**: ✅ All entry_id references found in dictionary
 
+## Scenario 2b: Create and Validate Musical Annotation
+
+**User Story**: A music analyst creates a rich musical annotation with theory analysis, semantic description, and instrumentation details.
+
+### Steps
+
+1. **Create musical annotation JSON**:
+```json
+{
+  "id": "musical-annotation-001",
+  "clip_id": "sample-audio-001",
+  "time_range": {
+    "start_sec": 0.0,
+    "end_sec": 30.0
+  },
+  "provenance": {
+    "annotator_type": "ai",
+    "annotator_id": "music-analyzer-v2.1",
+    "timestamp": "2025-09-26T10:45:00Z"
+  },
+  "schema_version": "1.0",
+  "musical_analysis": {
+    "protocol_version": "1.0",
+    "theory": {
+      "bpm": 126.0,
+      "key": "F#",
+      "scale": "minor",
+      "key_confidence": 0.83,
+      "chords": [
+        {
+          "time": 0.0,
+          "chord": "F#:min",
+          "confidence": 0.61
+        },
+        {
+          "time": 1.0,
+          "chord": "D:maj",
+          "confidence": 0.55
+        }
+      ],
+      "roman_numerals": ["i", "VI"]
+    },
+    "semantic_description": {
+      "attributes": {
+        "mood": ["energetic", "upbeat"],
+        "energy": ["driving", "high-energy"],
+        "texture": ["bright", "polished"]
+      },
+      "genre": {
+        "primary": "electronic",
+        "secondary": ["edm", "dance"],
+        "subgenres": []
+      },
+      "instrumentation": [
+        {
+          "instrument": "synthesizer",
+          "role": "lead",
+          "descriptors": ["bright", "melodic", "soaring"]
+        },
+        {
+          "instrument": "kick_drum",
+          "role": "percussion",
+          "descriptors": ["punchy", "heavy"]
+        }
+      ],
+      "vocals": {
+        "presence": "none"
+      }
+    }
+  }
+}
+```
+
+2. **Validate musical annotation**:
+```bash
+adp validate musical-annotation musical-annotation-001.json
+```
+
+**Expected Result**: ✅ Validation passes with musical analysis structure
+
+3. **Validate music theory constraints**:
+```bash
+adp validate-music-theory musical-annotation-001.json
+```
+
+**Expected Result**: ✅ BPM range, chord symbols, and confidence scores validated
+
 ## Scenario 3: Create and Validate Dataset Manifest
 
 **User Story**: A researcher creates a dataset manifest that references multiple clips and annotations.

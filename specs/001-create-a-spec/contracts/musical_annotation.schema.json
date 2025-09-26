@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adp-protocol.org/schemas/musical_annotation/1.0",
+  "title": "ADP Musical Annotation",
+  "description": "Enhanced annotation with rich musical analysis including theory, semantics, and instrumentation",
+  "type": "object",
+  "required": ["id", "clip_id", "time_range", "provenance", "schema_version", "musical_analysis"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique annotation identifier"
+    },
+    "clip_id": {
+      "type": "string",
+      "description": "Reference to audio clip"
+    },
+    "time_range": {
+      "type": "object",
+      "required": ["start_sec", "end_sec"],
+      "properties": {
+        "start_sec": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Start time in seconds (>= 0.0)"
+        },
+        "end_sec": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "End time in seconds (> start_sec)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["annotator_type", "timestamp"],
+      "properties": {
+        "annotator_type": {
+          "type": "string",
+          "enum": ["human", "ai"],
+          "description": "Origin type"
+        },
+        "annotator_id": {
+          "type": "string",
+          "description": "Annotator identifier"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 creation timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$",
+      "description": "Semantic version"
+    },
+    "musical_analysis": {
+      "type": "object",
+      "required": ["protocol_version"],
+      "properties": {
+        "protocol_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+$",
+          "description": "Musical analysis protocol version"
+        },
+        "theory": {
+          "type": "object",
+          "properties": {
+            "bpm": {
+              "type": "number",
+              "minimum": 40,
+              "maximum": 300,
+              "description": "Beats per minute"
+            },
+            "key": {
+              "type": "string",
+              "pattern": "^[A-G][#b]?$",
+              "description": "Musical key (e.g., F#, Bb)"
+            },
+            "scale": {
+              "type": "string",
+              "enum": ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "chromatic", "pentatonic"],
+              "description": "Scale type"
+            },
+            "key_confidence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "Confidence in key detection"
+            },
+            "chords": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["time", "chord", "confidence"],
+                "properties": {
+                  "time": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "description": "Chord onset time in seconds"
+                  },
+                  "chord": {
+                    "type": "string",
+                    "pattern": "^[A-G][#b]?:(maj|min|dim|aug|sus2|sus4|7|maj7|min7|dim7|aug7)[0-9]*$",
+                    "description": "Chord symbol (e.g., F#:min, D:maj)"
+                  },
+                  "confidence": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                    "description": "Chord detection confidence"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "roman_numerals": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^(i|ii|iii|iv|v|vi|vii|I|II|III|IV|V|VI|VII)[°+]?[0-9]*$",
+                "description": "Roman numeral analysis"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "semantic_description": {
+          "type": "object",
+          "properties": {
+            "attributes": {
+              "type": "object",
+              "properties": {
+                "mood": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["energetic", "calm", "melancholic", "upbeat", "dark", "bright", "intense", "relaxed", "aggressive", "peaceful", "nostalgic", "euphoric"]
+                  },
+                  "description": "Emotional characteristics"
+                },
+                "energy": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["high-energy", "low-energy", "driving", "laid-back", "explosive", "subtle", "building", "sustained"]
+                  },
+                  "description": "Energy level descriptors"
+                },
+                "texture": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["bright", "dark", "warm", "cold", "rich", "thin", "dense", "sparse", "polished", "raw"]
+                  },
+                  "description": "Timbral characteristics"
+                }
+              },
+              "additionalProperties": false
+            },
+            "genre": {
+              "type": "object",
+              "required": ["primary"],
+              "properties": {
+                "primary": {
+                  "type": "string",
+                  "description": "Primary genre classification"
+                },
+                "secondary": {
+                  "type": "array",
+                  "items": {"type": "string"},
+                  "description": "Secondary genre classifications"
+                },
+                "subgenres": {
+                  "type": "array",
+                  "items": {"type": "string"},
+                  "description": "Specific subgenre classifications"
+                }
+              },
+              "additionalProperties": false
+            },
+            "instrumentation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["instrument", "role"],
+                "properties": {
+                  "instrument": {
+                    "type": "string",
+                    "description": "Instrument name"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": ["lead", "rhythm", "bass", "percussion", "harmony", "melody", "accompaniment", "solo"],
+                    "description": "Instrument role in the mix"
+                  },
+                  "descriptors": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Instrument-specific descriptive terms"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "vocals": {
+              "type": "object",
+              "required": ["presence"],
+              "properties": {
+                "presence": {
+                  "type": "string",
+                  "enum": ["none", "lead", "backing", "choir", "spoken", "whispered", "falsetto"],
+                  "description": "Type of vocal presence"
+                },
+                "gender": {
+                  "type": "string",
+                  "enum": ["male", "female", "mixed", "unknown"],
+                  "description": "Vocal gender classification"
+                },
+                "style": {
+                  "type": "string",
+                  "description": "Vocal style characteristics"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["entry_id", "confidence"],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "description": "Reference to dictionary entry ID"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Confidence score [0.0, 1.0]"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Traditional ADP labels (optional for backward compatibility)"
+    },
+    "free_text": {
+      "type": "string",
+      "description": "Additional description"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional key-value pairs"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "time_range": {
+            "type": "object",
+            "properties": {
+              "start_sec": {"type": "number"},
+              "end_sec": {"type": "number"}
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "time_range": {
+            "properties": {
+              "end_sec": {
+                "exclusiveMinimum": {"$data": "1/start_sec"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

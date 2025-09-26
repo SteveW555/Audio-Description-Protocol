@@ -8,8 +8,8 @@
 1. Load plan.md from feature directory
    → Extract: Python 3.11+, PyTorch, jsonschema, pytest tech stack
 2. Load design documents:
-   → data-model.md: 5 entities (DictionaryEntry, Annotation, Dataset, ModelOutput, AudioClipReference)
-   → contracts/: 4 JSON Schema files for validation
+   → data-model.md: 6 entities (DictionaryEntry, Annotation, MusicalAnnotation, Dataset, ModelOutput, AudioClipReference)
+   → contracts/: 5 JSON Schema files for validation
    → quickstart.md: 5 integration test scenarios
 3. Generate tasks by category:
    → Setup: project structure, dependencies, configuration
@@ -20,7 +20,7 @@
    → Integration: end-to-end scenario tests from quickstart
    → Polish: documentation, examples, performance optimization
 4. Applied rules: [P] for parallel execution (different files), TDD ordering
-5. Tasks numbered T001-T034, dependency ordered
+5. Tasks numbered T001-T047, dependency ordered
 6. Constitutional compliance: library-first, test-driven, schema compliance
 ```
 
@@ -47,6 +47,7 @@
 - [ ] **T007** [P] Annotation schema validation test in tests/schemas/test_annotation_schema.py
 - [ ] **T008** [P] Dataset schema validation test in tests/schemas/test_dataset_schema.py
 - [ ] **T009** [P] Model output schema validation test in tests/schemas/test_model_output_schema.py
+- [ ] **T009b** [P] Musical annotation schema validation test in tests/schemas/test_musical_annotation_schema.py
 
 ### Validation Engine Tests
 - [ ] **T010** [P] Core validator test for JSON Schema loading in tests/validation/test_validator_core.py
@@ -61,6 +62,7 @@
 - [ ] **T015** [P] Copy annotation.schema.json to schemas/annotation.schema.json
 - [ ] **T016** [P] Copy dataset.schema.json to schemas/dataset.schema.json
 - [ ] **T017** [P] Copy model_output.schema.json to schemas/model_output.schema.json
+- [ ] **T017b** [P] Copy musical_annotation.schema.json to schemas/musical_annotation.schema.json
 
 ### Data Models
 - [ ] **T018** [P] DictionaryEntry model in src/adp_core/models/dictionary.py
@@ -68,6 +70,7 @@
 - [ ] **T020** [P] Dataset model in src/adp_core/models/dataset.py
 - [ ] **T021** [P] ModelOutput model in src/adp_core/models/model_output.py
 - [ ] **T022** [P] AudioClipReference model in src/adp_core/models/audio_clip.py
+- [ ] **T022b** [P] MusicalAnnotation model in src/adp_core/models/musical_annotation.py
 
 ### Validation Engine
 - [ ] **T023** Core JSON Schema validator in src/adp_core/validation/validator.py
@@ -80,20 +83,27 @@
 - [ ] **T028** Dictionary validation commands in src/adp_core/cli/dictionary_commands.py
 - [ ] **T029** Annotation validation commands in src/adp_core/cli/annotation_commands.py
 - [ ] **T030** Dataset validation commands in src/adp_core/cli/dataset_commands.py
+- [ ] **T031** Musical annotation validation commands in src/adp_core/cli/musical_annotation_commands.py
 
 ## Phase 3.4: Integration Tests (Based on Quickstart Scenarios)
-- [ ] **T031** [P] Scenario 1 test: Dictionary entry creation and validation in tests/integration/test_dictionary_workflow.py
-- [ ] **T032** [P] Scenario 2 test: Audio annotation validation workflow in tests/integration/test_annotation_workflow.py
-- [ ] **T033** [P] Scenario 3 test: Dataset manifest creation and validation in tests/integration/test_dataset_workflow.py
-- [ ] **T034** [P] Scenario 4 test: Model output generation and validation in tests/integration/test_model_output_workflow.py
-- [ ] **T035** [P] Scenario 5 test: End-to-end workflow validation in tests/integration/test_complete_workflow.py
+- [ ] **T032** [P] Scenario 1 test: Dictionary entry creation and validation in tests/integration/test_dictionary_workflow.py
+- [ ] **T033** [P] Scenario 2 test: Audio annotation validation workflow in tests/integration/test_annotation_workflow.py
+- [ ] **T034** [P] Scenario 2b test: Musical annotation validation workflow in tests/integration/test_musical_annotation_workflow.py
+- [ ] **T035** [P] Scenario 3 test: Dataset manifest creation and validation in tests/integration/test_dataset_workflow.py
+- [ ] **T036** [P] Scenario 4 test: Model output generation and validation in tests/integration/test_model_output_workflow.py
+- [ ] **T037** [P] Scenario 5 test: End-to-end workflow validation in tests/integration/test_complete_workflow.py
 
 ## Phase 3.5: Polish & Documentation
-- [ ] **T036** [P] Package __init__.py files with proper imports in src/adp_core/
-- [ ] **T037** [P] Example JSON files in examples/ directory matching quickstart scenarios
-- [ ] **T038** [P] README.md with installation, usage, and API documentation
-- [ ] **T039** [P] Performance optimization for 10K scale requirement
-- [ ] **T040** [P] Error handling and user-friendly error messages
+- [ ] **T038** [P] Package __init__.py files with proper imports in src/adp_core/
+- [ ] **T039** [P] Example JSON files in examples/ directory matching quickstart scenarios
+- [ ] **T040** [P] README.md with installation, usage, and API documentation
+- [ ] **T041** [P] Performance optimization for 10K scale requirement with specific metrics: schema validation <100ms per file, dataset loading <2GB memory, CLI response <500ms
+- [ ] **T042** [P] Error handling and user-friendly error messages
+- [ ] **T043** [P] Dataset license validation and enforcement (CC0-1.0 default) in src/adp_core/validation/license_validator.py
+- [ ] **T044** [P] Provenance tracking validation for human vs AI annotations in src/adp_core/validation/provenance_validator.py
+- [ ] **T045** [P] Music theory validation (BPM 40-300, chord symbols, roman numerals) in src/adp_core/validation/music_theory_validator.py
+- [ ] **T046** [P] Semantic description validation (mood, energy, texture enums) in src/adp_core/validation/semantic_validator.py
+- [ ] **T047** [P] Backward compatibility validation for simple annotations vs musical annotations in src/adp_core/validation/compatibility_validator.py
 
 ## Dependency Graph
 
@@ -108,18 +118,21 @@ graph TD
     T003 --> T007[Ann Schema Test]
     T003 --> T008[Dataset Schema Test]
     T003 --> T009[Model Schema Test]
+    T003 --> T009b[Musical Ann Schema Test]
     T003 --> T010[Validator Test]
 
     T006 --> T014[Dict Schema File]
     T007 --> T015[Ann Schema File]
     T008 --> T016[Dataset Schema File]
     T009 --> T017[Model Schema File]
+    T009b --> T017b[Musical Ann Schema File]
 
     T014 --> T018[Dict Model]
     T015 --> T019[Ann Model]
     T016 --> T020[Dataset Model]
     T017 --> T021[Model Output]
     T017 --> T022[Audio Clip Model]
+    T017b --> T022b[Musical Ann Model]
 
     T010 --> T023[Core Validator]
     T011 --> T024[Reference Validator]
@@ -130,12 +143,25 @@ graph TD
     T024 --> T028[Dict Commands]
     T025 --> T029[Ann Commands]
     T026 --> T030[Dataset Commands]
+    T022b --> T031[Musical Ann Commands]
 
-    T027 --> T031[Dict Workflow Test]
-    T028 --> T032[Ann Workflow Test]
-    T029 --> T033[Dataset Workflow Test]
-    T030 --> T034[Model Workflow Test]
-    T030 --> T035[Complete Workflow Test]
+    T027 --> T032[Dict Workflow Test]
+    T028 --> T033[Ann Workflow Test]
+    T031 --> T034[Musical Ann Workflow Test]
+    T029 --> T035[Dataset Workflow Test]
+    T030 --> T036[Model Workflow Test]
+    T030 --> T037[Complete Workflow Test]
+
+    T032 --> T038[Package Init Files]
+    T033 --> T039[Example Files]
+    T034 --> T040[README Documentation]
+    T035 --> T041[Performance Optimization]
+    T036 --> T042[Error Handling]
+    T037 --> T043[License Validation]
+    T037 --> T044[Provenance Validation]
+    T037 --> T045[Music Theory Validation]
+    T037 --> T046[Semantic Validation]
+    T037 --> T047[Compatibility Validation]
 ```
 
 ## Parallel Execution Examples
@@ -155,11 +181,11 @@ git status  # T005
 ### Phase 3.2 (Schema Tests) - Can run T006-T013 in parallel:
 ```bash
 # All schema validation tests can run simultaneously
-pytest tests/schemas/ -v  # T006-T009 parallel
+pytest tests/schemas/ -v  # T006-T009b parallel
 pytest tests/validation/ -v  # T010-T013 parallel
 ```
 
-### Phase 3.3 (Models) - Can run T018-T022 in parallel:
+### Phase 3.3 (Models) - Can run T018-T022b in parallel:
 ```bash
 # All model files are independent
 # T018: DictionaryEntry model
@@ -167,9 +193,10 @@ pytest tests/validation/ -v  # T010-T013 parallel
 # T020: Dataset model
 # T021: ModelOutput model
 # T022: AudioClipReference model
+# T022b: MusicalAnnotation model
 ```
 
-### Phase 3.4 (Integration Tests) - Can run T031-T035 in parallel:
+### Phase 3.4 (Integration Tests) - Can run T032-T037 in parallel:
 ```bash
 pytest tests/integration/ -v --maxfail=1
 ```
@@ -182,17 +209,17 @@ pytest tests/integration/ -v --maxfail=1
 
 **JSON Schema Compliance**: ✅
 - All data exchange via versioned JSON Schemas in `/schemas`
-- Validation tests for each schema (T006-T009)
-- Schema files properly structured (T014-T017)
+- Validation tests for each schema (T006-T009b)
+- Schema files properly structured (T014-T017b)
 
 **Library-First Modularity**: ✅
-- Core logic in src/adp_core/ before CLI (T018-T026 before T027-T030)
+- Core logic in src/adp_core/ before CLI (T018-T026 before T027-T031)
 - Reusable models and validation components
 - CLI wraps library functionality
 
 **Test-Driven Delivery**: ✅
 - All tests written before implementation (Phase 3.2 before 3.3)
-- Integration tests validate user scenarios (T031-T035)
+- Integration tests validate user scenarios (T032-T037)
 - Schema validation ensures contract compliance
 
 **Spec-First Development**: ✅
@@ -204,7 +231,7 @@ pytest tests/integration/ -v --maxfail=1
 
 **Target**: Handle 10,000 audio clips and annotations
 - Dataset schema includes maxItems: 10000 constraint
-- Performance optimization task (T039) addresses scale requirements
+- Performance optimization task (T041) addresses scale requirements
 - Integration tests validate at target scale
 
 ## Task Completion Criteria
@@ -215,8 +242,8 @@ Each task must include:
 3. **Constitutional Compliance**: Adherence to library-first, schema-compliant patterns
 4. **Error Handling**: Graceful handling of invalid inputs with clear error messages
 
-**Estimated Total**: 40 tasks across 5 phases
-**Critical Path**: T001→T002→T003→T006-T013→T014-T017→T018-T026→T027-T030→T031-T035
+**Estimated Total**: 47 tasks across 5 phases
+**Critical Path**: T001→T002→T003→T006-T013→T014-T017→T018-T026→T027-T031→T032-T037→T038-T047
 
 ## Success Metrics
 

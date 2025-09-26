@@ -85,6 +85,13 @@ A music researcher annotates an audio clip with descriptive labels using the ADP
 - **FR-012**: System MUST support hierarchical label relationships (parent-child categories)
 - **FR-013**: Dataset licensing MUST default to CC0-1.0 (Creative Commons Public Domain)
 - **FR-014**: System MUST resolve conflicting annotations using last-writer-wins strategy (most recent annotation overwrites previous)
+- **FR-015**: System MUST support enhanced musical annotations with theory analysis including: BPM detection (40-300 range), key/scale identification with confidence scores, time-stamped chord progressions, and roman numeral harmonic analysis
+- **FR-016**: System MUST provide semantic description capabilities including: mood attributes (from controlled vocabulary of 12+ terms), energy descriptors (8+ terms), texture characteristics (10+ terms), and hierarchical genre classification (primary/secondary/subgenres)
+- **FR-017**: System MUST capture instrumentation analysis including: instrument identification, role classification (lead/rhythm/bass/percussion/harmony/melody/accompaniment/solo), and instrument-specific descriptors
+- **FR-018**: System MUST support vocal analysis including presence, gender, and style characteristics
+- **FR-019**: System MUST validate chord symbols using standard notation (root:quality format)
+- **FR-020**: System MUST enforce realistic BPM ranges (40-300) for tempo analysis
+- **FR-021**: System MUST maintain backward compatibility with simple label-based annotations
 
 ### Non-Functional Requirements
 - **NFR-001**: System MUST handle datasets containing up to 10,000 audio clips and annotations
@@ -92,6 +99,7 @@ A music researcher annotates an audio clip with descriptive labels using the ADP
 ### Key Entities *(include if feature involves data)*
 - **DictionaryEntry**: Standardized musical descriptor with unique ID, human-readable label, detailed definition, optional aliases/tags, and hierarchical parent-child relationships
 - **Annotation**: Time-bound label application linking audio clips to dictionary entries with confidence scores and provenance metadata
+- **MusicalAnnotation**: Enhanced annotation with comprehensive musical analysis including theory (BPM, key, chords), semantic description (mood, energy, texture, genre), instrumentation analysis, and vocal characteristics
 - **Dataset**: Curated collection containing clip references, associated annotations, dictionary entries, and dataset-level metadata
 - **ModelOutput**: AI-generated annotation enhanced with inference metadata including model version, processing time, and hardware context
 - **AudioClipReference**: Standardized pointer to audio content supporting file paths or web URLs with format specifications and integrity validation

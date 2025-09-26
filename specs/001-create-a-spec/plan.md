@@ -40,7 +40,7 @@ Audio Description Protocol (ADP) Framework creates standardized JSON schemas for
 **Testing**: pytest with JSON Schema validation tests, contract tests, integration tests
 **Target Platform**: Cross-platform (Linux, macOS, Windows) - CLI and library focus
 **Project Type**: Single project (library-first with CLI interface)
-**Performance Goals**: Handle 10K annotations/clips efficiently, schema validation <100ms
+**Performance Goals**: Handle 10K annotations/clips efficiently with specific metrics: schema validation <100ms per file, dataset loading <2GB memory, CLI response <500ms, batch validation throughput >100 files/second
 **Constraints**: JSON Schema compliance mandatory, versioned schemas, CC0-1.0 licensing
 **Scale/Scope**: Up to 10,000 audio clips and annotations, hierarchical dictionary relationships
 
@@ -77,12 +77,14 @@ src/adp_core/
 ├── schemas/             # JSON Schema definitions
 │   ├── dictionary.py    # Dictionary entry schema logic
 │   ├── annotation.py    # Annotation schema logic
+│   ├── musical_annotation.py  # Musical annotation schema logic
 │   ├── dataset.py       # Dataset manifest schema logic
 │   └── model_output.py  # Model output schema logic
 ├── models/              # Data models and entities
 │   ├── __init__.py
 │   ├── dictionary.py    # DictionaryEntry model
 │   ├── annotation.py    # Annotation model
+│   ├── musical_annotation.py  # MusicalAnnotation model
 │   └── dataset.py       # Dataset model
 ├── validation/          # Schema validation logic
 │   ├── __init__.py
@@ -94,6 +96,7 @@ src/adp_core/
 schemas/                 # JSON Schema files (.json)
 ├── dictionary.schema.json
 ├── annotation.schema.json
+├── musical_annotation.schema.json  # Enhanced musical analysis schema
 ├── dataset.schema.json
 └── model_output.schema.json
 
@@ -197,7 +200,7 @@ examples/                # Sample data files
 - Library-first modularity: Core logic separate from CLI
 - JSON Schema compliance: Validation against contracts mandatory
 
-**Estimated Output**: 30-35 numbered, ordered tasks in tasks.md
+**Estimated Output**: 47 numbered, ordered tasks in tasks.md
 
 **Key Integration Points**:
 - Schema validation tests verify contract compliance
