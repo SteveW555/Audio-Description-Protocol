@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adp-protocol.org/schemas/annotation/1.0",
+  "title": "ADP Annotation",
+  "description": "Time-bound label application linking audio clips to dictionary entries",
+  "type": "object",
+  "required": ["id", "clip_id", "time_range", "labels", "provenance", "schema_version"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique annotation identifier"
+    },
+    "clip_id": {
+      "type": "string",
+      "description": "Reference to audio clip"
+    },
+    "time_range": {
+      "type": "object",
+      "required": ["start_sec", "end_sec"],
+      "properties": {
+        "start_sec": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Start time in seconds (>= 0.0)"
+        },
+        "end_sec": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "End time in seconds (> start_sec)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["entry_id", "confidence"],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "description": "Reference to dictionary entry ID"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Confidence score [0.0, 1.0]"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Applied labels with confidence"
+    },
+    "free_text": {
+      "type": "string",
+      "description": "Additional description"
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["annotator_type", "timestamp"],
+      "properties": {
+        "annotator_type": {
+          "type": "string",
+          "enum": ["human", "ai"],
+          "description": "Origin type"
+        },
+        "annotator_id": {
+          "type": "string",
+          "description": "Annotator identifier"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 creation timestamp"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Origin tracking"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$",
+      "description": "Semantic version"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional key-value pairs"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "time_range": {
+            "type": "object",
+            "properties": {
+              "start_sec": {"type": "number"},
+              "end_sec": {"type": "number"}
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "time_range": {
+            "properties": {
+              "end_sec": {
+                "exclusiveMinimum": {"$data": "1/start_sec"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

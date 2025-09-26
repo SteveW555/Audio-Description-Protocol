@@ -1,50 +1,71 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+==================
+Version change: Template → 1.0.0
+Modified principles: All principles newly defined from template
+Added sections: All sections newly defined from template
+Removed sections: None
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md: Constitution Check reference verified
+- ⚠ .specify/templates/spec-template.md: Needs review for ADP-specific requirements
+- ⚠ .specify/templates/tasks-template.md: Needs review for TDD and schema validation tasks
+- ⚠ .claude/commands/*.md: Need review for agent-specific references
+Follow-up TODOs: Review template consistency and update references to constitution v1.0.0
+-->
+
+# Audio Description Protocol (ADP) Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Python + PyTorch First
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+All ML libraries MUST default to **PyTorch** unless there is a strong reason otherwise. Experimental work may use auxiliary libs (e.g. librosa, torchaudio, HuggingFace) but PyTorch remains the core runtime.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: Keeps the ML stack consistent and easier to maintain for audio processing workflows.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Spec-First Development
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Every new capability MUST begin with a written spec (spec.md). Specs MUST include: data flow, inputs/outputs, schema references, and open questions. No code may land without a linked spec section.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: ADP is a protocol; schema stability and documentation matter more than speed.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### JSON Schema Compliance
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+All data exchanged (dictionary entries, annotations, datasets, model outputs) MUST conform to versioned JSON Schemas in `/schemas`. PRs that introduce or change schemas MUST include validation tests on sample JSON files.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: ADP's usefulness depends on strict, versioned contracts for interoperability.
+
+### Library-First Modularity
+
+Core logic MUST be packaged as reusable Python libraries before integration into tools or CLIs. Libraries MUST ship with unit tests and at least one usage example.
+
+**Rationale**: Ensures low coupling and reuse across CLI tools, training pipelines, and Unity adapters.
+
+### Test-Driven Delivery
+
+Tests MUST be written before or alongside code changes. All schema, unit, and integration tests MUST pass in CI before merge. Datasets MUST include at least one validation script that checks schema conformance.
+
+**Rationale**: Guarantees correctness in a protocol where precision matters for human-AI interoperability.
+
+## Ethical + Licensing Rules
+
+Default dataset license MUST be **CC0-1.0** unless explicitly documented otherwise. Free-text annotations MUST NOT include PII or sensitive data. Provenance fields MUST identify whether annotations were made by human or AI.
+
+**Rationale**: Ensures ADP datasets are safe, reusable, and aligned with open science principles.
+
+## Development Workflow
+
+1. **Specification** → Describe new object/flow in `specs/adp/spec.md`
+2. **Planning** → Expand into `plan.md` (schema refs, test coverage, migration notes)
+3. **Tasks** → Break into concrete steps (`tasks.md`)
+4. **Implementation** → Write code and data under `/src` and `/schemas`, add tests under `/tests`
+5. **Validation** → Run schema validation and ML training tests before merge
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Amendments** → Require PR with rationale, schema impact, and migration notes.
+**Versioning** → Semantic versioning (major/minor/patch).
+**Compliance** → Maintainers review specs/tasks quarterly; violations must have remediation tasks.
+**Execution Constraints** → Specs MUST be ratified before planning begins. Plans MUST include: schema updates, test plan, and dataset impact. Implementation MUST NOT skip tests or validation scripts. Breaking schema changes MUST bump the major version and document migration steps.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-09-26 | **Last Amended**: 2025-09-26

@@ -1,0 +1,96 @@
+{
+    "protocol_version": "1.0",
+    "theory": {
+        "bpm": 126.0,
+        "key": "F#",
+        "scale": "minor",
+        "key_confidence": 0.83,
+        "chords": [
+            {
+                "time": 0.0,
+                "chord": "F#:min",
+                "confidence": 0.61
+            },
+            {
+                "time": 1.0,
+                "chord": "D:maj",
+                "confidence": 0.55
+            },
+            {
+                "time": 2.0,
+                "chord": "A:maj",
+                "confidence": 0.62
+            },
+            {
+                "time": 3.0,
+                "chord": "E:maj",
+                "confidence": 0.58
+            }
+        ],
+        "roman_numerals": [
+            "i",
+            "VI",
+            "III",
+            "VII"
+        ]
+    },
+    "semantic_description": {
+        "attributes": {
+            "mood": [
+                "energetic",
+                "upbeat",
+                "intense"
+            ],
+            "energy": [
+                "driving",
+                "high-energy"
+            ],
+            "texture": [
+                "bright",
+                "polished"
+            ]
+        },
+        "genre": {
+            "primary": "electronic",
+            "secondary": [
+                "edm",
+                "dance"
+            ],
+            "subgenres": []
+        },
+        "instrumentation": [
+            {
+                "instrument": "synthesizer",
+                "role": "lead",
+                "descriptors": [
+                    "bright",
+                    "melodic",
+                    "soaring"
+                ]
+            },
+            {
+                "instrument": "kick_drum",
+                "role": "percussion",
+                "descriptors": [
+                    "punchy",
+                    "heavy",
+                    "four-on-the-floor"
+                ]
+            },
+            {
+                "instrument": "bass_synthesizer",
+                "role": "bass",
+                "descriptors": [
+                    "deep",
+                    "driving",
+                    "sub-bass"
+                ]
+            }
+        ],
+        "vocals": {
+            "presence": "none",
+            "gender": null,
+            "style": null
+        }
+    }
+}

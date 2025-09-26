@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adp-protocol.org/schemas/model-output/1.0",
+  "title": "ADP Model Output",
+  "description": "AI-generated annotation with inference metadata",
+  "allOf": [
+    {
+      "$ref": "annotation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": ["inference_meta"],
+      "properties": {
+        "inference_meta": {
+          "type": "object",
+          "required": ["model_name", "model_version"],
+          "properties": {
+            "model_name": {
+              "type": "string",
+              "description": "Model identifier"
+            },
+            "model_version": {
+              "type": "string",
+              "description": "Model version"
+            },
+            "inference_time_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Processing time in milliseconds"
+            },
+            "hardware_context": {
+              "type": "string",
+              "enum": ["CPU", "GPU", "TPU", "other"],
+              "description": "Hardware used for inference"
+            },
+            "parameters": {
+              "type": "object",
+              "description": "Model parameters used"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Model-specific metadata"
+        },
+        "comparison_target": {
+          "type": "string",
+          "description": "Reference to human annotation ID for comparison"
+        },
+        "provenance": {
+          "type": "object",
+          "required": ["annotator_type", "timestamp"],
+          "properties": {
+            "annotator_type": {
+              "const": "ai",
+              "description": "Must be 'ai' for model outputs"
+            },
+            "annotator_id": {
+              "type": "string",
+              "description": "Model identifier"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO 8601 creation timestamp"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}
