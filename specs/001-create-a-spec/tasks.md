@@ -33,11 +33,11 @@
 - Based on plan.md structure decision
 
 ## Phase 3.1: Setup
-- [ ] **T001** Create project structure with src/adp_core/, schemas/, tests/, examples/ directories
-- [ ] **T002** Initialize Python project with pyproject.toml, setup.py, and requirements.txt
-- [ ] **T003** [P] Configure pytest.ini with test discovery and JSON Schema test fixtures
-- [ ] **T004** [P] Setup linting with flake8, black, and mypy configuration files
-- [ ] **T005** [P] Create .gitignore for Python project with common excludes
+- [x] **T001** Create project structure with src/adp_core/, schemas/, tests/, examples/ directories
+- [x] **T002** Initialize Python project with pyproject.toml, setup.py, and requirements.txt
+- [x] **T003** [P] Configure pytest.ini with test discovery and JSON Schema test fixtures
+- [x] **T004** [P] Setup linting with flake8, black, and mypy configuration files
+- [x] **T005** [P] Create .gitignore for Python project with common excludes
 
 ## Phase 3.2: Schema Validation Tests (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
