@@ -1,3 +1,52 @@
+"""
+<!--
+DATASET MANIFEST MODEL - AUDIO COLLECTION MANAGEMENT
+==============================================================================
+FILE PURPOSE:
+    Defines comprehensive dataset models for managing audio collections with
+    annotations, metadata, and references. Provides manifest functionality
+    for dataset packaging, distribution, and machine learning workflows.
+
+WHAT HAPPENS HERE:
+    1. AudioClip: Individual audio file metadata and validation
+    2. AnnotationReference: Links to annotation files with integrity checks
+    3. DictionaryReference: Links to vocabulary files with categorization
+    4. DatasetSplits: ML train/validation/test split management
+    5. DatasetMetadata: Comprehensive dataset statistics and curation info
+    6. Dataset: Main manifest combining all components with validation
+
+ARCHITECTURAL ROLE:
+    - Central manifest for audio dataset organization
+    - Reference management for distributed annotation files
+    - Integrity verification through checksums and validation
+    - ML workflow support with predefined data splits
+    - Metadata aggregation for dataset discovery and analysis
+
+KEY FEATURES:
+    - Audio format validation and metadata extraction
+    - File integrity verification with checksums
+    - Semantic versioning for dataset releases
+    - SPDX license identifier compliance
+    - ML splits for reproducible training workflows
+    - Comprehensive metadata for dataset curation
+    - Unique ID validation across all components
+
+VALIDATION LOGIC:
+    - Unique ID enforcement across clips, annotations, dictionaries
+    - Audio format and technical parameter validation
+    - Checksum format validation for integrity verification
+    - Semantic version pattern matching
+    - License format validation
+    - Dataset consistency and completeness checks
+
+DEPENDENCIES:
+    - pydantic: Data validation and serialization
+    - datetime: Timestamp handling for versioning
+    - typing: Type annotations for flexible metadata
+==============================================================================
+-->
+"""
+
 """Dataset data model for audio collections."""
 
 from datetime import datetime
@@ -6,7 +55,10 @@ from pydantic import BaseModel, Field, validator
 
 
 class AudioClip(BaseModel):
-    """Audio clip metadata."""
+    """
+    <!-- Individual audio file metadata with technical parameters -->
+    Audio clip metadata.
+    """
 
     id: str = Field(
         ...,
@@ -75,7 +127,10 @@ class AudioClip(BaseModel):
 
 
 class AnnotationReference(BaseModel):
-    """Reference to an annotation file in the dataset."""
+    """
+    <!-- File reference to annotation with integrity verification -->
+    Reference to an annotation file in the dataset.
+    """
 
     id: str = Field(
         ...,
@@ -111,7 +166,10 @@ class AnnotationReference(BaseModel):
 
 
 class DictionaryReference(BaseModel):
-    """Reference to a dictionary entry file in the dataset."""
+    """
+    <!-- File reference to dictionary entry with categorization -->
+    Reference to a dictionary entry file in the dataset.
+    """
 
     id: str = Field(
         ...,
@@ -147,7 +205,10 @@ class DictionaryReference(BaseModel):
 
 
 class DatasetSplits(BaseModel):
-    """Dataset splits for machine learning."""
+    """
+    <!-- Train/validation/test splits for ML workflows -->
+    Dataset splits for machine learning.
+    """
 
     train: Optional[List[str]] = Field(
         None,
@@ -176,7 +237,10 @@ class DatasetSplits(BaseModel):
 
 
 class DatasetMetadata(BaseModel):
-    """Additional metadata about the dataset."""
+    """
+    <!-- Comprehensive dataset statistics and curation information -->
+    Additional metadata about the dataset.
+    """
 
     curator: Optional[str] = Field(
         None,
@@ -227,7 +291,10 @@ class DatasetMetadata(BaseModel):
 
 
 class Dataset(BaseModel):
-    """Dataset manifest model."""
+    """
+    <!-- Main dataset manifest combining all components -->
+    Dataset manifest model.
+    """
 
     id: str = Field(
         ...,
@@ -299,7 +366,10 @@ class Dataset(BaseModel):
 
     @validator('license')
     def validate_license_format(cls, v):
-        """Validate license is a valid SPDX identifier format."""
+        """
+        <!-- Ensures license follows SPDX identifier format -->
+        Validate license is a valid SPDX identifier format.
+        """
         # Basic validation - in practice, you'd check against SPDX list
         if not v or len(v.strip()) == 0:
             raise ValueError('License cannot be empty')
@@ -307,7 +377,10 @@ class Dataset(BaseModel):
 
     @validator('clips')
     def validate_clips_unique_ids(cls, v):
-        """Validate that clip IDs are unique."""
+        """
+        <!-- Enforces unique clip IDs across dataset -->
+        Validate that clip IDs are unique.
+        """
         ids = [clip.id for clip in v]
         if len(ids) != len(set(ids)):
             raise ValueError('Clip IDs must be unique')
@@ -330,14 +403,20 @@ class Dataset(BaseModel):
         return v
 
     def get_clip_by_id(self, clip_id: str) -> Optional[AudioClip]:
-        """Get audio clip by ID."""
+        """
+        <!-- Retrieves specific audio clip by unique identifier -->
+        Get audio clip by ID.
+        """
         for clip in self.clips:
             if clip.id == clip_id:
                 return clip
         return None
 
     def get_total_duration(self) -> Optional[float]:
-        """Calculate total duration from clips with duration metadata."""
+        """
+        <!-- Sums duration metadata across all clips -->
+        Calculate total duration from clips with duration metadata.
+        """
         clips_with_duration = [clip for clip in self.clips if clip.duration_sec is not None]
         if not clips_with_duration:
             return None

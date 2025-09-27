@@ -1,3 +1,47 @@
+"""
+<!--
+ANNOTATION DATA MODEL - CORE ADP FUNCTIONALITY
+==============================================================================
+FILE PURPOSE:
+    Defines the foundational annotation data model for audio clip descriptions.
+    This is the core entity in the ADP system, representing labeled segments
+    of audio with provenance, confidence, and quality metrics.
+
+WHAT HAPPENS HERE:
+    1. TimeRange: Defines temporal boundaries for audio segments
+    2. Label: Individual classification labels with confidence scores
+    3. Provenance: Tracks annotation creation context and lineage
+    4. QualityMetrics: Computes annotation reliability and agreement metrics
+    5. Annotation: Main class combining all annotation components
+
+ARCHITECTURAL ROLE:
+    - Foundation for all ADP annotation types (human, AI, musical)
+    - Base class for inheritance by specialized annotation models
+    - Core validation logic for temporal and confidence constraints
+    - Quality metrics computation for annotation reliability assessment
+
+KEY FEATURES:
+    - Temporal validation ensuring end_sec > start_sec
+    - Confidence score validation (0.0 to 1.0 range)
+    - Automatic quality metrics computation
+    - ISO 8601 timestamp handling for provenance
+    - Extensible base for specialized annotation types
+
+VALIDATION LOGIC:
+    - Time range consistency checks
+    - Label confidence score bounds
+    - Schema version pattern matching
+    - Provenance timestamp format validation
+    - Quality metrics automatic computation
+
+DEPENDENCIES:
+    - pydantic: Data validation and serialization framework
+    - datetime: Timestamp handling and ISO format support
+    - typing: Type annotations for robust API contracts
+==============================================================================
+-->
+"""
+
 """Annotation data model for audio clips."""
 
 from datetime import datetime
@@ -6,7 +50,12 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class TimeRange(BaseModel):
-    """Time range specification for audio segments."""
+    """
+    <!-- Temporal boundary specification for audio segments with validation -->
+    Time range specification for audio segments.
+
+    Validates that end_sec > start_sec and provides duration calculation.
+    """
 
     start_sec: float = Field(
         ...,
@@ -22,7 +71,10 @@ class TimeRange(BaseModel):
 
     @root_validator
     def validate_time_range(cls, values):
-        """Validate that end_sec > start_sec."""
+        """
+        <!-- Ensures temporal consistency: end_sec > start_sec -->
+        Validate that end_sec > start_sec.
+        """
         start = values.get('start_sec')
         end = values.get('end_sec')
 
@@ -34,7 +86,10 @@ class TimeRange(BaseModel):
 
     @property
     def duration_sec(self) -> float:
-        """Calculate duration in seconds."""
+        """
+        <!-- Computes time span: end_sec - start_sec -->
+        Calculate duration in seconds.
+        """
         return self.end_sec - self.start_sec
 
     class Config:
@@ -48,7 +103,12 @@ class TimeRange(BaseModel):
 
 
 class Label(BaseModel):
-    """Label with confidence score."""
+    """
+    <!-- Individual classification label with confidence scoring -->
+    Label with confidence score.
+
+    Represents a single classification label applied to an audio segment.
+    """
 
     entry_id: str = Field(
         ...,
@@ -73,7 +133,12 @@ class Label(BaseModel):
 
 
 class Provenance(BaseModel):
-    """Provenance information for annotations."""
+    """
+    <!-- Annotation creation metadata and lineage tracking -->
+    Provenance information for annotations.
+
+    Tracks who, when, and how an annotation was created.
+    """
 
     annotator_type: Literal["human", "ai"] = Field(
         ...,
@@ -116,7 +181,12 @@ class Provenance(BaseModel):
 
 
 class QualityMetrics(BaseModel):
-    """Quality metrics for annotations."""
+    """
+    <!-- Annotation reliability and agreement assessment -->
+    Quality metrics for annotations.
+
+    Provides measures of annotation quality and inter-annotator agreement.
+    """
 
     inter_annotator_agreement: Optional[float] = Field(
         None,
@@ -134,7 +204,12 @@ class QualityMetrics(BaseModel):
 
 
 class Annotation(BaseModel):
-    """Base annotation model for audio clips."""
+    """
+    <!-- Core annotation entity combining temporal, semantic, and provenance data -->
+    Base annotation model for audio clips.
+
+    Primary data structure for describing labeled audio segments with full metadata.
+    """
 
     id: str = Field(
         ...,
@@ -182,7 +257,10 @@ class Annotation(BaseModel):
     @model_validator(mode='before')
     @classmethod
     def compute_quality_metrics(cls, values):
-        """Compute quality metrics if not provided."""
+        """
+        <!-- Auto-calculates confidence averages and quality scores -->
+        Compute quality metrics if not provided.
+        """
         labels = values.get('labels', [])
         quality_metrics = values.get('quality_metrics')
 

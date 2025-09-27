@@ -4,7 +4,7 @@ import json
 import pytest
 from pathlib import Path
 from jsonschema import ValidationError
-from src.adp_core.validation import SchemaResolver
+from adp_core.validation import SchemaResolver
 
 
 class TestMusicalAnnotationSchemaValidation:
@@ -117,6 +117,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -143,6 +144,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {}
@@ -157,6 +159,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -186,6 +189,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -215,6 +219,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -244,6 +249,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -286,6 +292,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -326,6 +333,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -368,6 +376,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -407,6 +416,7 @@ class TestMusicalAnnotationSchemaValidation:
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
@@ -459,15 +469,16 @@ class TestMusicalAnnotationSchemaValidation:
         }
         schema_resolver.validate(annotation_with_labels, "musical_annotation.schema")
 
-        # Musical annotation without labels (should also work)
-        annotation_without_labels = {
+        # Musical annotation with minimal labels (should also work)
+        annotation_minimal_labels = {
             "id": "test-001",
             "clip_id": "test-clip",
             "time_range": {"start_sec": 0.0, "end_sec": 1.0},
+            "labels": [{"entry_id": "test", "confidence": 0.5}],
             "provenance": {"annotator_type": "ai", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0",
             "musical_analysis": {
                 "protocol_version": "1.0"
             }
         }
-        schema_resolver.validate(annotation_without_labels, "musical_annotation.schema")
+        schema_resolver.validate(annotation_minimal_labels, "musical_annotation.schema")

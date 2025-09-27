@@ -1,3 +1,54 @@
+"""
+<!--
+MODEL OUTPUT DATA MODEL - AI ANNOTATION FRAMEWORK
+==============================================================================
+FILE PURPOSE:
+    Extends base annotations with AI model inference metadata, uncertainty
+    quantification, and explainability information. Specialized for machine
+    learning model outputs with comprehensive inference context tracking.
+
+WHAT HAPPENS HERE:
+    1. PreprocessingInfo: Audio preprocessing metadata for model inputs
+    2. EnsembleInfo: Multi-model ensemble configuration and voting
+    3. UncertaintyInfo: Prediction confidence and calibration metrics
+    4. ExplainabilityInfo: Model interpretability and attention weights
+    5. InferenceMeta: Core model execution context and performance
+    6. ModelProvenance: AI-specific provenance with annotator constraints
+    7. ModelOutput: Complete AI annotation with all metadata
+
+ARCHITECTURAL ROLE:
+    - Specialized annotation for AI/ML model outputs
+    - Comprehensive inference metadata tracking
+    - Model performance and reliability assessment
+    - Explainability and interpretability support
+    - Ensemble model result aggregation
+
+KEY FEATURES:
+    - Enforced AI annotator type validation
+    - Inference timing and hardware context tracking
+    - Uncertainty quantification with entropy and confidence intervals
+    - Ensemble voting strategy configuration
+    - Model explainability through attention and feature importance
+    - Preprocessing step documentation for reproducibility
+    - Comparison target linking for evaluation workflows
+
+VALIDATION LOGIC:
+    - AI annotator type enforcement
+    - Model weight normalization validation
+    - Confidence interval bounds checking
+    - Inference time non-negative validation
+    - Hardware context enumeration
+    - Feature importance score validation
+
+DEPENDENCIES:
+    - annotation: Base annotation model inheritance
+    - pydantic: Data validation and serialization
+    - datetime: Timestamp handling
+    - typing: Type annotations for metadata flexibility
+==============================================================================
+-->
+"""
+
 """Model output data model extending annotation."""
 
 from datetime import datetime
@@ -8,7 +59,10 @@ from .annotation import Annotation, Provenance
 
 
 class PreprocessingInfo(BaseModel):
-    """Preprocessing information for model inference."""
+    """
+    <!-- Audio preprocessing metadata for model input preparation -->
+    Preprocessing information for model inference.
+    """
 
     sample_rate: Optional[int] = Field(
         None,
@@ -46,7 +100,10 @@ class PreprocessingInfo(BaseModel):
 
 
 class EnsembleInfo(BaseModel):
-    """Ensemble model information."""
+    """
+    <!-- Multi-model ensemble configuration and voting strategies -->
+    Ensemble model information.
+    """
 
     is_ensemble: bool = Field(
         ...,
@@ -65,7 +122,10 @@ class EnsembleInfo(BaseModel):
 
     @validator('model_weights')
     def validate_weights(cls, v):
-        """Validate model weights are between 0 and 1."""
+        """
+        <!-- Ensures ensemble weights are properly normalized -->
+        Validate model weights are between 0 and 1.
+        """
         if v is not None:
             for weight in v.values():
                 if not 0 <= weight <= 1:
@@ -74,7 +134,10 @@ class EnsembleInfo(BaseModel):
 
 
 class UncertaintyInfo(BaseModel):
-    """Uncertainty quantification for model predictions."""
+    """
+    <!-- Prediction confidence metrics and calibration scores -->
+    Uncertainty quantification for model predictions.
+    """
 
     prediction_entropy: Optional[float] = Field(
         None,
@@ -96,7 +159,10 @@ class UncertaintyInfo(BaseModel):
 
     @validator('confidence_interval')
     def validate_confidence_interval(cls, v):
-        """Validate confidence interval format."""
+        """
+        <!-- Ensures confidence intervals have proper bounds -->
+        Validate confidence interval format.
+        """
         if v is not None:
             required_keys = {'lower', 'upper'}
             if not required_keys.issubset(v.keys()):
@@ -109,7 +175,10 @@ class UncertaintyInfo(BaseModel):
 
 
 class ExplainabilityInfo(BaseModel):
-    """Model explainability information."""
+    """
+    <!-- Model interpretability through attention and feature importance -->
+    Model explainability information.
+    """
 
     attention_weights: Optional[List[float]] = Field(
         None,
@@ -128,7 +197,10 @@ class ExplainabilityInfo(BaseModel):
 
 
 class InferenceMeta(BaseModel):
-    """Inference metadata for model outputs."""
+    """
+    <!-- Core model execution context and performance metrics -->
+    Inference metadata for model outputs.
+    """
 
     model_name: str = Field(
         ...,
@@ -182,7 +254,10 @@ class InferenceMeta(BaseModel):
 
 
 class ModelProvenance(Provenance):
-    """Provenance for model outputs with AI constraint."""
+    """
+    <!-- AI-specific provenance with enforced annotator type -->
+    Provenance for model outputs with AI constraint.
+    """
 
     annotator_type: Literal["ai"] = Field(
         "ai",
@@ -201,7 +276,10 @@ class ModelProvenance(Provenance):
 
 
 class ModelOutput(Annotation):
-    """Model output extending annotation with inference metadata."""
+    """
+    <!-- Complete AI annotation with inference metadata and uncertainty -->
+    Model output extending annotation with inference metadata.
+    """
 
     inference_meta: InferenceMeta = Field(
         ...,
@@ -235,7 +313,10 @@ class ModelOutput(Annotation):
 
     @validator('provenance')
     def validate_ai_provenance(cls, v):
-        """Ensure provenance is for AI annotator."""
+        """
+        <!-- Enforces AI annotator type for model outputs -->
+        Ensure provenance is for AI annotator.
+        """
         if v.annotator_type != "ai":
             raise ValueError('Model output provenance must have annotator_type="ai"')
         return v

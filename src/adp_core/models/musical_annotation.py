@@ -1,3 +1,51 @@
+"""
+<!--
+MUSICAL ANNOTATION DATA MODEL - ADVANCED MUSIC ANALYSIS FRAMEWORK
+==============================================================================
+FILE PURPOSE:
+    Extends base annotations with comprehensive musical analysis capabilities.
+    Provides detailed music theory, structural, and semantic analysis for
+    professional music annotation workflows with hierarchical decomposition.
+
+WHAT HAPPENS HERE:
+    1. MusicalElement: Individual musical components (notes, chords, rhythms)
+    2. MusicalStructure: Hierarchical musical organization (beats, measures, sections)
+    3. MusicalAnalysis: Comprehensive analysis results (tempo, key, genre, affect)
+    4. MusicalAnnotation: Extended annotation combining all musical analysis
+
+ARCHITECTURAL ROLE:
+    - Professional music analysis and annotation system
+    - Hierarchical musical structure modeling
+    - Music theory integration with semantic analysis
+    - Advanced audio feature extraction support
+    - Temporal musical event tracking and validation
+
+KEY FEATURES:
+    - Comprehensive musical element classification system
+    - Hierarchical structure validation with parent-child relationships
+    - Music theory analysis (tempo, key, harmony, rhythm)
+    - Semantic musical attributes (mood, energy, genre)
+    - Spectral feature integration (MFCCs, centroid, etc.)
+    - Musical event timing (onsets, beats, downbeats)
+    - Structural analysis (sections, phrases, form)
+
+VALIDATION LOGIC:
+    - Musical structure hierarchy consistency checking
+    - Time sequence sorting and non-negative validation
+    - Spectral feature format and type validation
+    - Musical element confidence score bounds
+    - Hierarchical parent-child relationship integrity
+    - Musical timing event validation
+
+DEPENDENCIES:
+    - annotation: Base annotation model inheritance
+    - pydantic: Data validation and serialization
+    - datetime: Timestamp handling
+    - typing: Union types for flexible musical values
+==============================================================================
+-->
+"""
+
 """Musical annotation data model for advanced music analysis."""
 from datetime import datetime
 from typing import List, Optional, Dict, Any, Literal, Union
@@ -6,7 +54,10 @@ from .annotation import Annotation, Label, TimeRange, Provenance
 
 
 class MusicalElement(BaseModel):
-    """Individual musical element within an annotation."""
+    """
+    <!-- Individual musical component with type and attributes -->
+    Individual musical element within an annotation.
+    """
 
     element_type: Literal[
         "note", "chord", "rhythm", "tempo", "key", "time_signature",
@@ -30,7 +81,10 @@ class MusicalElement(BaseModel):
 
 
 class MusicalStructure(BaseModel):
-    """Hierarchical musical structure information."""
+    """
+    <!-- Hierarchical musical organization with parent-child relationships -->
+    Hierarchical musical structure information.
+    """
 
     level: Literal[
         "note", "beat", "measure", "phrase", "section", "movement", "piece"
@@ -58,7 +112,10 @@ class MusicalStructure(BaseModel):
 
 
 class MusicalAnalysis(BaseModel):
-    """Comprehensive musical analysis results."""
+    """
+    <!-- Complete music theory and semantic analysis results -->
+    Comprehensive musical analysis results.
+    """
 
     tempo: Optional[float] = Field(
         None, gt=0,
@@ -133,7 +190,10 @@ class MusicalAnalysis(BaseModel):
 
 
 class MusicalAnnotation(Annotation):
-    """Extended annotation for musical audio with advanced music analysis."""
+    """
+    <!-- Professional music annotation with comprehensive analysis -->
+    Extended annotation for musical audio with advanced music analysis.
+    """
 
     # Override annotation_type to be musical
     annotation_type: Literal["musical"] = Field(
@@ -189,7 +249,10 @@ class MusicalAnnotation(Annotation):
 
     @validator('musical_structure')
     def validate_musical_structure(cls, structures):
-        """Validate that musical structure is hierarchically consistent."""
+        """
+        <!-- Ensures hierarchical musical structure consistency -->
+        Validate that musical structure is hierarchically consistent.
+        """
         if not structures:
             return structures
 
@@ -211,7 +274,10 @@ class MusicalAnnotation(Annotation):
 
     @validator('onset_times', 'beat_times', 'downbeat_times')
     def validate_time_sequences(cls, times):
-        """Validate that time sequences are sorted and non-negative."""
+        """
+        <!-- Ensures musical timing sequences are properly ordered -->
+        Validate that time sequences are sorted and non-negative.
+        """
         if times is None:
             return times
 
@@ -225,7 +291,10 @@ class MusicalAnnotation(Annotation):
 
     @validator('spectral_features')
     def validate_spectral_features(cls, features):
-        """Validate spectral features structure."""
+        """
+        <!-- Validates audio feature format and numeric types -->
+        Validate spectral features structure.
+        """
         if features is None:
             return features
 

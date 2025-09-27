@@ -4,7 +4,7 @@ import json
 import pytest
 from pathlib import Path
 from jsonschema import ValidationError
-from src.adp_core.validation import SchemaResolver
+from adp_core.validation import SchemaResolver
 
 
 class TestAnnotationSchemaValidation:
@@ -233,7 +233,7 @@ class TestAnnotationSchemaValidation:
             with pytest.raises(ValidationError):
                 schema_resolver.validate(annotation, "annotation.schema")
 
-    def test_optional_fields(self, schema, valid_annotation):
+    def test_optional_fields(self, schema_resolver, valid_annotation):
         """Test that optional fields work correctly."""
         # Minimal annotation without optional fields
         minimal_annotation = {

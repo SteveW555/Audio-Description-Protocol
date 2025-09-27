@@ -1,3 +1,50 @@
+"""
+<!--
+DICTIONARY ENTRY DATA MODEL - STANDARDIZED VOCABULARY SYSTEM
+==============================================================================
+FILE PURPOSE:
+    Defines the dictionary entry model for standardized audio description
+    vocabulary. Creates a controlled vocabulary system for consistent labeling
+    across the ADP ecosystem with hierarchical relationships and metadata.
+
+WHAT HAPPENS HERE:
+    1. DictionaryEntry: Core vocabulary definition with validation
+    2. Hierarchical relationships through parent_id references
+    3. Synonym management for vocabulary expansion
+    4. Metadata tracking for usage statistics and curation
+    5. Format validation for kebab-case IDs and controlled patterns
+
+ARCHITECTURAL ROLE:
+    - Standardized vocabulary foundation for all ADP annotations
+    - Hierarchical taxonomy support for structured classification
+    - Controlled vocabulary enforcement through validation
+    - Semantic relationship modeling between terms
+
+KEY FEATURES:
+    - Kebab-case ID validation for URL-safe identifiers
+    - Hierarchical parent-child relationships
+    - Synonym expansion for vocabulary flexibility
+    - Usage frequency tracking for optimization
+    - Confidence thresholds for automatic labeling
+    - Extensible metadata for custom vocabulary needs
+
+VALIDATION LOGIC:
+    - ID format validation (kebab-case pattern)
+    - Minimum definition length requirements
+    - Schema version pattern matching
+    - Synonym format validation
+    - Related ID format consistency
+    - Metadata field type validation
+
+DEPENDENCIES:
+    - pydantic: Data validation and serialization
+    - datetime: Timestamp handling for creation/update tracking
+    - typing: Type annotations for metadata flexibility
+    - re: Regular expression validation for ID patterns
+==============================================================================
+-->
+"""
+
 """Dictionary entry data model."""
 
 from datetime import datetime
@@ -6,7 +53,12 @@ from pydantic import BaseModel, Field, validator
 
 
 class DictionaryEntry(BaseModel):
-    """Dictionary entry model for standardized audio labels."""
+    """
+    <!-- Standardized vocabulary entry with hierarchical relationships -->
+    Dictionary entry model for standardized audio labels.
+
+    Defines controlled vocabulary terms for consistent audio description.
+    """
 
     id: str = Field(
         ...,
@@ -70,14 +122,20 @@ class DictionaryEntry(BaseModel):
 
     @validator('synonyms', each_item=True)
     def validate_synonyms(cls, v):
-        """Validate that synonyms are non-empty strings."""
+        """
+        <!-- Ensures synonym strings are non-empty and properly formatted -->
+        Validate that synonyms are non-empty strings.
+        """
         if not v or len(v.strip()) == 0:
             raise ValueError('Synonym cannot be empty')
         return v.strip()
 
     @validator('related_ids', each_item=True)
     def validate_related_ids(cls, v):
-        """Validate related ID format."""
+        """
+        <!-- Ensures related IDs follow kebab-case format -->
+        Validate related ID format.
+        """
         import re
         if not re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", v):
             raise ValueError('Related ID must be in kebab-case format')
@@ -85,7 +143,10 @@ class DictionaryEntry(BaseModel):
 
     @validator('metadata')
     def validate_metadata(cls, v):
-        """Validate metadata contains expected optional fields."""
+        """
+        <!-- Validates optional metadata fields for consistency -->
+        Validate metadata contains expected optional fields.
+        """
         if v is None:
             return v
 

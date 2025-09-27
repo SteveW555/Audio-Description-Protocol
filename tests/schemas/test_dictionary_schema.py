@@ -4,7 +4,7 @@ import json
 import pytest
 from pathlib import Path
 from jsonschema import ValidationError
-from src.adp_core.validation import SchemaResolver
+from adp_core.validation import SchemaResolver
 
 
 class TestDictionarySchemaValidation:

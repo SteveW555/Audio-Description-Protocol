@@ -1,3 +1,53 @@
+"""
+<!--
+SCHEMA RESOLVER - ADVANCED JSON SCHEMA VALIDATION ENGINE
+==============================================================================
+FILE PURPOSE:
+    Implements advanced JSON Schema validation with Draft 2020-12 support,
+    $data reference resolution, custom format validation, and schema
+    inheritance. Core validation engine for the entire ADP framework.
+
+WHAT HAPPENS HERE:
+    1. Schema loading and registry creation for reference resolution
+    2. Advanced $data reference validation for dynamic constraints
+    3. Custom format checkers for ISO 8601 timestamps and patterns
+    4. Schema inheritance resolution through allOf compositions
+    5. Cross-schema validation for complex data structures
+    6. Error handling and detailed validation feedback
+
+ARCHITECTURAL ROLE:
+    - Central validation engine for all ADP schemas
+    - JSON Schema Draft 2020-12 implementation with extensions
+    - Reference resolution for modular schema architecture
+    - Format validation for domain-specific data types
+    - Validation error reporting and debugging support
+
+KEY FEATURES:
+    - Automatic schema discovery and loading from directory
+    - Registry-based reference resolution for schema composition
+    - $data reference support for dynamic validation constraints
+    - Custom ISO 8601 date-time format validation
+    - Two-pass validation: basic + $data constraints
+    - Detailed error messages with path information
+    - Schema inheritance through allOf resolution
+
+VALIDATION PROCESS:
+    1. Load all schemas from directory into registry
+    2. Create validator with reference resolution support
+    3. First pass: Basic validation with $data references removed
+    4. Second pass: Custom $data constraint validation
+    5. Error aggregation and detailed reporting
+
+DEPENDENCIES:
+    - jsonschema: Core JSON Schema validation engine
+    - referencing: Modern reference resolution for Draft 2020-12
+    - pathlib: File system operations for schema loading
+    - datetime: Timestamp validation and parsing
+    - re: Regular expression validation for custom formats
+==============================================================================
+-->
+"""
+
 """Schema resolver for handling JSON Schema references."""
 import json
 from pathlib import Path
@@ -11,10 +61,15 @@ import re
 
 
 class SchemaResolver:
-    """Resolver for JSON Schema references in ADP schemas."""
+    """
+    <!-- Advanced JSON Schema validation with reference resolution -->
+    Resolver for JSON Schema references in ADP schemas.
+    """
 
     def __init__(self, schemas_dir: str = None):
-        """Initialize the schema resolver.
+        """
+        <!-- Initializes schema registry and loads all schema files -->
+        Initialize the schema resolver.
 
         Args:
             schemas_dir: Directory containing schema files. Defaults to schemas/ in project root.
@@ -38,7 +93,10 @@ class SchemaResolver:
         self._load_all_schemas()
 
     def _load_all_schemas(self):
-        """Load all schema files from the schemas directory."""
+        """
+        <!-- Discovers and loads all JSON schema files into registry -->
+        Load all schema files from the schemas directory.
+        """
         # Load all schemas
         for schema_file in self.schemas_dir.glob("*.json"):
             schema_name = schema_file.stem
@@ -116,7 +174,9 @@ class SchemaResolver:
         return self.registry
 
     def validate(self, instance: Any, schema_name: str) -> None:
-        """Validate an instance against a schema with reference resolution.
+        """
+        <!-- Two-pass validation: basic + $data constraint validation -->
+        Validate an instance against a schema with reference resolution.
 
         Args:
             instance: The data to validate
@@ -297,7 +357,9 @@ class SchemaResolver:
 
 
 def validate_against_schema(instance: Any, schema_name: str, schemas_dir: str = None) -> None:
-    """Convenience function to validate an instance against a schema.
+    """
+    <!-- Convenience function for one-off schema validation -->
+    Convenience function to validate an instance against a schema.
 
     Args:
         instance: The data to validate
