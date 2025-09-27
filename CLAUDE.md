@@ -12,6 +12,8 @@ The .specify and specs folders show the Spec Kit approach to development. .claud
 
 ## Active Technologies
 - Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, jsonschema, librosa/torchaudio (audio processing), pytest (testing) (001-create-a-spec)
+- Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes (002-advanced-audio-processing)
+- File-based (audio files, JSON annotations, model files) (002-advanced-audio-processing)
 
 ## Project Structure
 ```
@@ -26,6 +28,7 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standard conventions
 
 ## Recent Changes
+- 002-advanced-audio-processing: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes
 - 001-create-a-spec: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, jsonschema, librosa/torchaudio (audio processing), pytest (testing)
 
 <!-- MANUAL ADDITIONS START -->
