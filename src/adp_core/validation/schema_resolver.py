@@ -1,10 +1,10 @@
 """Schema resolver for handling JSON Schema references."""
 import json
-import os
 from pathlib import Path
 from typing import Dict, Any
 import jsonschema
-from jsonschema import RefResolver, Draft7Validator, validators
+from referencing import Registry, Resource
+from referencing.jsonschema import DRAFT7
 
 
 class SchemaResolver:
@@ -31,39 +31,35 @@ class SchemaResolver:
 
         self.schemas_dir = Path(schemas_dir)
         self.schemas: Dict[str, Dict[str, Any]] = {}
-        self.resolvers: Dict[str, RefResolver] = {}
+        self.registry: Registry = None
         self._load_all_schemas()
 
     def _load_all_schemas(self):
         """Load all schema files from the schemas directory."""
-        # First pass: load all schemas
+        # Load all schemas
         for schema_file in self.schemas_dir.glob("*.json"):
             schema_name = schema_file.stem
             with open(schema_file, 'r') as f:
                 schema = json.load(f)
             self.schemas[schema_name] = schema
 
-        # Second pass: create resolvers with all schemas available
-        for schema_file in self.schemas_dir.glob("*.json"):
-            schema_name = schema_file.stem
-            schema = self.schemas[schema_name]
-
-            # Create a resolver for this schema
+        # Create registry with all schemas
+        resources = []
+        for schema_name, schema in self.schemas.items():
+            # Create URI for this schema
+            schema_file = self.schemas_dir / f"{schema_name}.json"
             schema_uri = f"file://{schema_file.absolute()}"
-            resolver = RefResolver(base_uri=schema_uri, referrer=schema)
 
-            # Add all schemas to this resolver's store
-            for other_name, other_schema in self.schemas.items():
-                other_file = self.schemas_dir / f"{other_name}.json"
-                other_uri = f"file://{other_file.absolute()}"
-                resolver.store[other_uri] = other_schema
-                # Also store with relative references
-                resolver.store[f"{other_name}.json"] = other_schema
-                # Store with absolute schema ID URLs from the schema itself
-                if "$id" in other_schema:
-                    resolver.store[other_schema["$id"]] = other_schema
+            # Create resource and add to registry
+            resource = Resource.from_contents(schema, default_specification=DRAFT7)
+            resources.append((schema_uri, resource))
 
-            self.resolvers[schema_name] = resolver
+            # Also register with relative name and $id if present
+            if "$id" in schema:
+                resources.append((schema["$id"], resource))
+            resources.append((f"{schema_name}.json", resource))
+
+        self.registry = Registry().with_resources(resources)
 
     def get_schema(self, schema_name: str) -> Dict[str, Any]:
         """Get a schema by name.
@@ -78,18 +74,13 @@ class SchemaResolver:
             raise ValueError(f"Schema '{schema_name}' not found")
         return self.schemas[schema_name]
 
-    def get_resolver(self, schema_name: str) -> RefResolver:
-        """Get a resolver for a specific schema.
-
-        Args:
-            schema_name: Name of the schema
+    def get_registry(self) -> Registry:
+        """Get the registry containing all schemas.
 
         Returns:
-            RefResolver configured for this schema
+            Registry configured with all schemas
         """
-        if schema_name not in self.resolvers:
-            raise ValueError(f"Resolver for schema '{schema_name}' not found")
-        return self.resolvers[schema_name]
+        return self.registry
 
     def validate(self, instance: Any, schema_name: str) -> None:
         """Validate an instance against a schema with reference resolution.
@@ -103,14 +94,13 @@ class SchemaResolver:
             ValueError: If schema not found
         """
         schema = self.get_schema(schema_name)
-        resolver = self.get_resolver(schema_name)
 
         # For now, remove $data references to get basic validation working
         # TODO: Implement proper $data reference handling
         clean_schema = self._remove_data_references(schema)
 
-        validator_class = jsonschema.validators.Draft7Validator
-        validator = validator_class(clean_schema, resolver=resolver)
+        # Create validator with registry for reference resolution
+        validator = jsonschema.Draft7Validator(clean_schema, registry=self.registry)
         validator.validate(instance)
 
     def _remove_data_references(self, schema):
@@ -120,19 +110,20 @@ class SchemaResolver:
 
         def clean_recursive(obj):
             if isinstance(obj, dict):
-                # Handle $data references by removing the constraint
                 keys_to_remove = []
                 for key, value in obj.items():
-                    if isinstance(value, dict) and "$data" in value:
-                        # Remove constraints that use $data references
-                        keys_to_remove.append(key)
-                    elif key in ["if", "then", "else"] and isinstance(value, dict):
-                        # For conditional schemas, clean them recursively but keep structure
-                        clean_recursive(value)
-                    else:
+                    if isinstance(value, dict):
+                        # If the value contains a $data reference, remove this constraint entirely
+                        if "$data" in value:
+                            keys_to_remove.append(key)
+                        else:
+                            # Recursively clean nested objects
+                            clean_recursive(value)
+                    elif isinstance(value, list):
+                        # Clean lists recursively
                         clean_recursive(value)
 
-                # Remove the keys after iteration to avoid dict change during iteration
+                # Remove the keys that contained $data references
                 for key in keys_to_remove:
                     del obj[key]
 

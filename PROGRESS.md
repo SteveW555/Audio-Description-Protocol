@@ -1,5 +1,12 @@
 # Audio Description Protocol (ADP) Development Progress
 
+### 2025-09-27 - Session 2
+**Features:** JSON Schema validation modernization, RefResolver migration to referencing library
+**Fixes:** Eliminated deprecation warnings, resolved future compatibility issues with jsonschema
+**Improvements:** Modernized validation architecture, enhanced resource management with Registry system
+
+---
+
 ## Session: 2025-09-26
 
 ### <� Foundation Setup
