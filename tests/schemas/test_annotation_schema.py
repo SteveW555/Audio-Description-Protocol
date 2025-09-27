@@ -3,11 +3,17 @@
 import json
 import pytest
 from pathlib import Path
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
+from src.adp_core.validation import SchemaResolver
 
 
 class TestAnnotationSchemaValidation:
     """Test annotation schema validation."""
+
+    @pytest.fixture
+    def schema_resolver(self):
+        """Schema resolver for handling references."""
+        return SchemaResolver()
 
     @pytest.fixture
     def schema_path(self):
@@ -15,10 +21,9 @@ class TestAnnotationSchemaValidation:
         return Path("schemas/annotation.schema.json")
 
     @pytest.fixture
-    def schema(self, schema_path):
+    def schema(self, schema_resolver):
         """Load annotation schema."""
-        with open(schema_path) as f:
-            return json.load(f)
+        return schema_resolver.get_schema("annotation.schema")
 
     @pytest.fixture
     def valid_annotation(self):
@@ -58,11 +63,11 @@ class TestAnnotationSchemaValidation:
         with open(schema_path) as f:
             json.load(f)  # Should not raise exception
 
-    def test_valid_annotation_passes(self, schema, valid_annotation):
+    def test_valid_annotation_passes(self, schema_resolver, valid_annotation):
         """Test that valid annotation passes validation."""
-        validate(instance=valid_annotation, schema=schema)
+        schema_resolver.validate(valid_annotation, "annotation.schema")
 
-    def test_required_fields_validation(self, schema):
+    def test_required_fields_validation(self, schema_resolver):
         """Test that required fields are enforced."""
         base_annotation = {
             "id": "test-001",
@@ -81,9 +86,9 @@ class TestAnnotationSchemaValidation:
             del invalid_annotation[field]
 
             with pytest.raises(ValidationError, match=f"'{field}' is a required property"):
-                validate(instance=invalid_annotation, schema=schema)
+                schema_resolver.validate(invalid_annotation, "annotation.schema")
 
-    def test_time_range_validation(self, schema):
+    def test_time_range_validation(self, schema_resolver):
         """Test time range validation rules."""
         base_annotation = {
             "id": "test-001",
@@ -103,7 +108,7 @@ class TestAnnotationSchemaValidation:
         for time_range in valid_ranges:
             annotation = base_annotation.copy()
             annotation["time_range"] = time_range
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Invalid time ranges (end <= start)
         invalid_ranges = [
@@ -117,9 +122,9 @@ class TestAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["time_range"] = time_range
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "annotation.schema")
 
-    def test_labels_validation(self, schema):
+    def test_labels_validation(self, schema_resolver):
         """Test labels array validation."""
         base_annotation = {
             "id": "test-001",
@@ -139,13 +144,13 @@ class TestAnnotationSchemaValidation:
         for labels in valid_labels:
             annotation = base_annotation.copy()
             annotation["labels"] = labels
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Empty labels array (should fail)
         annotation = base_annotation.copy()
         annotation["labels"] = []
         with pytest.raises(ValidationError):
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Invalid confidence scores
         invalid_labels = [
@@ -158,9 +163,9 @@ class TestAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["labels"] = labels
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "annotation.schema")
 
-    def test_provenance_validation(self, schema):
+    def test_provenance_validation(self, schema_resolver):
         """Test provenance object validation."""
         base_annotation = {
             "id": "test-001",
@@ -178,7 +183,7 @@ class TestAnnotationSchemaValidation:
                 "annotator_type": annotator_type,
                 "timestamp": "2025-09-26T10:30:00Z"
             }
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Invalid annotator_type
         annotation = base_annotation.copy()
@@ -187,7 +192,7 @@ class TestAnnotationSchemaValidation:
             "timestamp": "2025-09-26T10:30:00Z"
         }
         with pytest.raises(ValidationError):
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Missing required provenance fields
         required_provenance_fields = ["annotator_type", "timestamp"]
@@ -201,9 +206,9 @@ class TestAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["provenance"] = provenance
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "annotation.schema")
 
-    def test_schema_version_pattern(self, schema):
+    def test_schema_version_pattern(self, schema_resolver):
         """Test schema version pattern validation."""
         base_annotation = {
             "id": "test-001",
@@ -218,7 +223,7 @@ class TestAnnotationSchemaValidation:
         for version in valid_versions:
             annotation = base_annotation.copy()
             annotation["schema_version"] = version
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Invalid versions
         invalid_versions = ["v1.0", "1", "1.0.0.1", "1.a", ""]
@@ -226,7 +231,7 @@ class TestAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["schema_version"] = version
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "annotation.schema")
 
     def test_optional_fields(self, schema, valid_annotation):
         """Test that optional fields work correctly."""
@@ -239,12 +244,12 @@ class TestAnnotationSchemaValidation:
             "provenance": {"annotator_type": "human", "timestamp": "2025-09-26T10:30:00Z"},
             "schema_version": "1.0"
         }
-        validate(instance=minimal_annotation, schema=schema)
+        schema_resolver.validate(minimal_annotation, "annotation.schema")
 
         # Full annotation with all optional fields
-        validate(instance=valid_annotation, schema=schema)
+        schema_resolver.validate(valid_annotation, "annotation.schema")
 
-    def test_iso_timestamp_format(self, schema):
+    def test_iso_timestamp_format(self, schema_resolver):
         """Test ISO 8601 timestamp format validation."""
         base_annotation = {
             "id": "test-001",
@@ -266,7 +271,7 @@ class TestAnnotationSchemaValidation:
                 "annotator_type": "human",
                 "timestamp": timestamp
             }
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "annotation.schema")
 
         # Invalid timestamp formats
         invalid_timestamps = [
@@ -283,4 +288,4 @@ class TestAnnotationSchemaValidation:
                 "timestamp": timestamp
             }
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "annotation.schema")

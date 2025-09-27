@@ -3,11 +3,17 @@
 import json
 import pytest
 from pathlib import Path
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
+from src.adp_core.validation import SchemaResolver
 
 
 class TestModelOutputSchemaValidation:
     """Test model output schema validation."""
+
+    @pytest.fixture
+    def schema_resolver(self):
+        """Schema resolver for handling references."""
+        return SchemaResolver()
 
     @pytest.fixture
     def schema_path(self):
@@ -15,10 +21,9 @@ class TestModelOutputSchemaValidation:
         return Path("schemas/model_output.schema.json")
 
     @pytest.fixture
-    def schema(self, schema_path):
+    def schema(self, schema_resolver):
         """Load model output schema."""
-        with open(schema_path) as f:
-            return json.load(f)
+        return schema_resolver.get_schema("model_output.schema")
 
     @pytest.fixture
     def valid_model_output(self):
@@ -64,11 +69,11 @@ class TestModelOutputSchemaValidation:
         with open(schema_path) as f:
             json.load(f)  # Should not raise exception
 
-    def test_valid_model_output_passes(self, schema, valid_model_output):
+    def test_valid_model_output_passes(self, schema_resolver, valid_model_output):
         """Test that valid model output passes validation."""
-        validate(instance=valid_model_output, schema=schema)
+        schema_resolver.validate(valid_model_output, "model_output.schema")
 
-    def test_inherits_annotation_fields(self, schema):
+    def test_inherits_annotation_fields(self, schema_resolver):
         """Test that model output inherits all annotation required fields."""
         # All annotation required fields should be required in model output
         base_model_output = {
@@ -85,7 +90,7 @@ class TestModelOutputSchemaValidation:
         }
 
         # Should validate successfully
-        validate(instance=base_model_output, schema=schema)
+        schema_resolver.validate(base_model_output, "model_output.schema")
 
         # Test that annotation required fields are still required
         annotation_required = ["id", "clip_id", "time_range", "labels", "provenance", "schema_version"]
@@ -95,9 +100,9 @@ class TestModelOutputSchemaValidation:
             del invalid_output[field]
 
             with pytest.raises(ValidationError, match=f"'{field}' is a required property"):
-                validate(instance=invalid_output, schema=schema)
+                schema_resolver.validate(invalid_output, "model_output.schema")
 
-    def test_inference_meta_validation(self, schema):
+    def test_inference_meta_validation(self, schema_resolver):
         """Test inference_meta object validation."""
         base_model_output = {
             "id": "model-001",
@@ -126,11 +131,11 @@ class TestModelOutputSchemaValidation:
         for inference_meta in valid_inference_meta:
             output = base_model_output.copy()
             output["inference_meta"] = inference_meta
-            validate(instance=output, schema=schema)
+            schema_resolver.validate(output, "model_output.schema")
 
         # Missing inference_meta (should fail)
         with pytest.raises(ValidationError, match="'inference_meta' is a required property"):
-            validate(instance=base_model_output, schema=schema)
+            schema_resolver.validate(base_model_output, "model_output.schema")
 
         # Missing required inference_meta fields
         required_inference_fields = ["model_name", "model_version"]
@@ -144,9 +149,9 @@ class TestModelOutputSchemaValidation:
             output = base_model_output.copy()
             output["inference_meta"] = inference_meta
             with pytest.raises(ValidationError, match=f"'{field}' is a required property"):
-                validate(instance=output, schema=schema)
+                schema_resolver.validate(output, "model_output.schema")
 
-    def test_annotator_type_must_be_ai(self, schema):
+    def test_annotator_type_must_be_ai(self, schema_resolver):
         """Test that provenance.annotator_type must be 'ai' for model outputs."""
         base_model_output = {
             "id": "model-001",
@@ -166,7 +171,7 @@ class TestModelOutputSchemaValidation:
             "annotator_type": "ai",
             "timestamp": "2025-09-26T10:30:00Z"
         }
-        validate(instance=output, schema=schema)
+        schema_resolver.validate(output, "model_output.schema")
 
         # Invalid: annotator_type = "human" (should fail based on model output constraints)
         output = base_model_output.copy()
@@ -179,7 +184,7 @@ class TestModelOutputSchemaValidation:
         # For now, we'll validate that the schema accepts it (base annotation behavior)
         # but the application logic should enforce the ai constraint
 
-    def test_inference_time_validation(self, schema):
+    def test_inference_time_validation(self, schema_resolver):
         """Test inference_time_ms validation."""
         base_model_output = {
             "id": "model-001",
@@ -199,7 +204,7 @@ class TestModelOutputSchemaValidation:
         for time_ms in valid_times:
             output = base_model_output.copy()
             output["inference_meta"]["inference_time_ms"] = time_ms
-            validate(instance=output, schema=schema)
+            schema_resolver.validate(output, "model_output.schema")
 
         # Invalid inference times (negative)
         invalid_times = [-1.0, -100.5]
@@ -207,9 +212,9 @@ class TestModelOutputSchemaValidation:
             output = base_model_output.copy()
             output["inference_meta"]["inference_time_ms"] = time_ms
             with pytest.raises(ValidationError):
-                validate(instance=output, schema=schema)
+                schema_resolver.validate(output, "model_output.schema")
 
-    def test_hardware_context_validation(self, schema):
+    def test_hardware_context_validation(self, schema_resolver):
         """Test hardware_context field validation."""
         base_model_output = {
             "id": "model-001",
@@ -229,9 +234,9 @@ class TestModelOutputSchemaValidation:
         for context in valid_contexts:
             output = base_model_output.copy()
             output["inference_meta"]["hardware_context"] = context
-            validate(instance=output, schema=schema)
+            schema_resolver.validate(output, "model_output.schema")
 
-    def test_comparison_target_validation(self, schema):
+    def test_comparison_target_validation(self, schema_resolver):
         """Test comparison_target field validation."""
         base_model_output = {
             "id": "model-001",
@@ -249,12 +254,12 @@ class TestModelOutputSchemaValidation:
         # Valid comparison target (annotation ID)
         output = base_model_output.copy()
         output["comparison_target"] = "annotation-001"
-        validate(instance=output, schema=schema)
+        schema_resolver.validate(output, "model_output.schema")
 
         # Without comparison target (optional field)
-        validate(instance=base_model_output, schema=schema)
+        schema_resolver.validate(base_model_output, "model_output.schema")
 
-    def test_optional_fields(self, schema, valid_model_output):
+    def test_optional_fields(self, schema_resolver, valid_model_output):
         """Test that optional fields work correctly."""
         # Minimal model output
         minimal_output = {
@@ -269,7 +274,7 @@ class TestModelOutputSchemaValidation:
                 "model_version": "1.0.0"
             }
         }
-        validate(instance=minimal_output, schema=schema)
+        schema_resolver.validate(minimal_output, "model_output.schema")
 
         # Full model output with all optional fields
-        validate(instance=valid_model_output, schema=schema)
+        schema_resolver.validate(valid_model_output, "model_output.schema")

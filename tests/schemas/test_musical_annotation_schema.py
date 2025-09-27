@@ -3,11 +3,17 @@
 import json
 import pytest
 from pathlib import Path
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
+from src.adp_core.validation import SchemaResolver
 
 
 class TestMusicalAnnotationSchemaValidation:
     """Test musical annotation schema validation."""
+
+    @pytest.fixture
+    def schema_resolver(self):
+        """Schema resolver for handling references."""
+        return SchemaResolver()
 
     @pytest.fixture
     def schema_path(self):
@@ -15,10 +21,9 @@ class TestMusicalAnnotationSchemaValidation:
         return Path("schemas/musical_annotation.schema.json")
 
     @pytest.fixture
-    def schema(self, schema_path):
+    def schema(self, schema_resolver):
         """Load musical annotation schema."""
-        with open(schema_path) as f:
-            return json.load(f)
+        return schema_resolver.get_schema("musical_annotation.schema")
 
     @pytest.fixture
     def valid_musical_annotation(self):
@@ -102,11 +107,11 @@ class TestMusicalAnnotationSchemaValidation:
         with open(schema_path) as f:
             json.load(f)  # Should not raise exception
 
-    def test_valid_musical_annotation_passes(self, schema, valid_musical_annotation):
+    def test_valid_musical_annotation_passes(self, schema_resolver, valid_musical_annotation):
         """Test that valid musical annotation passes validation."""
-        validate(instance=valid_musical_annotation, schema=schema)
+        schema_resolver.validate(valid_musical_annotation, "musical_annotation.schema")
 
-    def test_required_fields_validation(self, schema):
+    def test_required_fields_validation(self, schema_resolver):
         """Test that required fields are enforced."""
         base_annotation = {
             "id": "test-001",
@@ -120,7 +125,7 @@ class TestMusicalAnnotationSchemaValidation:
         }
 
         # Should validate successfully
-        validate(instance=base_annotation, schema=schema)
+        schema_resolver.validate(base_annotation, "musical_annotation.schema")
 
         # Test core annotation required fields
         core_required = ["id", "clip_id", "time_range", "provenance", "schema_version", "musical_analysis"]
@@ -130,9 +135,9 @@ class TestMusicalAnnotationSchemaValidation:
             del invalid_annotation[field]
 
             with pytest.raises(ValidationError, match=f"'{field}' is a required property"):
-                validate(instance=invalid_annotation, schema=schema)
+                schema_resolver.validate(invalid_annotation, "musical_annotation.schema")
 
-    def test_musical_analysis_protocol_version_required(self, schema):
+    def test_musical_analysis_protocol_version_required(self, schema_resolver):
         """Test that musical_analysis.protocol_version is required."""
         base_annotation = {
             "id": "test-001",
@@ -144,9 +149,9 @@ class TestMusicalAnnotationSchemaValidation:
         }
 
         with pytest.raises(ValidationError, match="'protocol_version' is a required property"):
-            validate(instance=base_annotation, schema=schema)
+            schema_resolver.validate(base_annotation, "musical_annotation.schema")
 
-    def test_bpm_range_validation(self, schema):
+    def test_bpm_range_validation(self, schema_resolver):
         """Test BPM range validation (40-300)."""
         base_annotation = {
             "id": "test-001",
@@ -165,7 +170,7 @@ class TestMusicalAnnotationSchemaValidation:
         for bpm in valid_bpms:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["bpm"] = bpm
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid BPMs (outside range)
         invalid_bpms = [39, 301, 0, -10, 500]
@@ -173,9 +178,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["bpm"] = bpm
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_key_pattern_validation(self, schema):
+    def test_key_pattern_validation(self, schema_resolver):
         """Test musical key pattern validation."""
         base_annotation = {
             "id": "test-001",
@@ -194,7 +199,7 @@ class TestMusicalAnnotationSchemaValidation:
         for key in valid_keys:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["key"] = key
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid keys
         invalid_keys = ["H", "c", "C##", "Cbb", "1", ""]
@@ -202,9 +207,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["key"] = key
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_scale_enum_validation(self, schema):
+    def test_scale_enum_validation(self, schema_resolver):
         """Test scale enum validation."""
         base_annotation = {
             "id": "test-001",
@@ -223,7 +228,7 @@ class TestMusicalAnnotationSchemaValidation:
         for scale in valid_scales:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["scale"] = scale
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid scales
         invalid_scales = ["Major", "MINOR", "blues", "jazz", ""]
@@ -231,9 +236,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["scale"] = scale
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_chord_symbol_pattern_validation(self, schema):
+    def test_chord_symbol_pattern_validation(self, schema_resolver):
         """Test chord symbol pattern validation."""
         base_annotation = {
             "id": "test-001",
@@ -260,7 +265,7 @@ class TestMusicalAnnotationSchemaValidation:
         for chord_data in valid_chords:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["chords"] = [chord_data]
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid chord symbols
         invalid_chords = [
@@ -273,9 +278,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["chords"] = [chord_data]
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_roman_numeral_pattern_validation(self, schema):
+    def test_roman_numeral_pattern_validation(self, schema_resolver):
         """Test roman numeral pattern validation."""
         base_annotation = {
             "id": "test-001",
@@ -300,7 +305,7 @@ class TestMusicalAnnotationSchemaValidation:
         for numerals in valid_numerals:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["roman_numerals"] = numerals
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid roman numerals
         invalid_numerals = [
@@ -313,9 +318,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["theory"]["roman_numerals"] = numerals
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_mood_enum_validation(self, schema):
+    def test_mood_enum_validation(self, schema_resolver):
         """Test mood enum validation."""
         base_annotation = {
             "id": "test-001",
@@ -342,7 +347,7 @@ class TestMusicalAnnotationSchemaValidation:
         for mood_list in valid_moods:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["attributes"]["mood"] = mood_list
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid moods
         invalid_moods = [
@@ -355,9 +360,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["attributes"]["mood"] = mood_list
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_instrumentation_validation(self, schema):
+    def test_instrumentation_validation(self, schema_resolver):
         """Test instrumentation validation."""
         base_annotation = {
             "id": "test-001",
@@ -381,7 +386,7 @@ class TestMusicalAnnotationSchemaValidation:
         for instruments in valid_instruments:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["instrumentation"] = instruments
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid instrumentation (missing required fields)
         invalid_instruments = [
@@ -394,9 +399,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["instrumentation"] = instruments
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_vocals_validation(self, schema):
+    def test_vocals_validation(self, schema_resolver):
         """Test vocals validation."""
         base_annotation = {
             "id": "test-001",
@@ -421,7 +426,7 @@ class TestMusicalAnnotationSchemaValidation:
         for vocals in valid_vocals:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["vocals"] = vocals
-            validate(instance=annotation, schema=schema)
+            schema_resolver.validate(annotation, "musical_annotation.schema")
 
         # Invalid vocals (missing required presence)
         invalid_vocals = [
@@ -434,9 +439,9 @@ class TestMusicalAnnotationSchemaValidation:
             annotation = base_annotation.copy()
             annotation["musical_analysis"]["semantic_description"]["vocals"] = vocals
             with pytest.raises(ValidationError):
-                validate(instance=annotation, schema=schema)
+                schema_resolver.validate(annotation, "musical_annotation.schema")
 
-    def test_backward_compatibility_labels(self, schema):
+    def test_backward_compatibility_labels(self, schema_resolver):
         """Test backward compatibility with traditional labels."""
         # Musical annotation with traditional labels (should work)
         annotation_with_labels = {
@@ -452,7 +457,7 @@ class TestMusicalAnnotationSchemaValidation:
                 {"entry_id": "electronic", "confidence": 0.9}
             ]
         }
-        validate(instance=annotation_with_labels, schema=schema)
+        schema_resolver.validate(annotation_with_labels, "musical_annotation.schema")
 
         # Musical annotation without labels (should also work)
         annotation_without_labels = {
@@ -465,4 +470,4 @@ class TestMusicalAnnotationSchemaValidation:
                 "protocol_version": "1.0"
             }
         }
-        validate(instance=annotation_without_labels, schema=schema)
+        schema_resolver.validate(annotation_without_labels, "musical_annotation.schema")

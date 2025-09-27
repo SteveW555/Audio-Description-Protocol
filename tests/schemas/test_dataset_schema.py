@@ -3,11 +3,17 @@
 import json
 import pytest
 from pathlib import Path
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
+from src.adp_core.validation import SchemaResolver
 
 
 class TestDatasetSchemaValidation:
     """Test dataset schema validation."""
+
+    @pytest.fixture
+    def schema_resolver(self):
+        """Schema resolver for handling references."""
+        return SchemaResolver()
 
     @pytest.fixture
     def schema_path(self):
@@ -15,10 +21,9 @@ class TestDatasetSchemaValidation:
         return Path("schemas/dataset.schema.json")
 
     @pytest.fixture
-    def schema(self, schema_path):
+    def schema(self, schema_resolver):
         """Load dataset schema."""
-        with open(schema_path) as f:
-            return json.load(f)
+        return schema_resolver.get_schema("dataset.schema")
 
     @pytest.fixture
     def valid_dataset(self):
@@ -77,11 +82,11 @@ class TestDatasetSchemaValidation:
         with open(schema_path) as f:
             json.load(f)  # Should not raise exception
 
-    def test_valid_dataset_passes(self, schema, valid_dataset):
+    def test_valid_dataset_passes(self, schema_resolver, valid_dataset):
         """Test that valid dataset passes validation."""
-        validate(instance=valid_dataset, schema=schema)
+        schema_resolver.validate(valid_dataset, "dataset.schema")
 
-    def test_required_fields_validation(self, schema):
+    def test_required_fields_validation(self, schema_resolver):
         """Test that required fields are enforced."""
         base_dataset = {
             "id": "test-dataset",
@@ -102,9 +107,9 @@ class TestDatasetSchemaValidation:
             del invalid_dataset[field]
 
             with pytest.raises(ValidationError, match=f"'{field}' is a required property"):
-                validate(instance=invalid_dataset, schema=schema)
+                schema_resolver.validate(invalid_dataset, "dataset.schema")
 
-    def test_clips_validation(self, schema):
+    def test_clips_validation(self, schema_resolver):
         """Test clips array validation."""
         base_dataset = {
             "id": "test-dataset",
@@ -126,7 +131,7 @@ class TestDatasetSchemaValidation:
         for clips in valid_clips:
             dataset = base_dataset.copy()
             dataset["clips"] = clips
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
         # Invalid clips (missing required fields)
         invalid_clips = [
@@ -139,9 +144,9 @@ class TestDatasetSchemaValidation:
             dataset = base_dataset.copy()
             dataset["clips"] = clips
             with pytest.raises(ValidationError):
-                validate(instance=dataset, schema=schema)
+                schema_resolver.validate(dataset, "dataset.schema")
 
-    def test_annotations_validation(self, schema):
+    def test_annotations_validation(self, schema_resolver):
         """Test annotations array validation."""
         base_dataset = {
             "id": "test-dataset",
@@ -162,7 +167,7 @@ class TestDatasetSchemaValidation:
         for annotations in valid_annotations:
             dataset = base_dataset.copy()
             dataset["annotations"] = annotations
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
         # Invalid annotations
         invalid_annotations = [
@@ -174,9 +179,9 @@ class TestDatasetSchemaValidation:
             dataset = base_dataset.copy()
             dataset["annotations"] = annotations
             with pytest.raises(ValidationError):
-                validate(instance=dataset, schema=schema)
+                schema_resolver.validate(dataset, "dataset.schema")
 
-    def test_dictionary_entries_validation(self, schema):
+    def test_dictionary_entries_validation(self, schema_resolver):
         """Test dictionary_entries array validation."""
         base_dataset = {
             "id": "test-dataset",
@@ -197,7 +202,7 @@ class TestDatasetSchemaValidation:
         for entries in valid_entries:
             dataset = base_dataset.copy()
             dataset["dictionary_entries"] = entries
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
         # Invalid dictionary entries
         invalid_entries = [
@@ -209,9 +214,9 @@ class TestDatasetSchemaValidation:
             dataset = base_dataset.copy()
             dataset["dictionary_entries"] = entries
             with pytest.raises(ValidationError):
-                validate(instance=dataset, schema=schema)
+                schema_resolver.validate(dataset, "dataset.schema")
 
-    def test_version_pattern(self, schema):
+    def test_version_pattern(self, schema_resolver):
         """Test version pattern validation (semantic versioning)."""
         base_dataset = {
             "id": "test-dataset",
@@ -229,7 +234,7 @@ class TestDatasetSchemaValidation:
         for version in valid_versions:
             dataset = base_dataset.copy()
             dataset["version"] = version
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
         # Invalid versions
         invalid_versions = ["v1.0.0", "1.0", "1", "1.0.0.1", ""]
@@ -237,9 +242,9 @@ class TestDatasetSchemaValidation:
             dataset = base_dataset.copy()
             dataset["version"] = version
             with pytest.raises(ValidationError):
-                validate(instance=dataset, schema=schema)
+                schema_resolver.validate(dataset, "dataset.schema")
 
-    def test_license_validation(self, schema):
+    def test_license_validation(self, schema_resolver):
         """Test license field validation."""
         base_dataset = {
             "id": "test-dataset",
@@ -257,9 +262,9 @@ class TestDatasetSchemaValidation:
         for license_id in valid_licenses:
             dataset = base_dataset.copy()
             dataset["license"] = license_id
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
-    def test_iso_timestamp_format(self, schema):
+    def test_iso_timestamp_format(self, schema_resolver):
         """Test ISO 8601 timestamp format validation."""
         base_dataset = {
             "id": "test-dataset",
@@ -281,7 +286,7 @@ class TestDatasetSchemaValidation:
         for timestamp in valid_timestamps:
             dataset = base_dataset.copy()
             dataset["created_at"] = timestamp
-            validate(instance=dataset, schema=schema)
+            schema_resolver.validate(dataset, "dataset.schema")
 
         # Invalid timestamp formats
         invalid_timestamps = [
@@ -295,4 +300,4 @@ class TestDatasetSchemaValidation:
             dataset = base_dataset.copy()
             dataset["created_at"] = timestamp
             with pytest.raises(ValidationError):
-                validate(instance=dataset, schema=schema)
+                schema_resolver.validate(dataset, "dataset.schema")

@@ -3,11 +3,17 @@
 import json
 import pytest
 from pathlib import Path
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
+from src.adp_core.validation import SchemaResolver
 
 
 class TestDictionarySchemaValidation:
     """Test dictionary entry schema validation."""
+
+    @pytest.fixture
+    def schema_resolver(self):
+        """Schema resolver for handling references."""
+        return SchemaResolver()
 
     @pytest.fixture
     def schema_path(self):
@@ -15,10 +21,9 @@ class TestDictionarySchemaValidation:
         return Path("schemas/dictionary.schema.json")
 
     @pytest.fixture
-    def schema(self, schema_path):
+    def schema(self, schema_resolver):
         """Load dictionary schema."""
-        with open(schema_path) as f:
-            return json.load(f)
+        return schema_resolver.get_schema("dictionary.schema")
 
     @pytest.fixture
     def valid_dictionary_entry(self):
@@ -42,11 +47,11 @@ class TestDictionarySchemaValidation:
         with open(schema_path) as f:
             json.load(f)  # Should not raise exception
 
-    def test_valid_dictionary_entry_passes(self, schema, valid_dictionary_entry):
+    def test_valid_dictionary_entry_passes(self, schema_resolver, valid_dictionary_entry):
         """Test that valid dictionary entry passes validation."""
-        validate(instance=valid_dictionary_entry, schema=schema)
+        schema_resolver.validate(valid_dictionary_entry, "dictionary.schema")
 
-    def test_required_fields_validation(self, schema):
+    def test_required_fields_validation(self, schema_resolver):
         """Test that required fields are enforced."""
         # Missing id
         invalid_entry = {
@@ -55,7 +60,7 @@ class TestDictionarySchemaValidation:
             "schema_version": "1.0"
         }
         with pytest.raises(ValidationError, match="'id' is a required property"):
-            validate(instance=invalid_entry, schema=schema)
+            schema_resolver.validate(invalid_entry, "dictionary.schema")
 
         # Missing label
         invalid_entry = {
@@ -64,9 +69,9 @@ class TestDictionarySchemaValidation:
             "schema_version": "1.0"
         }
         with pytest.raises(ValidationError, match="'label' is a required property"):
-            validate(instance=invalid_entry, schema=schema)
+            schema_resolver.validate(invalid_entry, "dictionary.schema")
 
-    def test_id_pattern_validation(self, schema):
+    def test_id_pattern_validation(self, schema_resolver):
         """Test ID pattern validation (kebab-case)."""
         # Valid kebab-case IDs
         valid_ids = ["test", "test-id", "multi-word-test", "test123", "test-123-abc"]
@@ -77,7 +82,7 @@ class TestDictionarySchemaValidation:
                 "definition": "test definition",
                 "schema_version": "1.0"
             }
-            validate(instance=entry, schema=schema)
+            schema_resolver.validate(entry, "dictionary.schema")
 
         # Invalid IDs
         invalid_ids = ["Test", "test_id", "test ID", "test.", "-test", "test-"]
@@ -89,9 +94,9 @@ class TestDictionarySchemaValidation:
                 "schema_version": "1.0"
             }
             with pytest.raises(ValidationError):
-                validate(instance=entry, schema=schema)
+                schema_resolver.validate(entry, "dictionary.schema")
 
-    def test_label_pattern_validation(self, schema):
+    def test_label_pattern_validation(self, schema_resolver):
         """Test label pattern validation (lowercase with spaces/hyphens)."""
         # Valid labels
         valid_labels = ["test", "test label", "multi-word test", "test-label", "test 123"]
@@ -102,7 +107,7 @@ class TestDictionarySchemaValidation:
                 "definition": "test definition",
                 "schema_version": "1.0"
             }
-            validate(instance=entry, schema=schema)
+            schema_resolver.validate(entry, "dictionary.schema")
 
         # Invalid labels (should contain uppercase, special chars, etc.)
         invalid_labels = ["Test", "test_label", "test.label", "test@label"]
@@ -114,9 +119,9 @@ class TestDictionarySchemaValidation:
                 "schema_version": "1.0"
             }
             with pytest.raises(ValidationError):
-                validate(instance=entry, schema=schema)
+                schema_resolver.validate(entry, "dictionary.schema")
 
-    def test_definition_minimum_length(self, schema):
+    def test_definition_minimum_length(self, schema_resolver):
         """Test definition minimum length requirement."""
         # Valid definition (>= 10 characters)
         entry = {
@@ -125,7 +130,7 @@ class TestDictionarySchemaValidation:
             "definition": "1234567890",  # Exactly 10 characters
             "schema_version": "1.0"
         }
-        validate(instance=entry, schema=schema)
+        schema_resolver.validate(entry, "dictionary.schema")
 
         # Invalid definition (< 10 characters)
         entry = {
@@ -135,9 +140,9 @@ class TestDictionarySchemaValidation:
             "schema_version": "1.0"
         }
         with pytest.raises(ValidationError):
-            validate(instance=entry, schema=schema)
+            schema_resolver.validate(entry, "dictionary.schema")
 
-    def test_schema_version_pattern(self, schema):
+    def test_schema_version_pattern(self, schema_resolver):
         """Test schema version pattern validation."""
         # Valid versions
         valid_versions = ["1.0", "1.2.3", "10.20.30"]
@@ -148,7 +153,7 @@ class TestDictionarySchemaValidation:
                 "definition": "test definition",
                 "schema_version": version
             }
-            validate(instance=entry, schema=schema)
+            schema_resolver.validate(entry, "dictionary.schema")
 
         # Invalid versions
         invalid_versions = ["v1.0", "1", "1.0.0.1", "1.a", ""]
@@ -160,9 +165,9 @@ class TestDictionarySchemaValidation:
                 "schema_version": version
             }
             with pytest.raises(ValidationError):
-                validate(instance=entry, schema=schema)
+                schema_resolver.validate(entry, "dictionary.schema")
 
-    def test_optional_fields(self, schema, valid_dictionary_entry):
+    def test_optional_fields(self, schema_resolver, valid_dictionary_entry):
         """Test that optional fields work correctly."""
         # Test without optional fields
         minimal_entry = {
@@ -171,12 +176,12 @@ class TestDictionarySchemaValidation:
             "definition": "test definition",
             "schema_version": "1.0"
         }
-        validate(instance=minimal_entry, schema=schema)
+        schema_resolver.validate(minimal_entry, "dictionary.schema")
 
         # Test with all optional fields
-        validate(instance=valid_dictionary_entry, schema=schema)
+        schema_resolver.validate(valid_dictionary_entry, "dictionary.schema")
 
-    def test_iso_timestamp_format(self, schema):
+    def test_iso_timestamp_format(self, schema_resolver):
         """Test ISO 8601 timestamp format validation."""
         valid_timestamps = [
             "2025-09-26T10:00:00Z",
@@ -192,7 +197,7 @@ class TestDictionarySchemaValidation:
                 "schema_version": "1.0",
                 "created_at": timestamp
             }
-            validate(instance=entry, schema=schema)
+            schema_resolver.validate(entry, "dictionary.schema")
 
         # Invalid timestamp formats
         invalid_timestamps = [
@@ -211,4 +216,4 @@ class TestDictionarySchemaValidation:
                 "created_at": timestamp
             }
             with pytest.raises(ValidationError):
-                validate(instance=entry, schema=schema)
+                schema_resolver.validate(entry, "dictionary.schema")
