@@ -69,7 +69,7 @@ class TimeRange(BaseModel):
         description="End time in seconds from beginning of clip"
     )
 
-    @root_validator
+    @model_validator(mode='before')
     def validate_time_range(cls, values):
         """
         <!-- Ensures temporal consistency: end_sec > start_sec -->
@@ -94,7 +94,7 @@ class TimeRange(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "start_sec": 0.0,
                 "end_sec": 30.0
@@ -124,7 +124,7 @@ class Label(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "entry_id": "lo-fi-hip-hop",
                 "confidence": 0.85
@@ -170,7 +170,7 @@ class Provenance(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "annotator_type": "human",
                 "annotator_id": "researcher-001",
@@ -239,7 +239,7 @@ class Annotation(BaseModel):
 
     schema_version: str = Field(
         ...,
-        regex=r"^\d+\.\d+(?:\.\d+)*$",
+        pattern=r"^\d+\.\d+(?:\.\d+)*$",
         description="Version of the annotation schema used"
     )
 
@@ -283,7 +283,7 @@ class Annotation(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "annotation-001",
                 "clip_id": "sample-audio-001",

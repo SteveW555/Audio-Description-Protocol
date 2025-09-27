@@ -89,7 +89,7 @@ class PreprocessingInfo(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "sample_rate": 22050,
                 "window_size_sec": 0.025,
@@ -235,7 +235,7 @@ class InferenceMeta(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "model_name": "MusicGenreClassifier",
                 "model_version": "2.1.0",
@@ -326,7 +326,7 @@ class ModelOutput(Annotation):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "model-output-001",
                 "clip_id": "sample-audio-001",

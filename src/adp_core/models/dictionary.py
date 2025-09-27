@@ -62,7 +62,7 @@ class DictionaryEntry(BaseModel):
 
     id: str = Field(
         ...,
-        regex=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
         description="Unique identifier for the dictionary entry (kebab-case)"
     )
 
@@ -80,7 +80,7 @@ class DictionaryEntry(BaseModel):
 
     schema_version: str = Field(
         ...,
-        regex=r"^\d+\.\d+(?:\.\d+)*$",
+        pattern=r"^\d+\.\d+(?:\.\d+)*$",
         description="Version of the dictionary schema used"
     )
 
@@ -96,7 +96,7 @@ class DictionaryEntry(BaseModel):
 
     parent_id: Optional[str] = Field(
         None,
-        regex=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
         description="Optional parent entry ID for hierarchical classification"
     )
 
@@ -169,7 +169,7 @@ class DictionaryEntry(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat() if v else None
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "lo-fi-hip-hop",
                 "label": "Lo-Fi Hip Hop",

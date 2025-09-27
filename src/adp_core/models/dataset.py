@@ -101,7 +101,7 @@ class AudioClip(BaseModel):
 
     checksum: Optional[str] = Field(
         None,
-        regex=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
+        pattern=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
         description="File checksum for integrity verification"
     )
 
@@ -112,7 +112,7 @@ class AudioClip(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "clip-001",
                 "uri": "/path/to/audio1.wav",
@@ -149,13 +149,13 @@ class AnnotationReference(BaseModel):
 
     checksum: Optional[str] = Field(
         None,
-        regex=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
+        pattern=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
         description="File checksum for integrity verification"
     )
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "annotation-001",
                 "file_path": "/path/to/annotation1.json",
@@ -188,13 +188,13 @@ class DictionaryReference(BaseModel):
 
     checksum: Optional[str] = Field(
         None,
-        regex=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
+        pattern=r"^(md5|sha1|sha256):[a-fA-F0-9]+$",
         description="File checksum for integrity verification"
     )
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "lo-fi-hip-hop",
                 "file_path": "/path/to/dictionary_lo_fi.json",
@@ -227,7 +227,7 @@ class DatasetSplits(BaseModel):
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "train": ["clip-001", "clip-002", "clip-003"],
                 "validation": ["clip-004", "clip-005"],
@@ -272,13 +272,13 @@ class DatasetMetadata(BaseModel):
 
     language: Optional[str] = Field(
         None,
-        regex=r"^[a-z]{2}(-[A-Z]{2})?$",
+        pattern=r"^[a-z]{2}(-[A-Z]{2})?$",
         description="Primary language code (ISO 639-1)"
     )
 
     class Config:
         """Pydantic configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "curator": "Research Team",
                 "purpose": "Academic research",
@@ -309,7 +309,7 @@ class Dataset(BaseModel):
 
     version: str = Field(
         ...,
-        regex=r"^\d+\.\d+\.\d+$",
+        pattern=r"^\d+\.\d+\.\d+$",
         description="Semantic version of the dataset"
     )
 
@@ -335,7 +335,7 @@ class Dataset(BaseModel):
 
     schema_version: str = Field(
         ...,
-        regex=r"^\d+\.\d+(?:\.\d+)*$",
+        pattern=r"^\d+\.\d+(?:\.\d+)*$",
         description="Version of the dataset schema used"
     )
 
@@ -427,7 +427,7 @@ class Dataset(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "study-music-dataset",
                 "name": "Study Music Dataset",

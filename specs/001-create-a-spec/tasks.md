@@ -43,47 +43,47 @@
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
 ### Schema Contract Tests
-- [ ] **T006** [P] Dictionary schema validation test in tests/schemas/test_dictionary_schema.py
-- [ ] **T007** [P] Annotation schema validation test in tests/schemas/test_annotation_schema.py
-- [ ] **T008** [P] Dataset schema validation test in tests/schemas/test_dataset_schema.py
-- [ ] **T009** [P] Model output schema validation test in tests/schemas/test_model_output_schema.py
-- [ ] **T009b** [P] Musical annotation schema validation test in tests/schemas/test_musical_annotation_schema.py
+- [x] **T006** [P] Dictionary schema validation test in tests/schemas/test_dictionary_schema.py
+- [x] **T007** [P] Annotation schema validation test in tests/schemas/test_annotation_schema.py
+- [x] **T008** [P] Dataset schema validation test in tests/schemas/test_dataset_schema.py
+- [x] **T009** [P] Model output schema validation test in tests/schemas/test_model_output_schema.py
+- [x] **T009b** [P] Musical annotation schema validation test in tests/schemas/test_musical_annotation_schema.py
 
 ### Validation Engine Tests
-- [ ] **T010** [P] Core validator test for JSON Schema loading in tests/validation/test_validator_core.py
-- [ ] **T011** [P] Cross-reference validation test (dictionary ID references) in tests/validation/test_cross_reference.py
-- [ ] **T012** [P] Hierarchical validation test (parent-child relationships) in tests/validation/test_hierarchy.py
-- [ ] **T013** [P] Time range validation test (start < end, non-negative) in tests/validation/test_time_validation.py
+- [x] **T010** [P] Core validator test for JSON Schema loading in tests/validation/test_validator_core.py
+- [x] **T011** [P] Cross-reference validation test (dictionary ID references) in tests/validation/test_cross_reference.py
+- [x] **T012** [P] Hierarchical validation test (parent-child relationships) in tests/validation/test_hierarchy.py
+- [x] **T013** [P] Time range validation test (start < end, non-negative) in tests/validation/test_time_validation.py
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 ### JSON Schema Files
-- [ ] **T014** [P] Copy dictionary.schema.json to schemas/dictionary.schema.json
-- [ ] **T015** [P] Copy annotation.schema.json to schemas/annotation.schema.json
-- [ ] **T016** [P] Copy dataset.schema.json to schemas/dataset.schema.json
-- [ ] **T017** [P] Copy model_output.schema.json to schemas/model_output.schema.json
-- [ ] **T017b** [P] Copy musical_annotation.schema.json to schemas/musical_annotation.schema.json
+- [x] **T014** [P] Copy dictionary.schema.json to schemas/dictionary.schema.json
+- [x] **T015** [P] Copy annotation.schema.json to schemas/annotation.schema.json
+- [x] **T016** [P] Copy dataset.schema.json to schemas/dataset.schema.json
+- [x] **T017** [P] Copy model_output.schema.json to schemas/model_output.schema.json
+- [x] **T017b** [P] Copy musical_annotation.schema.json to schemas/musical_annotation.schema.json
 
 ### Data Models
-- [ ] **T018** [P] DictionaryEntry model in src/adp_core/models/dictionary.py
-- [ ] **T019** [P] Annotation model in src/adp_core/models/annotation.py
-- [ ] **T020** [P] Dataset model in src/adp_core/models/dataset.py
-- [ ] **T021** [P] ModelOutput model in src/adp_core/models/model_output.py
-- [ ] **T022** [P] AudioClipReference model in src/adp_core/models/audio_clip.py
-- [ ] **T022b** [P] MusicalAnnotation model in src/adp_core/models/musical_annotation.py
+- [x] **T018** [P] DictionaryEntry model in src/adp_core/models/dictionary.py
+- [x] **T019** [P] Annotation model in src/adp_core/models/annotation.py
+- [x] **T020** [P] Dataset model in src/adp_core/models/dataset.py
+- [x] **T021** [P] ModelOutput model in src/adp_core/models/model_output.py
+- [x] **T022** [P] AudioClipReference model in src/adp_core/models/audio_clip.py
+- [x] **T022b** [P] MusicalAnnotation model in src/adp_core/models/musical_annotation.py
 
 ### Validation Engine
-- [ ] **T023** Core JSON Schema validator in src/adp_core/validation/validator.py
-- [ ] **T024** Cross-reference validator (dictionary ID validation) in src/adp_core/validation/reference_validator.py
-- [ ] **T025** Hierarchical relationship validator in src/adp_core/validation/hierarchy_validator.py
-- [ ] **T026** Time range and constraint validator in src/adp_core/validation/constraint_validator.py
+- [x] **T023** Core JSON Schema validator in src/adp_core/validation/validator.py
+- [x] **T024** Cross-reference validator (dictionary ID validation) in src/adp_core/validation/reference_validator.py
+- [x] **T025** Hierarchical relationship validator in src/adp_core/validation/hierarchy_validator.py
+- [x] **T026** Time range and constraint validator in src/adp_core/validation/constraint_validator.py
 
 ### CLI Interface
-- [ ] **T027** Main CLI entry point in src/adp_core/cli/main.py
-- [ ] **T028** Dictionary validation commands in src/adp_core/cli/dictionary_commands.py
-- [ ] **T029** Annotation validation commands in src/adp_core/cli/annotation_commands.py
-- [ ] **T030** Dataset validation commands in src/adp_core/cli/dataset_commands.py
-- [ ] **T031** Musical annotation validation commands in src/adp_core/cli/musical_annotation_commands.py
+- [x] **T027** Main CLI entry point in src/adp_core/cli/main.py
+- [x] **T028** Dictionary validation commands in src/adp_core/cli/dictionary_commands.py
+- [x] **T029** Annotation validation commands in src/adp_core/cli/annotation_commands.py
+- [x] **T030** Dataset validation commands in src/adp_core/cli/dataset_commands.py
+- [x] **T031** Musical annotation validation commands in src/adp_core/cli/musical_annotation_commands.py
 
 ## Phase 3.4: Integration Tests (Based on Quickstart Scenarios)
 - [ ] **T032** [P] Scenario 1 test: Dictionary entry creation and validation in tests/integration/test_dictionary_workflow.py

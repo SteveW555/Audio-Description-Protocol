@@ -316,7 +316,7 @@ class MusicalAnnotation(Annotation):
 
     class Config:
         """Pydantic model configuration."""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "clip_id": "audio_001",
                 "annotation_type": "musical",

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Protocol Wizard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        /* Simple dark mode support */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dark .dark\:bg-gray-800\/50 {
+            background-color: rgba(31, 41, 55, 0.5);
+        }
+
+        .dark .dark\:bg-gray-900 {
+            background-color: #111827;
+        }
+
+        .dark .dark\:text-white {
+            color: #fff;
+        }
+
+        .dark .dark\:text-gray-100 {
+            color: #f3f4f6;
+        }
+
+        .dark .dark\:text-gray-200 {
+            color: #e5e7eb;
+        }
+
+        .dark .dark\:text-gray-300 {
+            color: #d1d5db;
+        }
+
+        .dark .dark\:text-gray-400 {
+            color: #9ca3af;
+        }
+
+        .dark .dark\:hover\:text-white:hover {
+            color: #fff;
+        }
+
+        .dark .dark\:hover\:text-blue-300:hover {
+            color: #93c5fd;
+        }
+
+        .dark .dark\:text-blue-400 {
+            color: #60a5fa;
+        }
+
+        .dark .dark\:bg-gray-700 {
+            background-color: #374151;
+        }
+
+        .dark .dark\:hover\:bg-gray-600:hover {
+            background-color: #4b5563;
+        }
+
+        .dark .dark\:ring-blue-500 {
+            --tw-ring-color: #3b82f6;
+        }
+
+        .dark .dark\:bg-green-900\/50 {
+            background-color: rgba(4, 120, 87, 0.5);
+        }
+
+        .dark .dark\:text-green-300 {
+            color: #6ee7b7;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- VOCABULARY (Global Scope) ---
+        const VOCABULARY = {
+            mood: ['energetic', 'upbeat', 'intense', 'melancholic', 'sad', 'calm', 'relaxed', 'epic', 'heroic', 'tense', 'suspenseful', 'dark', 'mysterious', 'romantic', 'sentimental', 'aggressive', 'dreamy', 'ethereal'],
+            energy: ['high-energy', 'driving', 'pumping', 'medium-energy', 'groovy', 'laid-back', 'low-energy', 'ambient', 'static'],
+            texture: ['bright', 'dark', 'warm', 'cold', 'dense', 'sparse', 'clean', 'polished', 'raw', 'gritty', 'distorted', 'smooth', 'harsh', 'acoustic', 'electronic', 'synthetic'],
+            primary_genre: ['electronic', 'rock', 'pop', 'hip_hop', 'jazz', 'classical', 'folk', 'world', 'soundtrack', 'ambient', 'sound_effect'],
+            secondary_genre: ['dance', 'edm', 'house', 'techno', 'alternative_rock', 'metal', 'indie_pop', 'rnb', 'soul', 'blues', 'country', 'cinematic'],
+            subgenres: {
+                // Primary genres
+                electronic: ['progressive_house', 'tech_house', 'ambient_techno', 'synthwave', 'trap', 'downtempo', 'drum_and_bass'],
+                rock: ['alternative_rock', 'indie_rock', 'punk_rock', 'progressive_rock', 'psychedelic_rock', 'heavy_metal', 'death_metal'],
+                pop: ['indie_pop', 'synth-pop', 'dance-pop', 'hyperpop', 'bubblegum_pop', 'art_pop'],
+                hip_hop: ['lo-fi_hip_hop', 'trap', 'boom-bap', 'gangsta_rap', 'conscious_hip_hop', 'cloud_rap'],
+                jazz: ['cool_jazz', 'swing', 'bebop', 'modal_jazz', 'free_jazz', 'jazz_fusion'],
+                classical: ['baroque', 'romantic_era', 'classical_period', 'contemporary_classical', 'minimalism', 'orchestral'],
+                folk: ['bluegrass', 'folk-rock', 'singer-songwriter', 'americana', 'traditional_folk', 'freak_folk'],
+                world: ['reggae', 'afrobeat', 'latin', 'celtic', 'bossa_nova', 'flamenco'],
+                soundtrack: ['film_score', 'video_game_music', 'ambient_soundtrack', 'orchestral_soundtrack', 'cinematic'],
+                ambient: ['ambient_techno', 'dark_ambient', 'drone', 'space_music', 'soundscape'],
+                sound_effect: ['foley', 'field_recording', 'abstract_sound', 'creature_sound', 'weather'],
+
+                // Mappings for secondary genres to provide subgenres
+                dance: ['house', 'techno', 'edm', 'dance-pop', 'disco'],
+                edm: ['progressive_house', 'tech_house', 'trap', 'drum_and_bass', 'dubstep'],
+                house: ['progressive_house', 'tech_house', 'deep_house', 'acid_house'],
+                techno: ['ambient_techno', 'industrial_techno', 'minimal_techno', 'detroit_techno'],
+                alternative_rock: ['indie_rock', 'punk_rock', 'grunge', 'post-punk'],
+                metal: ['heavy_metal', 'death_metal', 'black_metal', 'thrash_metal', 'doom_metal'],
+                indie_pop: ['dream_pop', 'twee_pop', 'synth-pop', 'jangle_pop'],
+                rnb: ['neo-soul', 'contemporary_rnb', 'quiet_storm', 'funk'],
+                soul: ['neo-soul', 'motown', 'funk', 'southern_soul'],
+                blues: ['delta_blues', 'chicago_blues', 'electric_blues', 'acoustic_blues'],
+                country: ['bluegrass', 'americana', 'honky_tonk', 'outlaw_country', 'bakersfield_sound'],
+                cinematic: ['film_score', 'orchestral_soundtrack', 'ambient_soundtrack', 'epic_score']
+            },
+            instrument: ['electric_guitar', 'acoustic_guitar', 'bass_guitar', 'double_bass', 'synthesizer', 'bass_synthesizer', 'piano', 'electric_piano', 'organ', 'drums', 'kick_drum', 'snare_drum', 'hi-hat', 'cymbals', 'drum_machine', 'sampler', 'strings', 'violin', 'cello', 'brass', 'trumpet', 'saxophone', 'flute', 'vocals'],
+            key: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+            scale: ['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian', 'chromatic', 'pentatonic_major', 'pentatonic_minor'],
+            vocals_presence: ['none', 'lead', 'backing', 'choir', 'sampled', 'spoken_word', 'ad-libs'],
+            vocals_gender: ['male', 'female', 'mixed', 'androgynous'],
+            vocals_style: ['singing', 'rapping', 'screaming', 'growling', 'falsetto', 'whispering', 'operatic'],
+            general_roles: ['lead', 'rhythm', 'melody', 'harmony', 'bass', 'percussion', 'pad', 'atmospheric', 'fx', 'counter-melody', 'ostinato', 'fill', 'arpeggio', 'chordal'],
+            instrument_roles: {
+                electric_guitar: ['lead', 'rhythm', 'fill', 'melody', 'solo'],
+                acoustic_guitar: ['rhythm', 'melody', 'fingerpicked', 'chordal'],
+                bass_guitar: ['bass', 'rhythm', 'melody', 'ostinato'],
+                double_bass: ['bass', 'walking_bassline', 'melody', 'solo'],
+                synthesizer: ['lead', 'pad', 'arpeggio', 'melody', 'atmospheric', 'fx', 'bass'],
+                bass_synthesizer: ['bass', 'sub-bass', 'arpeggio', 'ostinato'],
+                piano: ['melody', 'harmony', 'chordal', 'rhythm', 'lead'],
+                electric_piano: ['harmony', 'chordal', 'melody'],
+                organ: ['pad', 'harmony', 'lead', 'chordal'],
+                drums: ['percussion', 'rhythm', 'fill', 'beat'],
+                kick_drum: ['percussion', 'rhythm'],
+                snare_drum: ['percussion', 'rhythm', 'backbeat'],
+                strings: ['pad', 'harmony', 'melody', 'orchestral_bed', 'ostinato'],
+                brass: ['melody', 'harmony', 'fanfare', 'stab'],
+                vocals: ['lead', 'backing', 'harmony', 'ad-libs'],
+            },
+            general_descriptors: ['reverberant', 'dry', 'processed', 'present', 'distant', 'warm', 'bright', 'dark'],
+            instrument_descriptors: {
+                electric_guitar: ['distorted', 'clean', 'crunchy', 'wailing', 'overdriven', 'fuzzy', 'chugging'],
+                acoustic_guitar: ['strummed', 'fingerpicked', 'bright', 'warm', 'nylon', 'steel-string'],
+                bass_guitar: ['deep', 'funky', 'slapped', 'fretless', 'driving', 'growling', 'sub-bass'],
+                double_bass: ['bowed', 'plucked', 'warm', 'deep', 'jazzy'],
+                synthesizer: ['soaring', 'arpeggiated', 'bubbly', 'harsh', 'evolving', 'digital', 'analog'],
+                bass_synthesizer: ['deep', 'wobbling', 'sub-bass', 'acidic', 'driving'],
+                piano: ['percussive', 'gentle', 'honky-tonk', 'grand', 'bright'],
+                electric_piano: ['warm', 'bell-like', 'rhodes', 'wurlitzer'],
+                organ: ['church', 'hammond', 'rock', 'drawbar'],
+                drums: ['heavy', 'light', 'tight', 'loose', 'shuffling', 'tribal', 'acoustic'],
+                kick_drum: ['punchy', 'booming', 'tight', 'deep', 'four-on-the-floor'],
+                snare_drum: ['sharp', 'fat', 'crisp', 'reverberant', 'rimshot'],
+                drum_machine: ['electronic', '808', '909', 'processed', 'glitchy'],
+                strings: ['lush', 'sweeping', 'pizzicato', 'staccato', 'orchestral'],
+                brass: ['blaring', 'muted', 'majestic', 'jazzy'],
+                vocals: ['breathy', 'powerful', 'operatic', 'raspy', 'autotuned', 'harmonized'],
+            }
+        };
+
+        const getInitialState = () => ({
+            protocol_version: "1.0",
+            path: "New Sample",
+            theory: { bpm: '', key: '', scale: '', key_confidence: 'tbc', chords: 'tbc', roman_numerals: 'tbc' },
+            semantic_description: {
+                attributes: { mood: [], energy: [], texture: [] },
+                genre: { primary: '', primary_subgenres: [], secondary: [], secondary_subgenres: [] },
+                instrumentation: [],
+                vocals: { presence: '', gender: null, style: null },
+            },
+        });
+
+        // --- MAIN APP COMPONENT ---
+        function App() {
+            const { useState, useRef, useEffect } = React;
+
+            // --- HELPER COMPONENTS (Defined within App scope) ---
+            const JsonPreview = ({ data }) => {
+                const jsonString = JSON.stringify(data, null, 2);
+                const highlightedJson = jsonString
+                    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?)/g, (match) => {
+                        let cls = 'text-green-400';
+                        if (/:$/.test(match)) {
+                            cls = 'text-purple-400';
+                        }
+                        return `<span class="${cls}">${match}</span>`;
+                    })
+                    .replace(/(true|false)/g, '<span class="text-yellow-400">$1</span>')
+                    .replace(/([0-9]+(\.[0-9]+)?)/g, '<span class="text-cyan-400">$1</span>')
+                    .replace(/(null)/g, '<span class="text-red-400">$1</span>');
+
+                return (
+                    <div className="h-full bg-gray-900 rounded-lg p-4 overflow-auto">
+                        <pre className="text-sm text-gray-300 whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: highlightedJson }} />
+                    </div>
+                );
+            };
+
+            const TermSelector = ({ terms, onSelect, selected = [], multi = false, onNext, onSkip }) => {
+                const handleSelect = (term) => {
+                    if (multi) {
+                        const newSelected = selected.includes(term)
+                            ? selected.filter(t => t !== term)
+                            : [...selected, term];
+                        onSelect(newSelected);
+                    } else {
+                        onSelect(term);
+                    }
+                };
+
+                const isSelected = (term) => multi ? selected.includes(term) : selected === term;
+                const isNextDisabled = multi ? selected.length === 0 : !selected;
+
+                return (
+                    <div>
+                        <div className="flex flex-wrap gap-2 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50 min-h-[6rem] items-center">
+                            {terms.map(term => (
+                                <button
+                                    key={term}
+                                    onClick={() => handleSelect(term)}
+                                    className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${isSelected(term)
+                                            ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300 dark:ring-blue-500'
+                                            : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                                        }`}
+                                >
+                                    {term}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-center gap-4 mt-6">
+                            <button
+                                onClick={onSkip}
+                                className="px-6 py-2 font-semibold text-gray-600 bg-transparent rounded-lg hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            >
+                                Skip
+                            </button>
+                            <button
+                                onClick={onNext}
+                                disabled={isNextDisabled}
+                                className="px-6 py-2 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next &rarr;
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+            const TextInputStep = ({ stepConfig, data, updateData, nextStep, step }) => {
+                const { title, path, placeholder } = stepConfig;
+                const currentValue = path.split('.').reduce((o, i) => o[i], data);
+
+                return (
+                    <div className="p-1">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Step {step}: {title}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">Enter a value, or leave blank to skip.</p>
+                        <input
+                            type="text"
+                            value={currentValue === 'tbc' ? '' : currentValue}
+                            onChange={(e) => updateData(path, e.target.value)}
+                            placeholder={placeholder || "e.g., 120.5"}
+                            className="w-full p-3 mt-4 border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <div className="flex items-center justify-center gap-4 mt-6">
+                            <button
+                                onClick={() => {
+                                    if (currentValue === '') {
+                                        updateData(path, 'tbc');
+                                    }
+                                    nextStep();
+                                }}
+                                className="px-6 py-2 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                                Next &rarr;
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+
+            const WizardStep = ({ stepConfig, data, updateData, nextStep, step }) => {
+                const { title, path, multi } = stepConfig;
+                const terms = typeof stepConfig.terms === 'function' ? stepConfig.terms(data) : stepConfig.terms;
+                const currentValue = path.split('.').reduce((o, i) => o[i], data);
+
+                return (
+                    <div className="p-1">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Step {step}: {title}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">
+                            {multi ? "Select one or more terms, or skip." : "Select a term, or skip."}
+                        </p>
+                        <TermSelector
+                            terms={terms || []}
+                            selected={currentValue}
+                            onSelect={(value) => updateData(path, value)}
+                            onNext={nextStep}
+                            onSkip={() => {
+                                updateData(path, multi ? ['tbc'] : 'tbc');
+                                nextStep();
+                            }}
+                            multi={multi}
+                        />
+                    </div>
+                );
+            };
+
+            const AskStep = ({ title, prompt, onYes, onNo }) => {
+                return (
+                    <div className="p-1">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">{title}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">{prompt || 'Would you like to add more details?'}</p>
+                        <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50 min-h-[6rem] items-center text-center flex flex-col justify-center">
+                            <div className="flex gap-4">
+                                <button onClick={onYes} className="px-6 py-2 font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700">Yes</button>
+                                <button onClick={onNo} className="px-6 py-2 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700">No, Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            const InstrumentationWizard = ({
+                data, updateData, nextStep, step,
+                instrumentStep, setInstrumentStep,
+                currentInstrumentIndex, setCurrentInstrumentIndex
+            }) => {
+                const instruments = data.semantic_description.instrumentation;
+                const currentInstrument = instruments[currentInstrumentIndex] || {};
+
+                const addNewInstrument = () => {
+                    const newInstrument = { instrument: '', role: '', descriptors: [] };
+                    updateData('semantic_description.instrumentation', [...instruments, newInstrument]);
+                    setCurrentInstrumentIndex(instruments.length);
+                    setInstrumentStep(1);
+                };
+
+                const updateCurrentInstrument = (field, value) => {
+                    const newInstruments = [...instruments];
+                    newInstruments[currentInstrumentIndex] = { ...newInstruments[currentInstrumentIndex], [field]: value };
+                    updateData('semantic_description.instrumentation', newInstruments);
+                };
+
+                const getInstrumentDescriptors = (instrument) => {
+                    const specific = VOCABULARY.instrument_descriptors[instrument] || [];
+                    const combined = [...specific, ...VOCABULARY.general_descriptors];
+                    return [...new Set(combined)];
+                };
+
+                const getInstrumentRoles = (instrument) => {
+                    const specific = VOCABULARY.instrument_roles[instrument] || [];
+                    const combined = [...specific, ...VOCABULARY.general_roles];
+                    return [...new Set(combined)];
+                };
+
+                if (instrumentStep === 0) {
+                    const promptText = instruments.length > 0
+                        ? "Would you like to add another instrument with details?"
+                        : "Would you like to add an instrument with details?";
+                    return <AskStep title={`Step ${step}: Instrumentation`} prompt={promptText} onYes={addNewInstrument} onNo={nextStep} />;
+                }
+
+                if (instrumentStep === 1) { // Select instrument name
+                    return (
+                        <div className="p-1">
+                            <h3 className="font-semibold text-lg mb-2 dark:text-gray-200">Adding Instrument #{currentInstrumentIndex + 1}: Name</h3>
+                            <TermSelector
+                                terms={VOCABULARY.instrument}
+                                selected={currentInstrument.instrument}
+                                onSelect={(value) => updateCurrentInstrument('instrument', value)}
+                                onNext={() => setInstrumentStep(2)}
+                                onSkip={() => {
+                                    updateCurrentInstrument('instrument', 'tbc');
+                                    setInstrumentStep(2);
+                                }}
+                            />
+                        </div>
+                    );
+                }
+
+                if (instrumentStep === 2) { // Select role
+                    return (
+                        <div className="p-1">
+                            <h3 className="font-semibold text-lg mb-2 dark:text-gray-200">Adding Instrument #{currentInstrumentIndex + 1}: Role</h3>
+                            <TermSelector
+                                terms={getInstrumentRoles(currentInstrument.instrument)}
+                                selected={currentInstrument.role}
+                                onSelect={(value) => updateCurrentInstrument('role', value)}
+                                onNext={() => setInstrumentStep(3)}
+                                onSkip={() => {
+                                    updateCurrentInstrument('role', 'tbc');
+                                    setInstrumentStep(3);
+                                }}
+                            />
+                        </div>
+                    );
+                }
+
+                if (instrumentStep === 3) { // Select descriptors
+                    return (
+                        <div className="p-1">
+                            <h3 className="font-semibold text-lg mb-2 dark:text-gray-200">Adding Instrument #{currentInstrumentIndex + 1}: Descriptors</h3>
+                            <TermSelector
+                                terms={getInstrumentDescriptors(currentInstrument.instrument)}
+                                selected={currentInstrument.descriptors}
+                                onSelect={(value) => updateCurrentInstrument('descriptors', value)}
+                                onNext={() => setInstrumentStep(0)} // Go back to ask for another
+                                onSkip={() => {
+                                    updateCurrentInstrument('descriptors', ['tbc']);
+                                    setInstrumentStep(0);
+                                }}
+                                multi={true}
+                            />
+                        </div>
+                    );
+                }
+                return null;
+            };
+
+            const FinalStep = ({ data, onRestart }) => {
+                const [notification, setNotification] = useState('');
+                const [actionTaken, setActionTaken] = useState(false);
+                const jsonString = JSON.stringify(data, null, 2);
+
+                const copyToClipboard = () => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = jsonString;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        const successful = document.execCommand('copy');
+                        setNotification(successful ? 'JSON copied to clipboard!' : 'Failed to copy JSON.');
+                        if (successful) setActionTaken(true);
+                    } catch (err) {
+                        setNotification('Failed to copy JSON.');
+                    }
+                    document.body.removeChild(textArea);
+                    setTimeout(() => setNotification(''), 3000);
+                };
+
+                const downloadJson = () => {
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${data.path.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'audio-protocol'}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    setActionTaken(true);
+                };
+
+                return (
+                    <div className="p-1">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Protocol Generated</h2>
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">
+                            You can now copy or download the structured JSON data.
+                        </p>
+                        {notification && (
+                            <div className="my-4 p-3 rounded-lg bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 text-center">
+                                {notification}
+                            </div>
+                        )}
+                        <div className="flex flex-col gap-4 mt-6">
+                            <div className="flex gap-4">
+                                <button onClick={copyToClipboard} className="px-6 py-2 w-full font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700">Copy to Clipboard</button>
+                                <button onClick={downloadJson} className="px-6 py-2 w-full font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700">Download .json</button>
+                            </div>
+                            <button
+                                onClick={onRestart}
+                                disabled={!actionTaken}
+                                className="px-6 py-2 w-full font-semibold text-white bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Create New Record
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+
+            const [step, setStep] = useState(0);
+            const [instrumentStep, setInstrumentStep] = useState(0);
+            const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
+            const [addSecondaryGenre, setAddSecondaryGenre] = useState(false);
+            const [addTheory, setAddTheory] = useState(false);
+            const [data, setData] = useState(getInitialState());
+            const titleInputRef = useRef(null);
+
+            useEffect(() => {
+                if (step === 0 && titleInputRef.current) {
+                    titleInputRef.current.select();
+                }
+            }, [step]);
+
+            const getSubgenresFor = (genre) => {
+                if (!genre || genre === 'tbc') return [];
+                if (Array.isArray(genre)) {
+                    const allSubgenres = genre.flatMap(g => VOCABULARY.subgenres[g] || []);
+                    return [...new Set(allSubgenres)];
+                }
+                return VOCABULARY.subgenres[genre] || [];
+            };
+
+            const WIZARD_STEPS = [
+                { title: 'Mood', path: 'semantic_description.attributes.mood', terms: VOCABULARY.mood, multi: true },
+                { title: 'Energy', path: 'semantic_description.attributes.energy', terms: VOCABULARY.energy, multi: true },
+                { title: 'Texture', path: 'semantic_description.attributes.texture', terms: VOCABULARY.texture, multi: true },
+                { title: 'Primary Genre', path: 'semantic_description.genre.primary', terms: VOCABULARY.primary_genre, multi: false },
+                { title: 'Primary Subgenres', path: 'semantic_description.genre.primary_subgenres', terms: (data) => getSubgenresFor(data.semantic_description.genre.primary), multi: true },
+                { title: 'Add Secondary Genre?', special: 'ask_secondary_genre' },
+                { title: 'Secondary Genres', path: 'semantic_description.genre.secondary', terms: VOCABULARY.secondary_genre, multi: true, condition: () => addSecondaryGenre },
+                { title: 'Secondary Subgenres', path: 'semantic_description.genre.secondary_subgenres', terms: (data) => getSubgenresFor(data.semantic_description.genre.secondary), multi: true, condition: () => addSecondaryGenre },
+                { title: 'Instrumentation', special: 'instrumentation' },
+                { title: 'Music Theory', special: 'ask_theory' },
+                { title: 'BPM', path: 'theory.bpm', special: 'text_input', placeholder: 'e.g., 128', condition: () => addTheory },
+                { title: 'Key', path: 'theory.key', terms: VOCABULARY.key, multi: false, condition: () => addTheory },
+                { title: 'Scale', path: 'theory.scale', terms: VOCABULARY.scale, multi: false, condition: () => addTheory },
+                { title: 'Vocal Presence', path: 'semantic_description.vocals.presence', terms: VOCABULARY.vocals_presence, multi: false },
+                { title: 'Vocal Gender', path: 'semantic_description.vocals.gender', terms: VOCABULARY.vocals_gender, multi: false, condition: () => data.semantic_description.vocals.presence !== 'none' && data.semantic_description.vocals.presence !== '' },
+                { title: 'Vocal Style', path: 'semantic_description.vocals.style', terms: VOCABULARY.vocals_style, multi: false, condition: () => data.semantic_description.vocals.presence !== 'none' && data.semantic_description.vocals.presence !== '' },
+                { title: 'Final Review', special: 'final' }
+            ];
+
+            const updateData = (path, value) => {
+                setData(prevData => {
+                    const pathParts = path.split('.');
+                    const newData = JSON.parse(JSON.stringify(prevData));
+                    let current = newData;
+                    for (let i = 0; i < pathParts.length - 1; i++) {
+                        current = current[pathParts[i]];
+                    }
+                    current[pathParts[pathParts.length - 1]] = value;
+                    return newData;
+                });
+            };
+
+            const nextStep = () => {
+                let next = step + 1;
+                while (next < WIZARD_STEPS.length && WIZARD_STEPS[next].condition && !WIZARD_STEPS[next].condition()) {
+                    next++;
+                }
+                setStep(next);
+            };
+
+            const prevStep = () => {
+                let prev = step - 1;
+                while (prev >= 0 && WIZARD_STEPS[prev].condition && !WIZARD_STEPS[prev].condition()) {
+                    prev--;
+                }
+                setStep(prev < 0 ? 0 : prev);
+            };
+
+            const handleRestart = () => {
+                setStep(0);
+                setInstrumentStep(0);
+                setCurrentInstrumentIndex(0);
+                setAddSecondaryGenre(false);
+                setAddTheory(false);
+                setData(getInitialState());
+            };
+
+            const renderCurrentStep = () => {
+                const currentStepConfig = WIZARD_STEPS[step];
+                if (!currentStepConfig) return <FinalStep data={data} onRestart={handleRestart} />;
+                const stepNumber = WIZARD_STEPS.slice(0, step + 1).filter(s => !s.condition || s.condition()).length;
+
+
+                if (currentStepConfig.special === 'ask_secondary_genre') {
+                    return <AskStep
+                        title={`Step ${stepNumber}: Secondary Genre`}
+                        prompt="Would you like to add another genre?"
+                        onYes={() => {
+                            setAddSecondaryGenre(true);
+                            setStep(step + 1); // Fix: Directly go to next step
+                        }}
+                        onNo={() => {
+                            setAddSecondaryGenre(false);
+                            let instrumentationStepIndex = WIZARD_STEPS.findIndex(s => s.special === 'instrumentation');
+                            setStep(instrumentationStepIndex);
+                        }}
+                    />
+                }
+
+                if (currentStepConfig.special === 'ask_theory') {
+                    return <AskStep
+                        title={`Step ${stepNumber}: Music Theory`}
+                        prompt="Do you want to add music theory details, or leave that to auto-detection?"
+                        onYes={() => {
+                            setAddTheory(true);
+                            nextStep();
+                        }}
+                        onNo={() => {
+                            setAddTheory(false);
+                            updateData('theory.bpm', 'tbc');
+                            updateData('theory.key', 'tbc');
+                            updateData('theory.scale', 'tbc');
+                            let vocalStepIndex = WIZARD_STEPS.findIndex(s => s.path === 'semantic_description.vocals.presence');
+                            setStep(vocalStepIndex);
+                        }}
+                    />
+                }
+
+                if (currentStepConfig.special === 'instrumentation') {
+                    return <InstrumentationWizard
+                        data={data} updateData={updateData} nextStep={nextStep} step={stepNumber}
+                        instrumentStep={instrumentStep} setInstrumentStep={setInstrumentStep}
+                        currentInstrumentIndex={currentInstrumentIndex} setCurrentInstrumentIndex={setCurrentInstrumentIndex}
+                    />;
+                }
+                if (currentStepConfig.special === 'final') {
+                    return <FinalStep data={data} onRestart={handleRestart} />;
+                }
+
+                if (currentStepConfig.special === 'text_input') {
+                    return <TextInputStep stepConfig={currentStepConfig} data={data} updateData={updateData} nextStep={nextStep} step={stepNumber} />;
+                }
+
+                return <WizardStep stepConfig={currentStepConfig} data={data} updateData={updateData} nextStep={nextStep} step={stepNumber} />;
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans p-4 sm:p-6 lg:p-8">
+                    <div className="max-w-7xl mx-auto">
+                        <header className="mb-8">
+                            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
+                            <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
+                        </header>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="bg-white dark:bg-gray-800/50 rounded-xl shadow-lg p-6 lg:p-8">
+                                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Sample Title</h2>
+                                <input
+                                    ref={titleInputRef}
+                                    autoFocus
+                                    type="text"
+                                    value={data.path === 'tbc' ? '' : data.path}
+                                    onChange={(e) => updateData('path', e.target.value)}
+                                    placeholder="e.g., Cool_Synth_Loop_01.wav"
+                                    className="w-full p-3 mt-4 border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-1">(In production this will be auto-filled from the audio sample)</p>
+
+                                <hr className="my-6 border-gray-200 dark:border-gray-700" />
+
+                                {step > 0 && WIZARD_STEPS[step]?.special !== 'final' && (
+                                    <button onClick={prevStep} className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                        &larr; Back
+                                    </button>
+                                )}
+                                {renderCurrentStep()}
+                            </div>
+
+                            <div className="h-[32rem] lg:h-auto">
+                                <JsonPreview data={data} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- RENDER THE APP ---
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>

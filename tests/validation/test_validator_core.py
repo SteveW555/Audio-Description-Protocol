@@ -147,10 +147,10 @@ class TestSchemaFileAccess:
             "musical_annotation.schema.json"
         ]
 
-        # These files should not exist yet (we copy them in T014-T017)
+        # These files should exist (they were implemented in T014-T017)
         for filename in expected_files:
             schema_file = schema_dir / filename
-            assert not schema_file.exists(), f"Schema file {filename} exists before implementation phase"
+            assert schema_file.exists(), f"Schema file {filename} should exist after implementation phase"
 
     def test_schema_directory_structure(self):
         """Test that schema directory exists."""
