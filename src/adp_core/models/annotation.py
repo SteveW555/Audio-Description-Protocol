@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import List, Optional, Dict, Any, Literal
-from pydantic import BaseModel, Field, validator, root_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 class TimeRange(BaseModel):
@@ -178,14 +178,9 @@ class Annotation(BaseModel):
         description="Quality metrics for the annotation"
     )
 
-    @validator('labels')
-    def validate_labels_not_empty(cls, v):
-        """Ensure labels list is not empty."""
-        if not v:
-            raise ValueError('Labels cannot be empty')
-        return v
 
-    @root_validator
+    @model_validator(mode='before')
+    @classmethod
     def compute_quality_metrics(cls, values):
         """Compute quality metrics if not provided."""
         labels = values.get('labels', [])
