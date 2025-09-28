@@ -1,4 +1,4 @@
-import { InstrumentationEntry } from '../types/protocol';
+import { InstrumentationEntry } from '../app/src/types/protocol';
 
 export const VOCABULARY = {
     // Comprehensive mood descriptors from unified taxonomy

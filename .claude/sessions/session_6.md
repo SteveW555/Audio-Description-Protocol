@@ -53,9 +53,9 @@ Developed a comprehensive audio taxonomy system with 479 canonical terms across 
 - **Modular Architecture**: Separated concerns across multiple specialized files
   - Core taxonomy definitions in `taxonomy.ts`
   - Helper functions in `taxonomyHelpers.ts`
-  - Protocol types in `wizard/protocol.ts`
-  - Vocabulary mappings in `wizard/vocabulary.ts`
-  - Initial state management in `wizard/initialState.ts`
+  - Protocol types in `wizard/wizard_structures/protocol.ts`
+  - Vocabulary mappings in `wizard/wizard_structures/vocabulary.ts`
+  - Initial state management in `wizard/wizard_structures/initialState.ts`
 
 ### 📝 Documentation & Config
 - **Taxonomy Documentation**: Comprehensive markdown documentation explaining system structure
@@ -78,13 +78,13 @@ Developed a comprehensive audio taxonomy system with 479 canonical terms across 
 - **Pretty Printing**: User-friendly display functions for term information
 - **Cluster Navigation**: Hierarchical exploration with sibling relationship mapping
 
-### TypeScript Protocol Framework (`wizard/protocol.ts`)
+### TypeScript Protocol Framework (`wizard/wizard_structures/protocol.ts`)
 - **Semantic Attributes**: Type-safe definitions for mood, energy, and texture arrays
 - **Genre Classification**: Comprehensive genre and subgenre taxonomy with relationships
 - **Instrumentation Types**: Complete instrument classification with categories and families
 - **Music Theory Integration**: BPM, key signatures, scales, and chord progression types
 
-### Vocabulary Mappings (`wizard/vocabulary.ts`)
+### Vocabulary Mappings (`wizard/wizard_structures/vocabulary.ts`)
 - **Const Assertions**: Read-only vocabulary arrays for UI component integration
 - **Subgenre Relationships**: Hierarchical mapping of genres to their subgenre variants
 - **Instrumentation Entries**: Structured instrument definitions with metadata
@@ -202,9 +202,9 @@ Terms (479 total)
 - `old/taxonomy.txt` - Plain text taxonomy reference (49 lines)
 
 ### TypeScript Protocol Framework
-- `wizard/protocol.ts` - Complete protocol type definitions (306 lines)
-- `wizard/vocabulary.ts` - Vocabulary mappings and arrays (87 lines)
-- `wizard/initialState.ts` - Default protocol data initialization (33 lines)
+- `wizard/wizard_structures/protocol.ts` - Complete protocol type definitions (306 lines)
+- `wizard/wizard_structures/vocabulary.ts` - Vocabulary mappings and arrays (87 lines)
+- `wizard/wizard_structures/initialState.ts` - Default protocol data initialization (33 lines)
 
 ### Documentation & Planning
 - `taxonomy.md` - Taxonomy system documentation (71 lines)

@@ -1,4 +1,4 @@
-import { AudioProtocolData } from '../types/protocol';
+import { AudioProtocolData } from '../app/src/types/protocol';
 
 export const getInitialState = (): AudioProtocolData => ({
     protocol_version: '1.0',
