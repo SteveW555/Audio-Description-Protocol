@@ -17,7 +17,7 @@ This quickstart validates the Advanced Audio Processing Integration feature by d
 ## User Story Validation Scenarios
 
 ### Scenario 1: Single Audio File Analysis
-**Story**: Researcher analyzes a 3-minute audio file to extract tempo and key
+**Story**: Researcher analyzes a 3-minute audio file to extract tempo and key, and style and mood
 
 ```bash
 # Command

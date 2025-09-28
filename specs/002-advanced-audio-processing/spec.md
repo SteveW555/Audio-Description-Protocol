@@ -48,28 +48,30 @@ Music researchers and dataset curators need to automatically analyze audio files
 4. **Given** extracted features, **When** a user requests export, **Then** the system generates ADP-schema compliant annotation files with complete provenance tracking
 
 ### Edge Cases
-- What happens when audio files are corrupted or in unsupported formats?
+- What happens when audio files are corrupted or in unsupported formats? → Return clear error messages for non-WAV/MP3 formats
 - How does system handle extremely long audio files (>1 hour)?
-- What occurs when GPU resources are unavailable for processing?
-- How are conflicting AI vs human annotations resolved?
+- What occurs when GPU resources are unavailable for processing? → Prompt user to choose CPU processing with performance warning
+- How are conflicting AI vs human annotations resolved? → Flag conflicts for manual review
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
-- **FR-001**: System MUST analyze audio files to extract tempo with >95% accuracy (±3 BPM tolerance)
+- **FR-001**: System MUST analyze WAV and MP3 audio files to extract tempo with >95% accuracy (±3 BPM tolerance)
 - **FR-002**: System MUST detect musical key with >90% accuracy for major and minor keys
 - **FR-003**: System MUST generate chord progressions and spectral features from audio content
 - **FR-004**: System MUST convert all extracted features into ADP-schema compliant annotations
 - **FR-005**: System MUST provide confidence scores for all generated annotations
-- **FR-006**: System MUST process individual audio files in less than 30 seconds (3-minute files)
-- **FR-007**: System MUST achieve throughput of >100 files per hour in batch mode
-- **FR-008**: System MUST support GPU acceleration for large dataset processing
-- **FR-009**: System MUST compare AI-generated annotations with existing human annotations
+- **FR-006**: System MUST process individual audio files in less than 30 seconds (3-minute files) with maximum 4GB memory usage per file
+- **FR-007**: System MUST achieve throughput of >100 files per hour in batch mode with fail-fast behavior (stop entire batch on first failure)
+- **FR-008**: System MUST support GPU acceleration for large dataset processing with user prompt for CPU fallback when GPU unavailable
+- **FR-009**: System MUST compare AI-generated annotations with existing human annotations and flag conflicts for manual review without automatic resolution
 - **FR-010**: System MUST track complete provenance for all AI-generated annotations
 - **FR-011**: System MUST validate that all generated annotations comply with ADP schema
 - **FR-012**: Users MUST be able to initiate analysis through CLI commands
 - **FR-013**: Users MUST be able to export analysis results in standardized formats
-- **FR-014**: System MUST provide semantic analysis capabilities for audio content
+- **FR-014**: System MUST extract semantic features including genre classification, mood analysis, and instrumentation detection from audio content
+- **FR-014a**: System MUST provide confidence scores for all semantic feature classifications
+- **FR-014b**: Semantic analysis MUST support at least 10 major music genres and 5 mood categories
 - **FR-015**: System MUST manage pre-trained and custom model configurations
 
 ### Key Entities *(include if feature involves data)*
@@ -78,8 +80,18 @@ Music researchers and dataset curators need to automatically analyze audio files
 - **AI Annotation**: ADP-compliant annotation generated from extracted features with confidence scores
 - **Feature Set**: Collection of extracted musical characteristics (tempo, key, spectral features)
 - **Model Configuration**: Settings and parameters for audio analysis models
+- **Semantic Features**: High-level audio characteristics including genre, mood, and instrumentation with confidence scores
 - **Provenance Record**: Complete tracking of analysis process, model versions, and generation timestamps
 - **Validation Report**: Comparison results between AI-generated and human annotations
+
+## Clarifications
+
+### Session 2025-09-27
+- Q: What should be the maximum memory footprint per audio file during processing? → A: 4GB maximum memory per file
+- Q: How should the system handle conflicting annotations between AI and human analysis? → A: Flag conflicts for manual review without automatic resolution
+- Q: Which audio formats should have priority support? → A: WAV and MP3 only (most common, reliable processing)
+- Q: How should batch processing handle individual file failures? → A: Stop entire batch on first failure (fail-fast approach)
+- Q: What should happen when GPU acceleration is unavailable? → A: Prompt user to choose CPU processing with performance warning
 
 ---
 

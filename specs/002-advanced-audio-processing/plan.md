@@ -95,9 +95,14 @@ specs/[###-feature]/
 src/
 ├── adp/
 │   ├── audio/              # Audio processing core
-│   │   ├── analysis.py     # Feature extraction
-│   │   ├── models.py       # Model management
-│   │   └── validation.py   # Audio validation
+│   │   ├── tempo.py        # Tempo detection
+│   │   ├── key_detection.py # Key detection
+│   │   ├── chord_analysis.py # Chord progression analysis
+│   │   ├── spectral.py     # Spectral and semantic features
+│   │   ├── audio_file.py   # AudioFile model and validation
+│   │   ├── models.py       # Model registry and configuration
+│   │   ├── loaders.py      # Audio loading utilities
+│   │   └── validation.py   # Audio format validation
 │   ├── annotations/        # Annotation generation
 │   │   ├── generator.py    # AI annotation creation
 │   │   ├── converter.py    # Feature to annotation mapping
@@ -105,7 +110,8 @@ src/
 │   ├── cli/               # Command line interface
 │   │   ├── analyze.py     # adp analyze command
 │   │   ├── batch.py       # adp batch-process command
-│   │   └── extract.py     # adp extract-features command
+│   │   ├── extract_features.py # adp extract-features command
+│   │   └── args.py        # CLI argument parsing
 │   └── provenance/        # Tracking and metadata
 │       ├── tracker.py     # Provenance recording
 │       └── reporter.py    # Validation reports
@@ -179,9 +185,9 @@ tests/
 **Task Generation Strategy**:
 - Load `.specify/templates/tasks-template.md` as base
 - Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Audio processing core tasks: analysis.py, models.py, validation.py [P]
+- Audio processing core tasks: tempo.py, key_detection.py, chord_analysis.py, spectral.py [P]
 - Annotation generation tasks: generator.py, converter.py, validator.py [P]
-- CLI interface tasks: analyze.py, batch.py, extract.py [P]
+- CLI interface tasks: analyze.py, batch.py, extract_features.py, args.py [P]
 - Provenance tracking tasks: tracker.py, reporter.py [P]
 - Contract test tasks for all API endpoints [P]
 - Integration test tasks from quickstart scenarios
