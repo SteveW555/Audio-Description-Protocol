@@ -1,9 +1,59 @@
 import { InstrumentationEntry } from '../types/protocol';
 
 export const VOCABULARY = {
-    mood: ['energetic', 'upbeat', 'intense', 'melancholic', 'sad', 'calm', 'relaxed', 'epic', 'heroic', 'tense', 'suspenseful', 'dark', 'mysterious', 'romantic', 'sentimental', 'aggressive', 'dreamy', 'ethereal'] as const,
-    energy: ['high-energy', 'driving', 'pumping', 'medium-energy', 'groovy', 'laid-back', 'low-energy', 'ambient', 'static'] as const,
-    texture: ['bright', 'dark', 'warm', 'cold', 'dense', 'sparse', 'clean', 'polished', 'raw', 'gritty', 'distorted', 'smooth', 'harsh', 'acoustic', 'electronic', 'synthetic'] as const,
+    // Comprehensive mood descriptors from unified taxonomy
+    mood: [
+        // Positive / Uplifting
+        'upbeat', 'energetic', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive', 'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic', 'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly',
+        // Calm / Peaceful
+        'peaceful', 'calm', 'relaxed', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing', 'gentle', 'contemplative', 'restful', 'ethereal', 'atmospheric', 'flowing', 'smooth', 'gossamer',
+        // Dark / Negative
+        'dark', 'melancholic', 'sad', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting', 'moody', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing', 'shadowy', 'plaintive', 'negative',
+        // Intense / Aggressive
+        'intense', 'aggressive', 'driving', 'powerful', 'forceful', 'fierce', 'raw', 'edgy', 'explosive', 'menacing', 'angry', 'violent', 'furious', 'tense', 'harsh', 'thunderous', 'blistering', 'snarling', 'chaotic',
+        // Mysterious / Ambiguous
+        'mysterious', 'enigmatic', 'otherworldly', 'mystical', 'cryptic', 'elusive', 'veiled', 'obscure', 'twilight', 'liminal', 'majestic', 'epic', 'strange',
+        // Romantic / Tender
+        'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'warm-hearted', 'sultry', 'passionate', 'yearning', 'longing',
+        // Nostalgic / Reflective
+        'nostalgic', 'reflective', 'bittersweet', 'reminiscent', 'pensive', 'poignant', 'memory-laden', 'retrospective'
+    ] as const,
+
+    // Comprehensive energy descriptors from unified taxonomy
+    energy: [
+        // High / Positive Drive
+        'high-energy', 'driving', 'vigorous', 'propulsive', 'pumping', 'dynamic', 'explosive', 'kinetic', 'punchy', 'pulsating', 'frenetic', 'relentless', 'urgent', 'vibrant', 'bouncy', 'brisk', 'electrifying', 'high-octane', 'turbocharged', 'thumping',
+        // Medium / Flowing
+        'flowing', 'steady', 'moderate', 'balanced', 'measured', 'rolling', 'rhythmic', 'groovy', 'medium-energy', 'cascading', 'undulating', 'swinging', 'pulsing', 'unhurried', 'cruising', 'mid-tempo', 'paced',
+        // Low / Peaceful
+        'laid-back', 'low-energy', 'ambient', 'chill', 'mellow', 'gentle', 'subdued', 'restrained', 'placid', 'still', 'relaxed', 'downtempo', 'languid', 'serene', 'hushed', 'delicate', 'soft', 'sedate', 'hypnotic',
+        // Negative / Unstable
+        'tense', 'anxious', 'chaotic', 'agitated', 'erratic', 'unstable', 'jarring', 'dissonant', 'turbulent', 'unsettling', 'fragmented', 'static', 'restless', 'jittery', 'hectic', 'disjointed',
+        // Expansive / Other
+        'expansive', 'soaring', 'lifting', 'transcendent', 'boundless', 'sweeping', 'majestic', 'panoramic', 'vast', 'cosmic', 'breathless', 'gradual', 'crescendoing', 'swelling', 'decaying', 'wavering', 'oscillating', 'spiraling'
+    ] as const,
+
+    // Comprehensive texture descriptors from unified taxonomy
+    texture: [
+        // Bright / Positive
+        'bright', 'crisp', 'clear', 'brilliant', 'sparkling', 'crystalline', 'shimmering', 'radiant', 'gleaming', 'airy', 'polished', 'pristine', 'shiny', 'luminous',
+        // Warm / Peaceful
+        'warm', 'rich', 'full', 'lush', 'creamy', 'honeyed', 'golden', 'mellow', 'rounded', 'embracing', 'enveloping', 'cozy', 'sumptuous', 'velvety', 'buttery', 'silky', 'soft',
+        // Dark / Negative
+        'dark', 'muddy', 'harsh', 'gritty', 'murky', 'raspy', 'buzzy', 'distorted', 'coarse', 'abrasive', 'shadowy', 'veiled', 'obscured', 'heavy', 'dense', 'thick', 'clouded', 'muffled', 'oppressive',
+        // Natural / Acoustic
+        'acoustic', 'organic', 'natural', 'raw', 'live', 'authentic', 'unprocessed', 'woody', 'breathy', 'human', 'intimate', 'close-miked', 'hollow', 'earthy', 'fibrous', 'resonant', 'textured', 'grainy',
+        // Synthetic / Electronic
+        'electronic', 'synthetic', 'digital', 'processed', 'programmed', 'artificial', 'computerized', 'robotic', 'futuristic', 'cyber', 'pixelated', 'metallic', 'glassy', 'analog', 'mechanical', 'glitchy',
+        // Density & Layering
+        'layered', 'complex', 'full-bodied', 'orchestrated', 'intricate', 'detailed', 'multi-textured', 'stratified', 'elaborate', 'sparse', 'minimalistic', 'polyphonic', 'homophonic', 'monophonic', 'heterophonic',
+        // Smooth / Refined
+        'smooth', 'refined', 'sleek', 'elegant', 'sophisticated', 'seamless', 'effortless', 'fluid', 'graceful',
+        // Rough / Gritty
+        'rough', 'gritty', 'jagged', 'unpolished', 'edgy', 'crunchy', 'ratty',
+        // Space & Atmosphere
+        'spacious', 'reverberant', 'wet', 'dry', 'echoey', 'atmospheric', 'cinematic'
+    ] as const,
     primary_genre: ['electronic', 'rock', 'pop', 'hip_hop', 'jazz', 'classical', 'folk', 'world', 'soundtrack', 'ambient', 'sound_effect'] as const,
     secondary_genre: ['dance', 'edm', 'house', 'techno', 'alternative_rock', 'metal', 'indie_pop', 'rnb', 'soul', 'blues', 'country', 'cinematic'] as const,
     subgenres: {
@@ -55,7 +105,13 @@ export const VOCABULARY = {
         brass: ['melody', 'harmony', 'fanfare', 'stab'],
         vocals: ['lead', 'backing', 'harmony', 'ad-libs'],
     } as const,
-    general_descriptors: ['reverberant', 'dry', 'processed', 'present', 'distant', 'warm', 'bright', 'dark', 'lofi'] as const,
+    general_descriptors: [
+        // From comprehensive taxonomy - general descriptors that apply across instruments
+        'reverberant', 'dry', 'processed', 'present', 'distant', 'warm', 'bright', 'dark', 'clean', 'distorted',
+        'crunchy', 'fuzzy', 'deep', 'driving', 'growling', 'percussive', 'gentle', 'heavy', 'light', 'tight',
+        'loose', 'acoustic', 'punchy', 'booming', 'sharp', 'fat', 'crisp', 'electronic', 'glitchy', 'lush',
+        'sweeping', 'blaring', 'muted', 'majestic', 'breathy', 'powerful', 'raspy', 'autotuned', 'harmonized'
+    ] as const,
     instrument_descriptors: {
         electric_guitar: ['distorted', 'clean', 'crunchy', 'wailing', 'overdriven', 'fuzzy', 'chugging', 'riff'],
         acoustic_guitar: ['strummed', 'fingerpicked', 'bright', 'warm', 'nylon', 'steel-string'],
