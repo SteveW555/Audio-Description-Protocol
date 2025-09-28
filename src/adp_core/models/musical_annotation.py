@@ -51,6 +51,7 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any, Literal, Union
 from pydantic import BaseModel, Field, validator
 from .annotation import Annotation, Label, TimeRange, Provenance
+from ..taxonomy import SemanticAttributes, TaxonomyValidator
 
 
 class MusicalElement(BaseModel):
@@ -188,6 +189,12 @@ class MusicalAnalysis(BaseModel):
         description="Speechiness score"
     )
 
+    # Taxonomy-driven semantic analysis
+    semantic_attributes: Optional[SemanticAttributes] = Field(
+        None,
+        description="Comprehensive semantic descriptors using 479-term taxonomy"
+    )
+
 
 class MusicalAnnotation(Annotation):
     """
@@ -314,6 +321,26 @@ class MusicalAnnotation(Annotation):
 
         return features
 
+    @validator('semantic_attributes')
+    def validate_semantic_taxonomy(cls, semantic_attr):
+        """
+        <!-- Validates taxonomy terms against the 479-term canonical vocabulary -->
+        Validate semantic attributes against taxonomy.
+        """
+        if semantic_attr is None:
+            return semantic_attr
+
+        # Validate all terms and collect any invalid ones
+        invalid_terms = semantic_attr.validate_terms()
+
+        if invalid_terms:
+            invalid_list = []
+            for category, terms in invalid_terms.items():
+                invalid_list.extend([f"{category}:{term}" for term in terms])
+            raise ValueError(f"Invalid taxonomy terms: {', '.join(invalid_list)}")
+
+        return semantic_attr
+
     class Config:
         """Pydantic model configuration."""
         json_schema_extra = {
@@ -345,7 +372,12 @@ class MusicalAnnotation(Annotation):
                     "time_signature": "4/4",
                     "genre": "jazz",
                     "energy": 0.7,
-                    "valence": 0.8
+                    "valence": 0.8,
+                    "semantic_attributes": {
+                        "mood": ["upbeat", "positive-mood", "relaxed"],
+                        "energy": ["medium-energy", "groovy", "flowing"],
+                        "texture": ["warm", "smooth", "rich"]
+                    }
                 },
                 "musical_elements": [
                     {
