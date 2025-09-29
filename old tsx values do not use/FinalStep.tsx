@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 
 import { useWizardStore } from '../context/WizardContext';
@@ -50,8 +49,8 @@ export const FinalStep = ({ onRestart }: FinalStepProps) => {
 
     return (
         <div className="p-1">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100 mb-1">Protocol Generated</h2>
-            <p className="text-gray-500 dark:text-slate-400 mb-4">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Protocol Generated</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
                 You can now copy or download the structured JSON data.
             </p>
             {notification && (
@@ -64,14 +63,14 @@ export const FinalStep = ({ onRestart }: FinalStepProps) => {
                     <button
                         type="button"
                         onClick={copyToClipboard}
-                        className="h-12 px-6 w-full font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+                        className="px-6 py-2 w-full font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700"
                     >
                         Copy to Clipboard
                     </button>
                     <button
                         type="button"
                         onClick={downloadJson}
-                        className="h-12 px-6 w-full font-semibold text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                        className="px-6 py-2 w-full font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700"
                     >
                         Download .json
                     </button>
@@ -80,7 +79,7 @@ export const FinalStep = ({ onRestart }: FinalStepProps) => {
                     type="button"
                     onClick={onRestart}
                     disabled={!actionTaken}
-                    className="h-12 px-6 w-full font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2 w-full font-semibold text-white bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Create New Record
                 </button>
