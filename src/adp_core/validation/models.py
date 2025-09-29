@@ -5,12 +5,12 @@ These models define the data structures for validation requests and responses
 following the OpenAPI contract specifications.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
 class SchemaType(str, Enum):
@@ -62,23 +62,16 @@ class ValidationRequest(BaseModel):
         description="Validation scope and detail level"
     )
 
-    @validator('protocol_data')
-    def protocol_data_must_be_object(cls, v):
-        """Validate that protocol_data is a valid object"""
-        if not isinstance(v, dict):
-            raise ValueError('protocol_data must be a valid JSON object')
-        return v
-
-    @validator('field_path')
+    @field_validator('field_path')
+    @classmethod
     def field_path_jsonpath_format(cls, v):
         """Validate that field_path follows JSONPath syntax when provided"""
         if v is not None and not v.startswith('$.'):
             raise ValueError('field_path must follow JSONPath syntax starting with "$."')
         return v
 
-    class Config:
-        """Pydantic configuration"""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "protocol_data": {
                     "title": "My Audio Track",
@@ -90,6 +83,7 @@ class ValidationRequest(BaseModel):
                 "validation_mode": "field"
             }
         }
+    )
 
 
 class ValidationError(BaseModel):
@@ -121,7 +115,8 @@ class ValidationError(BaseModel):
         description="Actionable guidance for correction"
     )
 
-    @validator('message')
+    @field_validator('message')
+    @classmethod
     def message_must_be_brief(cls, v):
         """Ensure message is brief (1-2 sentences max)"""
         sentences = v.split('.') if v else []
@@ -129,16 +124,16 @@ class ValidationError(BaseModel):
             raise ValueError('Error message must be 1-2 sentences maximum')
         return v
 
-    @validator('field_path')
+    @field_validator('field_path')
+    @classmethod
     def field_path_must_be_jsonpath(cls, v):
         """Validate field_path follows JSONPath format"""
         if not v.startswith('$.'):
             raise ValueError('field_path must be valid JSONPath starting with "$."')
         return v
 
-    class Config:
-        """Pydantic configuration"""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "field_path": "$.title",
                 "message": "Title must be between 1 and 200 characters. Current length is 0.",
@@ -147,6 +142,7 @@ class ValidationError(BaseModel):
                 "suggested_fix": "Enter a descriptive title for your audio content"
             }
         }
+    )
 
 
 class ValidationWarning(BaseModel):
@@ -170,15 +166,15 @@ class ValidationWarning(BaseModel):
         description="Machine-readable warning identifier"
     )
 
-    class Config:
-        """Pydantic configuration"""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "field_path": "$.description",
                 "message": "Description is recommended for better protocol clarity.",
                 "warning_code": "FIELD_RECOMMENDED"
             }
         }
+    )
 
 
 class ValidationResult(BaseModel):
@@ -205,7 +201,7 @@ class ValidationResult(BaseModel):
         description="Field-level validation status map"
     )
     processed_at: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(timezone.utc),
         description="When validation was completed"
     )
     schema_version: str = Field(
@@ -213,7 +209,8 @@ class ValidationResult(BaseModel):
         description="Version of schema used for validation"
     )
 
-    @validator('field_results')
+    @field_validator('field_results')
+    @classmethod
     def field_results_valid_statuses(cls, v):
         """Validate field result statuses are valid"""
         valid_statuses = {'valid', 'invalid', 'pending'}
@@ -222,9 +219,8 @@ class ValidationResult(BaseModel):
                 raise ValueError(f'Invalid field status: {status}. Must be one of {valid_statuses}')
         return v
 
-    class Config:
-        """Pydantic configuration"""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "is_valid": True,
                 "errors": [],
@@ -237,3 +233,4 @@ class ValidationResult(BaseModel):
                 "schema_version": "1.2.0"
             }
         }
+    )

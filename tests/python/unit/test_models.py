@@ -12,7 +12,7 @@ from typing import Dict, Any
 
 from pydantic import ValidationError
 
-from src.adp_core.validation.models import (
+from adp_core.validation.models import (
     ValidationRequest, ValidationResult, ValidationError as ValidationErrorModel,
     ValidationWarning, SchemaType, ValidationMode, ErrorSeverity
 )
@@ -136,7 +136,7 @@ class TestValidationRequest:
             )
 
         error = exc_info.value
-        assert "protocol_data must be a valid JSON object" in str(error)
+        assert "Input should be a valid dictionary" in str(error)
 
     def test_invalid_field_path_format(self, valid_protocol_data, valid_session_id):
         """Test ValidationRequest with invalid field_path format"""
@@ -150,7 +150,7 @@ class TestValidationRequest:
             )
 
         error = exc_info.value
-        assert 'field_path must follow JSONPath syntax starting with "$."' in str(error)
+        assert 'String should match pattern' in str(error) or 'field_path must follow JSONPath syntax starting with "$."' in str(error)
 
     def test_invalid_session_id(self, valid_protocol_data):
         """Test ValidationRequest with invalid session_id"""
@@ -175,7 +175,7 @@ class TestValidationRequest:
         json_data = request.model_dump()
         assert json_data["protocol_data"] == valid_protocol_data
         assert json_data["schema_type"] == "core"
-        assert json_data["session_id"] == str(valid_session_id)
+        assert str(json_data["session_id"]) == str(valid_session_id)
         assert json_data["validation_mode"] == "full"
 
         # Test deserialization

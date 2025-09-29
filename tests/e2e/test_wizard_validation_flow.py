@@ -15,8 +15,8 @@ from uuid import uuid4
 import httpx
 from fastapi.testclient import TestClient
 
-from src.adp_core.api.app import app
-from src.adp_core.validation.models import ValidationRequest, SchemaType, ValidationMode
+from adp_core.api.app import app
+from adp_core.validation.models import ValidationRequest, SchemaType, ValidationMode
 
 
 class TestWizardValidationFlow:

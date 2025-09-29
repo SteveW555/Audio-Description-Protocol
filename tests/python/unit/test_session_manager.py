@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 from typing import Dict, Any
 from unittest.mock import Mock, patch
 
-from src.adp_core.validation.session_manager import SessionManager, UserSession
+from adp_core.validation.session_manager import SessionManager, UserSession
 
 
 class TestUserSession:
