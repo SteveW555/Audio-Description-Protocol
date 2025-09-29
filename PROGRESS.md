@@ -1,4 +1,51 @@
+### 2025-09-29 - Session 14
+**Features:** Complete hierarchical taxonomy expansion with Energy subcategories (5 groups: High Energy & Intense, Upbeat & Driving, Moderate & Balanced, Calm & Relaxed, Low Energy & Subdued organizing 90 terms) and Texture subcategories (9 groups: Thickness & Density, Spatial Qualities, Surface & Grain, Complexity & Detail, Harmonic Content, Movement & Flow, Timbral Qualities, Attack & Articulation, Purity & Clarity organizing 119 terms)
+**Improvements:** Enhanced groupTermsByCategory() to process all three dimensions (Mood/Energy/Texture) with complete subcategory mappings, TypeScript compilation validated, documentation updated across README.md, docs/features.md, and docs/MET-Supplement.md
+**Commit Info:** Working on branch 006-below-the-filter (changes not yet committed, previous commit: dde1dff refactor: migrate groupBy state management)
+
+### 2025-09-29 - Session 13
+**Features:** Complete Group By toolbar with hierarchical subcategory grouping (7 mood subcategories), popularity/frequency grouping with visual separators, localStorage persistence with version migration, comprehensive test suite (125+ assertions)
+**Fixes:** Category grouping logic corrected from main categories to subcategories matching taxonomy.py TAXONOMY_HIERARCHY structure
+**Improvements:** TDD implementation with tests-first approach, enhanced TermSelector with grouped/flat layout modes, integration into WizardStep component, pixel-perfect styling matching FrequencyFilter
+**Documentation:** IMPLEMENTATION_SUMMARY.md, INTEGRATION_GUIDE.md, data-model.md, quickstart.md with comprehensive test scenarios
+
+### 2025-09-29 - Session 12
+**Features:** Multi-select frequency filter with exclusive "All" button logic, enhanced visual design with "Filter by Popularity:" label and standardized button sizing, comprehensive test suite for multi-select behavior and filter persistence
+**Fixes:** Button sizing inconsistency with term selector components, state management edge cases for empty filter states, storage version compatibility during feature upgrades
+**Improvements:** Type system migration from single to array-based selection, advanced Zustand store logic for complex multi-select toggle behavior, enhanced session storage with automatic v1 to v2 migration
+**Commits:** 87c434e (*works finished filter by freq. docs: add frequency filter toolbar above term selector with persistence), b1f508d (specify freq filter)
+
+### 2025-09-29 - Session 11
+**Features:** Complete wizard development environment setup with Vite build system, Tailwind CSS v3 integration, comprehensive theme toggle system with localStorage persistence, TypeScript configuration with proper build pipeline
+**Fixes:** Development server configuration for port 3000 with auto-opening, theme persistence across sessions, CSS integration with Tailwind directives
+**Improvements:** Build system modernization from basic React to Vite-based development, enhanced component architecture with theme-aware styling, robust error handling for localStorage operations
+**Commits:** fc121fb (*works light and dark mode), a447e32 (feat: complete wizard development environment setup), 4764fd3 (*works feat: implement theme persistence and toggle button)
+
+### 2025-09-29 - Session 10
+**Features:** Contributor-focused agent guide to document project structure and workflows
+**Fixes:** Wizard layout now reserves ~70% width for controls and ~30% for JSON preview on large screens
+**Improvements:** Root-level Vite configuration scoped to wizard directory with updated dev script and relocated entry HTML
+**Commits:** 75beaa6 (*working* restructured files for faster startup)
+
 # Audio Description Protocol (ADP) Development Progress
+
+### 2025-09-29 - Session 9
+**Features:** Enhanced dark theme implementation with sophisticated slate color palette and blue accents, visual hierarchy improvements with enhanced contrast and typography, refined button styling with proper hover states and visual feedback
+**Fixes:** Button height regression from 004-make-all-attribute feature that broke Session 8 visual design, styling conflicts between new feature implementation and existing dark theme, CSS architecture restoration to preserve sophisticated visual design
+**Improvements:** Visual design preservation strategy and development process enhancement, component polish with improved accessibility and user experience, build system validation and responsive design optimization
+**Commits:** 9122b22 (completed wizard rebuild - visual styling enhancement to match original design specifications)
+
+### 2025-09-29 - Session 8
+**Features:** Complete visual styling implementation matching original screenshot design, professional wizard interface with authentic color scheme and typography, enhanced component styling with polished UI presentation
+**Fixes:** Visual consistency issues between current styling and original design, component integration conflicts, layout inconsistencies and color mismatches
+**Improvements:** CSS architecture enhancement with systematic color palette, refined visual hierarchy and accessibility, maintained all advanced taxonomy and protocol generation functionality
+**Commits:** 50b08b0 (Wizard Context and State Management), 7e429b6 (Musical Analysis and Semantic Attributes forms with validation)
+
+### 2025-09-28 - Session 7
+**Features:** Enhanced wizard directory structure, complete React wizard application with TypeScript integration, wizard context and state management system
+**Fixes:** Critical import path resolution after directory restructuring, broken TypeScript references in wizard components, documentation synchronization with new file locations
+**Improvements:** Modular wizard architecture with clear separation of concerns, improved maintainability with wizard_structures organization, type-safe protocol handling across wizard workflow
+**Commits:** e8e12c6 (Wizard Context and State Management), b0ab4e3 (taxonomy and vocabulary refactoring)
 
 ### 2025-09-27 - Session 5
 **Features:** Complete CLI interface with validation commands, dictionary management system, musical annotation validation with theory constraints, interactive entry creation
@@ -39,7 +86,8 @@
   - 1 non-functional requirement (10K clips/annotations scale)
   - 5 key entities defined: DictionaryEntry, Annotation, Dataset, ModelOutput, AudioClipReference
 
-### = Requirements Clarification
+### =
+ Requirements Clarification
 - **Clarification Session**: Resolved 5 critical ambiguities
   - Audio clip references: file paths or web URLs
   - Dataset licensing: CC0-1.0 default
@@ -105,6 +153,16 @@
   - 1 Task List (40 tasks, dependency-ordered)
 - **Constitutional Gates**: All checkpoints passed
 - **Readiness Status**: Ready for implementation execution
+
+---
+
+## Session: 2025-09-28 - Session 6
+**Features:** Comprehensive audio taxonomy system, TypeScript protocol definitions, wizard components, advanced vocabulary definitions
+**Taxonomy:** 479 canonical terms across Mood/Energy/Texture categories with frequency ratings, hierarchical organization, and metadata
+**Framework:** Helper functions for taxonomy management, initial state structures, protocol type definitions, comprehensive vocabulary mappings
+**Commits:** f8cb822 (taxonomy system), 6578402 (phase integration), 75073c5 (CLI enhancements)
+**Files Added:** Python taxonomy system (src/adp_core/taxonomy.py, src/adp_core/taxonomyHelpers.py), React wizard app (wizard/app/), archived legacy TypeScript structures (Archived Files/)
+**Documentation:** MET-Supplement.md, taxonomy.md, FUTURE.md planning documents
 
 ---
 

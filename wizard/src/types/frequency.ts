@@ -1,0 +1,1 @@
+export type FrequencyCategory = 'all' | 'ubiquitous' | 'frequent' | 'infrequent' | 'rare';

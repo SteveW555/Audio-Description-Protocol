@@ -174,3 +174,6 @@ tmp/
 # Logs
 *.log
 logs/
+
+wizard/app/node_modules/
+node_modules

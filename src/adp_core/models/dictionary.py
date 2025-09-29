@@ -2,6 +2,8 @@
 <!--
 DICTIONARY ENTRY DATA MODEL - STANDARDIZED VOCABULARY SYSTEM
 ==============================================================================
+See also wizard
+
 FILE PURPOSE:
     Defines the dictionary entry model for standardized audio description
     vocabulary. Creates a controlled vocabulary system for consistent labeling

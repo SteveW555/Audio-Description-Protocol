@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Description Protocol - Wizard</title>
+    <meta name="description" content="Interactive wizard for creating musical annotations using the Audio Description Protocol" />
+    <script>
+      (function () {
+        try {
+          var storedTheme = localStorage.getItem('adp-theme');
+          if (storedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            return;
+          }
+        } catch (error) {
+          // If accessing storage fails we fall back to the light theme
+        }
+        document.documentElement.classList.remove('dark');
+      })();
+    </script>
+  </head>
+  <body class="bg-gray-50 dark:bg-slate-950">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

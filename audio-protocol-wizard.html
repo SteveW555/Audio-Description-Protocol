@@ -163,7 +163,7 @@
 
         const getInitialState = () => ({
             protocol_version: "1.0",
-            path: "New Sample",
+            path: "New Sample 2",
             theory: { bpm: '', key: '', scale: '', key_confidence: 'tbc', chords: 'tbc', roman_numerals: 'tbc' },
             semantic_description: {
                 attributes: { mood: [], energy: [], texture: [] },
@@ -222,8 +222,8 @@
                                     key={term}
                                     onClick={() => handleSelect(term)}
                                     className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${isSelected(term)
-                                            ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300 dark:ring-blue-500'
-                                            : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                                        ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300 dark:ring-blue-500'
+                                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
                                         }`}
                                 >
                                     {term}
