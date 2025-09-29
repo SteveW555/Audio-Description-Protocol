@@ -37,4 +37,6 @@ Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standa
 - 002-advanced-audio-processing: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes
 
 <!-- MANUAL ADDITIONS START -->
+## Extra Reading
+- Read README.md
 <!-- MANUAL ADDITIONS END -->
