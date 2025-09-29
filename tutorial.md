@@ -189,7 +189,7 @@ interface WizardState {
 The system uses comprehensive TypeScript interfaces for type safety:
 
 ```typescript
-// Core Musical Descriptors (wizard/wizard_structures/protocol.ts)
+// Core Musical Descriptors (archived in Archived Files/wizard-structures/protocol.ts)
 export interface AudioProtocolData {
     protocol_version: string;
     path: string;
@@ -225,7 +225,7 @@ export interface SemanticDescription {
 The project includes a comprehensive vocabulary covering three dimensions:
 
 ```typescript
-// Taxonomy Structure (wizard/wizard_structures/taxonomy.ts)
+// Taxonomy Structure (now in Python: src/adp_core/taxonomy.py)
 export interface TermDef {
     id: string;           // Stable identifier (e.g., "upbeat")
     term: string;         // Display name (e.g., "upbeat")
@@ -280,8 +280,8 @@ Space & Atmosphere: spacious, reverberant, intimate...
 
 ### Hierarchical Organization
 
-```typescript
-// Term Resolution (wizard/wizard_structures/taxonomy.ts)
+```python
+# Term Resolution (src/adp_core/taxonomy.py)
 export const QualityHierarchyRef: Record<QualityCategory, { [clusterName: string]: string[] }> = {
     Mood: {
         'Positive / Uplifting': ['upbeat', 'joyful', 'triumphant', ...],
@@ -752,10 +752,10 @@ less src/adp_core/models/annotation.py
 less src/adp_core/models/musical_annotation.py
 
 # Review taxonomy
-less wizard/wizard_structures/taxonomy.ts
+less src/adp_core/taxonomy.py
 
 # Check TypeScript protocol
-less wizard/wizard_structures/protocol.ts
+less "Archived Files/wizard-structures/protocol.ts"
 
 # See validation examples
 less tests/validation/test_validator_core.py
@@ -793,7 +793,7 @@ print(annotation.model_dump_json(indent=2))
 
 ### Next Steps
 
-1. **Explore the Taxonomy**: Browse the 479-term vocabulary in `wizard/wizard_structures/taxonomy.ts`
+1. **Explore the Taxonomy**: Browse the 479-term vocabulary in `src/adp_core/taxonomy.py`
 2. **Try Advanced Features**: Experiment with musical structure and audio features
 3. **Validate Your Data**: Use both frontend and backend validation
 4. **Build Datasets**: Combine multiple annotations into dataset manifests
@@ -810,7 +810,6 @@ Audio Description Protocol/
 │   ├── validation/            # Validation logic
 │   └── typescript_bridge.py   # Frontend integration
 ├── wizard/                    # TypeScript frontend
-│   ├── wizard_structures/     # Shared definitions
 │   └── app/src/              # React application
 ├── schemas/                   # JSON schemas
 ├── tests/                     # Test suites

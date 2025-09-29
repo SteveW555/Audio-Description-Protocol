@@ -14,6 +14,10 @@ The .specify and specs folders show the Spec Kit approach to development. .claud
 - Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, jsonschema, librosa/torchaudio (audio processing), pytest (testing) (001-create-a-spec)
 - Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes (002-advanced-audio-processing)
 - File-based (audio files, JSON annotations, model files) (002-advanced-audio-processing)
+- Python 3.11+ (primary), TypeScript (wizard interface) + PyTorch, jsonschema, FastAPI, Node.js/TypeScript runtime (003-integrate-wizard-interface)
+- File-based (JSON schemas, protocol configurations), session storage for wizard state (003-integrate-wizard-interface)
+- TypeScript (wizard interface), Python 3.11+ (backend) + React, CSS/styled-components, FastAPI (004-make-all-attribute)
+- Session storage for wizard state, file-based JSON configurations (004-make-all-attribute)
 
 ## Project Structure
 ```
@@ -28,8 +32,9 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standard conventions
 
 ## Recent Changes
+- 004-make-all-attribute: Added TypeScript (wizard interface), Python 3.11+ (backend) + React, CSS/styled-components, FastAPI
+- 003-integrate-wizard-interface: Added Python 3.11+ (primary), TypeScript (wizard interface) + PyTorch, jsonschema, FastAPI, Node.js/TypeScript runtime
 - 002-advanced-audio-processing: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes
-- 001-create-a-spec: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, jsonschema, librosa/torchaudio (audio processing), pytest (testing)
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

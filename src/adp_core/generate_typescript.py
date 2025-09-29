@@ -23,9 +23,9 @@ class TypeScriptGenerator:
     def __init__(self, output_dir: str = None):
         """Initialize with output directory for generated TypeScript files."""
         if output_dir is None:
-            # Default to wizard structures directory
+            # Default to wizard app types directory
             current_dir = Path(__file__).parent
-            self.output_dir = current_dir.parent.parent / "wizard" / "wizard_structures" / "generated"
+            self.output_dir = current_dir.parent.parent / "wizard" / "app" / "src" / "types" / "generated"
         else:
             self.output_dir = Path(output_dir)
 
