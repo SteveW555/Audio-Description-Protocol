@@ -13,7 +13,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
 from typing import Dict, Any
 
-from src.adp_core.validation.schema_loader import SchemaLoader, SchemaCache
+from src.adp_core.validation.schema_loader import SchemaLoader, ValidationSchema
 
 
 class TestSchemaCache:
