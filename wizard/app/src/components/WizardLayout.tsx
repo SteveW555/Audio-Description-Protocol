@@ -130,9 +130,6 @@ export const WizardLayout = () => {
                 multi={'multi' in currentStepConfig ? currentStepConfig.multi : undefined}
                 stepNumber={stepNumber}
                 onNext={goToNextStep}
-                category={'category' in currentStepConfig ? currentStepConfig.category : undefined}
-                enableSearch={'enableSearch' in currentStepConfig ? currentStepConfig.enableSearch : undefined}
-                enableFrequencyGroups={'enableFrequencyGroups' in currentStepConfig ? currentStepConfig.enableFrequencyGroups : undefined}
             />
         );
     };

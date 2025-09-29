@@ -11,12 +11,9 @@ interface WizardStepProps {
     multi?: boolean;
     stepNumber: number;
     onNext: () => void;
-    category?: 'mood' | 'energy' | 'texture';
-    enableSearch?: boolean;
-    enableFrequencyGroups?: boolean;
 }
 
-export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, category, enableSearch, enableFrequencyGroups }: WizardStepProps) => {
+export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext }: WizardStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
 
@@ -39,9 +36,6 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
                     updateData(path, multi ? ['tbc'] : 'tbc');
                     onNext();
                 }}
-                category={category}
-                enableSearch={enableSearch}
-                enableFrequencyGroups={enableFrequencyGroups}
             />
         </div>
     );
