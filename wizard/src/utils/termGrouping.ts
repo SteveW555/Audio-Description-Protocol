@@ -9,7 +9,43 @@ import type { TermCategory, TermGroup } from '../types/grouping';
 import { TERM_FREQUENCIES } from './termFrequencies';
 import type { FrequencyCategory } from '../types/frequency';
 
-// Pre-computed term sets for O(1) category lookups
+// Hierarchical subcategory mappings (from taxonomy.py TAXONOMY_HIERARCHY)
+const MOOD_SUBCATEGORIES: Record<string, string[]> = {
+  'Positive / Uplifting': [
+    'upbeat', 'energetic-mood', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive-mood',
+    'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic',
+    'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly-mood'
+  ],
+  'Calm / Peaceful': [
+    'peaceful', 'calm', 'relaxed', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing',
+    'gentle', 'contemplative', 'restful', 'ethereal-mood', 'atmospheric-mood', 'flowing-mood',
+    'smooth-mood', 'gossamer-mood'
+  ],
+  'Dark / Negative': [
+    'dark-mood', 'melancholic', 'sad', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting',
+    'moody', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing',
+    'shadowy-mood', 'plaintive', 'negative-mood'
+  ],
+  'Intense / Aggressive': [
+    'intense-mood', 'aggressive', 'driving-mood', 'powerful-mood', 'forceful', 'fierce',
+    'raw-mood', 'edgy-mood', 'explosive-mood', 'menacing', 'angry', 'violent', 'furious',
+    'tense', 'harsh-mood', 'thunderous', 'blistering', 'snarling', 'chaotic-mood'
+  ],
+  'Mysterious / Ambiguous': [
+    'mysterious', 'enigmatic', 'ethereal-ambience', 'otherworldly', 'mystical', 'cryptic',
+    'elusive', 'veiled-mood', 'obscure-mood', 'twilight', 'liminal', 'majestic', 'epic', 'strange'
+  ],
+  'Romantic / Tender': [
+    'tender', 'affectionate', 'intimate-mood', 'loving', 'sensual', 'warm-hearted', 'sultry',
+    'passionate', 'yearning', 'longing'
+  ],
+  'Nostalgic / Reflective': [
+    'nostalgic', 'reflective', 'bittersweet', 'reminiscent', 'pensive', 'poignant',
+    'memory-laden', 'retrospective'
+  ]
+};
+
+// Pre-computed term sets for O(1) category lookups (main categories)
 const MOOD_TERMS: Set<string> = new Set([
   // Positive / Uplifting
   'upbeat', 'energetic-mood', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive-mood',
@@ -136,42 +172,28 @@ export function sortTermsByFrequency(terms: string[]): string[] {
 }
 
 /**
- * Group terms by semantic category (Mood, Energy, Texture)
+ * Group terms by semantic subcategory (e.g., Positive/Uplifting, Calm/Peaceful, etc.)
  * @param terms - Array of term strings to group
- * @returns Array of TermGroup objects in semantic order, empty groups filtered out
+ * @returns Array of TermGroup objects in hierarchical order, empty groups filtered out
  */
 export function groupTermsByCategory(terms: string[]): TermGroup[] {
   if (terms.length === 0) return [];
 
-  // Initialize groups
-  const groups: Record<TermCategory, string[]> = {
-    Mood: [],
-    Energy: [],
-    Texture: []
-  };
-
-  // Categorize terms
-  for (const term of terms) {
-    const category = inferTermCategory(term);
-    if (category) {
-      groups[category].push(term);
-    }
-    // Terms without category are excluded (handled separately by caller)
-  }
-
-  // Sort terms within each group by frequency
   const sortedGroups: TermGroup[] = [];
-  const categoryOrder: TermCategory[] = ['Mood', 'Energy', 'Texture'];
 
-  for (const category of categoryOrder) {
-    const categoryTerms = groups[category];
-    if (categoryTerms.length > 0) {
+  // Group by mood subcategories
+  for (const [subcategoryLabel, subcategoryTerms] of Object.entries(MOOD_SUBCATEGORIES)) {
+    const matchingTerms = terms.filter(term => subcategoryTerms.includes(term));
+    if (matchingTerms.length > 0) {
       sortedGroups.push({
-        label: category,
-        terms: sortTermsByFrequency(categoryTerms)
+        label: subcategoryLabel,
+        terms: sortTermsByFrequency(matchingTerms)
       });
     }
   }
+
+  // TODO: Add Energy and Texture subcategories when available
+  // For now, only mood terms will be grouped by subcategory
 
   return sortedGroups;
 }
