@@ -1,5 +1,7 @@
 # Audio Description Protocol (ADP)
 
+**Status:** Active Development | **Latest Feature:** Group By Toolbar (v006)
+
 A Python-first framework for describing musical audio clips with structured text annotations, featuring a comprehensive 479-term taxonomy and interactive React wizard interface for seamless human-AI interoperability.
 
 ## 🎯 Project Overview
