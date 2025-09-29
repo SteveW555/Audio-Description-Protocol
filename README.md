@@ -1,111 +1,192 @@
 # Audio Description Protocol (ADP)
 
-A spec-driven framework for describing musical audio clips with structured text annotations, enabling seamless interoperability between human annotators and AI models.
+A Python-first framework for describing musical audio clips with structured text annotations, featuring a comprehensive 479-term taxonomy and interactive React wizard interface for seamless human-AI interoperability.
 
 ## 🎯 Project Overview
 
-The Audio Description Protocol (ADP) creates standardized JSON schemas for musical audio annotation, supporting:
+The Audio Description Protocol (ADP) provides a complete ecosystem for musical audio annotation:
 
-- **Dictionary Entries**: Hierarchical musical descriptors with unique IDs
-- **Time-Based Annotations**: Labels with confidence scores and provenance tracking
-- **Dataset Manifests**: Curated collections of clips and annotations
-- **Model Outputs**: AI-generated annotations with inference metadata
+- **479-Term Taxonomy**: Comprehensive mood, energy, and texture descriptors with hierarchical organization
+- **Python Backend**: Robust data models, validation, and audio processing with PyTorch/librosa
+- **React Wizard Interface**: User-friendly web application for creating annotations step-by-step
+- **TypeScript Bridge**: Type-safe data exchange between frontend and backend
+- **Time-Based Annotations**: Precise temporal labels with confidence scores and provenance tracking
+- **Dataset Management**: Curated collections with manifests and version control
 
 ### Key Features
 
-- 📋 **JSON Schema Compliance**: All data exchange via versioned schemas
-- 🏗️ **Hierarchical Labels**: Parent-child relationships for musical taxonomy
-- 🕒 **Time Range Support**: Precise temporal annotations with validation
-- 🤖 **Human-AI Interoperability**: Provenance tracking for annotation sources
-- 📈 **Scalable**: Designed to handle up to 10,000 clips and annotations
-- 🔄 **Version Control**: Semantic versioning for schema evolution
+- 🎵 **Comprehensive Taxonomy**: 479 curated terms across mood (147), energy (100), and texture (232) dimensions
+- 🐍 **Python-First Architecture**: Core data models and validation using Pydantic with PyTorch integration
+- ⚛️ **Interactive Wizard**: React-based web interface with real-time validation and step-by-step annotation creation
+- 🔗 **TypeScript Bridge**: Maintains type safety and data consistency between Python backend and React frontend
+- 🕒 **Temporal Precision**: Time-range annotations with microsecond accuracy and validation
+- 🤖 **Human-AI Interoperability**: Full provenance tracking for annotation sources and confidence scoring
+- 📊 **Professional Quality**: Supports musical analysis, spectral features, and hierarchical musical structures
+- ⚡ **Real-time Validation**: Immediate feedback with comprehensive error reporting and term suggestions
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Python 3.11 or higher
-- Audio files (WAV/MP3 format)
+- Node.js 18+ (for React wizard interface)
+- Audio files (WAV/MP3/FLAC format)
 
 ### Installation
 
+#### Backend Setup
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd "Audio Description Protocol"
 
 # Create virtual environment
-python -m venv adp-env
-source adp-env/bin/activate  # On Windows: adp-env\Scripts\activate
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies (when implementation is complete)
-pip install -e .
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
+#### Frontend Setup (React Wizard)
+```bash
+# Navigate to wizard application
+cd wizard/app
+
+# Install Node.js dependencies
+npm install
+
+# Start development server
+npm run dev
+# Wizard available at http://localhost:5173
 ```
 
 ### Basic Usage
 
+#### Using the Interactive Wizard (Recommended)
 ```bash
-# Validate a dictionary entry
-adp validate dictionary examples/lo-fi-hip-hop.json
-
-# Validate an annotation
-adp validate annotation examples/annotation-001.json
-
-# Validate a complete dataset
-adp validate dataset examples/study-music-dataset.json
+# Start the React wizard interface
+cd wizard/app && npm run dev
+# Open http://localhost:5173 in your browser
+# Follow the step-by-step annotation process
 ```
 
-## 📖 Documentation Structure
+#### Programmatic Usage (Python)
+```python
+from adp_core.models.annotation import Annotation, TimeRange, Label
+from adp_core.taxonomy import SemanticAttributes
 
-This project follows a **spec-driven development** approach using the Spec Kit framework:
+# Create annotation with taxonomy terms
+annotation = Annotation(
+    id="my-annotation",
+    clip_id="audio-001",
+    time_range=TimeRange(start_sec=0.0, end_sec=30.0),
+    labels=[Label(entry_id="upbeat", confidence=0.9)],
+    # ... other fields
+)
+
+# Validate semantic attributes
+semantic = SemanticAttributes(
+    mood=["upbeat", "joyful"],
+    energy=["high-energy"],
+    texture=["bright", "crisp"]
+)
+```
+
+#### Command Line Interface
+```bash
+# Run tests
+pytest tests/
+
+# Check code quality
+ruff check src/
+
+# Validate taxonomy terms
+python -c "from adp_core.taxonomy import TAXONOMY_TERMS; print(f'Loaded {len(TAXONOMY_TERMS)} taxonomy terms')"
+```
+
+## 📖 Project Structure
+
+The codebase is organized into distinct backend and frontend components:
 
 ```
 📁 Audio Description Protocol/
-├── 📋 spec.md                    # Main feature specification
-├── 🏛️ .specify/                  # Spec Kit framework
-│   ├── memory/constitution.md    # Project governance principles
-│   └── templates/               # Development templates
-├── 📂 specs/001-create-a-spec/   # Current feature implementation
-│   ├── spec.md                  # Detailed requirements
-│   ├── plan.md                  # Implementation plan
-│   ├── research.md              # Technical decisions
-│   ├── data-model.md            # Entity definitions
-│   ├── contracts/               # JSON Schema files
-│   ├── quickstart.md            # Integration scenarios
-│   └── tasks.md                 # Implementation tasks (40 tasks)
-└── 📊 progress.md                # Development progress log
+├── 🐍 src/adp_core/              # Python Backend
+│   ├── models/                   # Pydantic data models
+│   │   ├── annotation.py         # Core annotation types
+│   │   ├── musical_annotation.py # Extended musical analysis
+│   │   └── dataset.py           # Dataset management
+│   ├── validation/              # Validation framework
+│   ├── api/                     # FastAPI web service
+│   ├── taxonomy.py              # 479-term taxonomy system
+│   ├── taxonomyHelpers.py       # Taxonomy utilities
+│   └── typescript_bridge.py     # Frontend type bridge
+├── ⚛️ wizard/app/               # React Frontend
+│   └── src/                     # React application
+│       ├── components/          # UI components
+│       ├── context/            # State management
+│       ├── types/              # TypeScript definitions
+│       └── utils/              # Helper functions
+├── 📂 tests/                    # Test suites
+│   ├── python/                 # Python backend tests
+│   └── e2e/                    # End-to-end tests
+├── 📋 schemas/                  # JSON Schema contracts
+├── 🗂️ Archived Files/          # Legacy code preservation
+├── 🏛️ .specify/                 # Spec Kit framework
+└── 📊 PROGRESS.md               # Development history
 ```
 
 ## 🏗️ Architecture
 
-### Entity Model
+### System Architecture
 
 ```mermaid
-graph TD
-    DE[DictionaryEntry] -->|references| DE
-    A[Annotation] -->|references| DE
-    A -->|references| ACR[AudioClipReference]
-    MO[ModelOutput] -->|extends| A
-    DS[Dataset] -->|aggregates| A
-    DS -->|aggregates| DE
-    DS -->|aggregates| ACR
+graph TB
+    subgraph "Frontend (React)"
+        W[Wizard Interface]
+        C[Components]
+        S[State Management]
+    end
+
+    subgraph "Backend (Python)"
+        T[479-Term Taxonomy]
+        M[Pydantic Models]
+        V[Validation Engine]
+        A[FastAPI Service]
+    end
+
+    subgraph "Data Layer"
+        J[JSON Schemas]
+        D[Audio Files]
+        AN[Annotations]
+    end
+
+    W --> A
+    C --> S
+    T --> M
+    M --> V
+    V --> A
+    A --> J
+    J --> D
+    J --> AN
 ```
 
 ### Core Components
 
-- **DictionaryEntry**: Musical descriptors with hierarchical relationships
-- **Annotation**: Time-bound labels linking audio clips to dictionary entries
-- **Dataset**: Curated collections with metadata and references
-- **ModelOutput**: AI-generated annotations with inference metadata
-- **AudioClipReference**: Standardized pointers to audio content
+- **479-Term Taxonomy**: Comprehensive vocabulary covering mood, energy, and texture dimensions
+- **Pydantic Models**: Type-safe Python data models with validation
+- **React Wizard**: Step-by-step annotation interface with real-time feedback
+- **TypeScript Bridge**: Maintains data consistency between frontend and backend
+- **Validation Engine**: Multi-level validation ensuring data quality
+- **FastAPI Service**: RESTful API for frontend-backend communication
 
 ### Data Flow
 
-1. **Dictionary Creation**: Define musical terms with hierarchical relationships
-2. **Audio Annotation**: Apply labels to time ranges with confidence scores
-3. **Dataset Assembly**: Aggregate clips, annotations, and dictionary entries
-4. **Validation**: Ensure all data conforms to JSON Schema contracts
-5. **AI Processing**: Generate model outputs with inference metadata
+1. **User Interaction**: React wizard collects annotation data with real-time validation
+2. **Type Safety**: TypeScript bridge ensures data consistency across systems
+3. **Python Validation**: Backend validates against taxonomy and schema constraints
+4. **JSON Export**: Generates ADP-compliant JSON for storage or further processing
+5. **Dataset Integration**: Annotations can be aggregated into curated datasets
 
 ## 📋 Specification Overview
 
@@ -132,66 +213,120 @@ graph TD
 - **Performance**: Schema validation <100ms
 - **Storage**: File-based JSON with optional database future support
 
-## 🔧 JSON Schema Examples
+## 🎵 Taxonomy Overview
 
-### Dictionary Entry
-```json
-{
-  "id": "lo-fi-hip-hop",
-  "label": "lo-fi hip hop",
-  "definition": "Relaxed hip hop subgenre characterized by low-fidelity sound quality, jazz samples, and downtempo beats.",
-  "schema_version": "1.0",
-  "parent_id": "hip-hop",
-  "tags": ["chill", "instrumental", "study-music"],
-  "created_at": "2025-09-26T10:00:00Z"
-}
+### 479-Term Classification System
+
+The ADP taxonomy organizes musical descriptors into three main dimensions:
+
+#### **Mood Descriptors (147 terms)**
+- **Positive/Uplifting**: upbeat, joyful, triumphant, heroic, optimistic
+- **Calm/Peaceful**: peaceful, serene, dreamy, meditative, tranquil
+- **Dark/Negative**: melancholic, somber, haunting, ominous, brooding
+- **Intense/Aggressive**: aggressive, forceful, explosive, driving
+- **Mysterious/Ambiguous**: mysterious, enigmatic, ethereal, atmospheric
+
+#### **Energy Descriptors (100 terms)**
+- **High Energy**: high-energy, driving, vigorous, explosive, pumping
+- **Medium Energy**: groovy, steady, flowing, balanced, moderate
+- **Low Energy**: laid-back, ambient, chill, mellow, peaceful
+- **Dynamic Shifts**: building, crescendo, explosive, surging
+
+#### **Texture Descriptors (232 terms)**
+- **Bright/Positive**: bright, crisp, sparkling, crystalline, brilliant
+- **Warm/Rich**: warm, lush, golden, creamy, honeyed
+- **Dark/Heavy**: dark, muddy, thick, dense, weighty
+- **Acoustic/Natural**: acoustic, woody, breathy, organic
+- **Electronic/Synthetic**: electronic, digital, processed, robotic
+
+### Example Usage
+```python
+# Semantic annotation using taxonomy terms
+semantic_attributes = SemanticAttributes(
+    mood=["upbeat", "joyful", "optimistic"],      # Positive mood cluster
+    energy=["high-energy", "driving"],           # High energy cluster
+    texture=["bright", "crisp", "warm"]          # Mixed texture qualities
+)
 ```
 
-### Annotation
+## 🔧 JSON Schema Examples
+
+### Musical Annotation with Taxonomy
 ```json
 {
-  "id": "annotation-001",
-  "clip_id": "sample-audio-001",
+  "id": "musical-annotation-001",
+  "clip_id": "lofi-track-001",
+  "annotation_type": "musical",
   "time_range": {
     "start_sec": 0.0,
-    "end_sec": 30.0
+    "end_sec": 180.0
   },
-  "labels": [
-    {
-      "entry_id": "lo-fi-hip-hop",
-      "confidence": 0.85
+  "musical_analysis": {
+    "tempo": 85,
+    "key_signature": "A minor",
+    "time_signature": "4/4",
+    "semantic_attributes": {
+      "mood": ["peaceful", "nostalgic", "dreamy"],
+      "energy": ["laid-back", "mellow", "flowing"],
+      "texture": ["warm", "soft", "analog"]
     }
-  ],
+  },
   "provenance": {
     "annotator_type": "human",
-    "annotator_id": "researcher-001",
-    "timestamp": "2025-09-26T10:30:00Z"
+    "annotator_id": "expert-musicologist",
+    "timestamp": "2025-09-29T10:30:00Z"
   },
   "schema_version": "1.0"
 }
 ```
 
+### Dataset with Taxonomy Integration
+```json
+{
+  "id": "chill-hop-dataset",
+  "name": "Chill Hip-Hop Collection",
+  "version": "1.0",
+  "clips": [...],
+  "annotations": [...],
+  "metadata": {
+    "total_duration_sec": 7200,
+    "annotation_count": 150,
+    "taxonomy_coverage": {
+      "mood_terms": 45,
+      "energy_terms": 12,
+      "texture_terms": 38
+    }
+  }
+}
+```
+
 ## 🛠️ Development Status
 
-### Current Phase: Planning Complete ✅
+### Current Phase: Core Implementation Complete ✅
 
-- [x] Constitution established (v1.0.0)
-- [x] Feature specification with 14 requirements
-- [x] Implementation plan with technical architecture
-- [x] Data model with 5 entities
-- [x] JSON Schema contracts (4 schemas)
-- [x] Integration test scenarios
-- [x] Task breakdown (40 implementation tasks)
+- [x] **Python Backend**: Complete taxonomy system with 479 terms and Pydantic models
+- [x] **React Wizard**: Fully functional step-by-step annotation interface
+- [x] **TypeScript Bridge**: Type-safe data exchange between frontend and backend
+- [x] **Validation Framework**: Multi-level validation with real-time feedback
+- [x] **Test Coverage**: Comprehensive test suites for Python and TypeScript components
+- [x] **Documentation**: Complete architecture and usage documentation
+- [x] **Codebase Cleanup**: Archived legacy files and established clean separation
 
-### Next Phase: Implementation
+### Recent Achievements (September 2025)
 
-The project is ready for implementation following the generated task list in `specs/001-create-a-spec/tasks.md`:
+- **Session 9**: Enhanced visual styling and UI polish for wizard interface
+- **Session 8**: Complete wizard context and state management implementation
+- **Session 7**: React wizard application with TypeScript integration
+- **Sessions 4-6**: 479-term taxonomy system and Python backend validation
+- **Codebase Cleanup**: Organized archive structure preserving development history
 
-1. **Setup Phase** (T001-T005): Project structure and configuration
-2. **Schema Tests** (T006-T013): TDD validation tests
-3. **Core Implementation** (T014-T030): Models, validation engine, CLI
-4. **Integration Tests** (T031-T035): End-to-end scenarios
-5. **Polish** (T036-T040): Documentation and optimization
+### Current Capabilities
+
+- ✅ **Interactive Annotation Creation**: Full wizard workflow from audio metadata to semantic descriptions
+- ✅ **Real-time Validation**: Immediate feedback on taxonomy term usage and data constraints
+- ✅ **Professional Quality**: Musical analysis, instrumentation details, and spectral features
+- ✅ **Type Safety**: End-to-end type checking from React UI to Python backend
+- ✅ **Export Ready**: Generates ADP-compliant JSON for dataset integration
 
 ## 🏛️ Project Governance
 
@@ -233,7 +368,8 @@ This project follows constitutional principles defined in `.specify/memory/const
 ### Branch Structure
 
 - `main`: Stable releases
-- `001-create-a-spec`: Current feature development
+- `004-make-all-attribute`: Current feature branch with complete wizard implementation
+- `Cleaning-Codebase`: Recent cleanup branch (archived legacy TypeScript files)
 
 ## 📄 License
 
@@ -245,22 +381,42 @@ Default dataset license: **CC0-1.0** (Creative Commons Public Domain)
 
 ## 📞 Support & Documentation
 
-- **Specification**: See `specs/001-create-a-spec/spec.md` for detailed requirements
-- **Architecture**: Review `specs/001-create-a-spec/data-model.md` for entity definitions
-- **API Contracts**: Check `specs/001-create-a-spec/contracts/` for JSON Schemas
-- **Integration Guide**: Follow `specs/001-create-a-spec/quickstart.md` for usage scenarios
-- **Progress Tracking**: Monitor `progress.md` for development updates
+- **Tutorial**: Comprehensive architecture guide in `tutorial.md`
+- **Python API**: Review `src/adp_core/` for backend models and validation
+- **React Components**: Check `wizard/app/src/` for frontend implementation
+- **Taxonomy Reference**: Explore `src/adp_core/taxonomy.py` for 479-term vocabulary
+- **JSON Schemas**: Find contracts in `schemas/` directory
+- **Progress Tracking**: Monitor `PROGRESS.md` for development history
+- **Legacy Files**: Historical code preserved in `Archived Files/` with documentation
 
 ## 🔮 Future Roadmap
 
-- **Phase 1**: Core validation and CLI implementation
-- **Phase 2**: Advanced audio processing with PyTorch/librosa
-- **Phase 3**: Web interface and collaborative annotation
-- **Phase 4**: Machine learning model integration
-- **Phase 5**: Performance optimization and scaling
+- **Phase 1** ✅: Core Python backend with 479-term taxonomy
+- **Phase 2** ✅: React wizard interface with real-time validation
+- **Phase 3**: Advanced audio processing and ML model integration
+- **Phase 4**: API service deployment and collaborative annotation
+- **Phase 5**: Dataset marketplace and community features
+- **Phase 6**: Performance optimization and enterprise scaling
+
+## 🎯 Getting Started Quickly
+
+### For Researchers & Annotators
+1. **Use the Wizard**: `cd wizard/app && npm run dev` → Open http://localhost:5173
+2. **Follow the Steps**: Audio metadata → Genre → Semantic attributes → Export JSON
+3. **Validate Results**: Comprehensive real-time feedback ensures quality
+
+### For Developers
+1. **Explore the Taxonomy**: `python -c "from adp_core.taxonomy import TAXONOMY_TERMS; print(len(TAXONOMY_TERMS))"`
+2. **Run Tests**: `pytest tests/python/` for backend, `cd wizard/app && npm test` for frontend
+3. **Read the Tutorial**: Complete architecture overview in `tutorial.md`
+
+### For AI/ML Practitioners
+1. **Review Data Models**: Check `src/adp_core/models/` for annotation structures
+2. **Understand Taxonomy**: 479 curated terms for consistent model training
+3. **Export Datasets**: Use wizard or programmatic interface for dataset creation
 
 ---
 
-**Status**: Planning complete, ready for implementation
-**Version**: Constitutional v1.0.0, Feature specification complete
-**Last Updated**: 2025-09-26
+**Status**: Core implementation complete, production ready for annotation workflows
+**Architecture**: Python backend + React frontend with 479-term taxonomy
+**Last Updated**: 2025-09-29 (Codebase Cleanup Complete)
