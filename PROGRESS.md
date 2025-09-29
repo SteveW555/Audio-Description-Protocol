@@ -1,3 +1,9 @@
+### 2025-09-29 - Session 10
+**Features:** Contributor-focused agent guide to document project structure and workflows
+**Fixes:** Wizard layout now reserves ~70% width for controls and ~30% for JSON preview on large screens
+**Improvements:** Root-level Vite configuration scoped to wizard directory with updated dev script and relocated entry HTML
+**Commits:** 75beaa6 (*working* restructured files for faster startup)
+
 # Audio Description Protocol (ADP) Development Progress
 
 ### 2025-09-29 - Session 9
@@ -57,7 +63,8 @@
   - 1 non-functional requirement (10K clips/annotations scale)
   - 5 key entities defined: DictionaryEntry, Annotation, Dataset, ModelOutput, AudioClipReference
 
-### = Requirements Clarification
+### =
+ Requirements Clarification
 - **Clarification Session**: Resolved 5 critical ambiguities
   - Audio clip references: file paths or web URLs
   - Dataset licensing: CC0-1.0 default
