@@ -1,3 +1,4 @@
+import React from 'react';
 import { memo, useMemo } from 'react';
 
 import { useWizardStore } from '../context/WizardContext';

@@ -1,3 +1,4 @@
+import React from 'react';
 import { AskStep } from './AskStep';
 import { TermSelector } from './TermSelector';
 import { useInstrumentationFlow } from '../hooks/useInstrumentationFlow';

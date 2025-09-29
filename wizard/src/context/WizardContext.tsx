@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useRef } from 'react';
+import React, { createContext, ReactNode, useContext, useRef } from 'react';
 import { create, StoreApi, UseBoundStore } from 'zustand';
 
 import { getInitialState } from '../constants/initialState';

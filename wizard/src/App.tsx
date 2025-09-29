@@ -1,3 +1,4 @@
+import React from 'react';
 import { WizardProvider } from './context/WizardContext';
 import { WizardLayout } from './components/WizardLayout';
 

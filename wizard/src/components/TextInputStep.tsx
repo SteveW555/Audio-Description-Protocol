@@ -1,3 +1,4 @@
+import React from 'react';
 import { type ChangeEvent, useMemo } from 'react';
 
 import { useWizardStore } from '../context/WizardContext';
