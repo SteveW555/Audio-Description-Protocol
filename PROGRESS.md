@@ -1,3 +1,9 @@
+### 2025-09-29 - Session 12
+**Features:** Multi-select frequency filter with exclusive "All" button logic, enhanced visual design with "Filter by Popularity:" label and standardized button sizing, comprehensive test suite for multi-select behavior and filter persistence
+**Fixes:** Button sizing inconsistency with term selector components, state management edge cases for empty filter states, storage version compatibility during feature upgrades
+**Improvements:** Type system migration from single to array-based selection, advanced Zustand store logic for complex multi-select toggle behavior, enhanced session storage with automatic v1 to v2 migration
+**Commits:** 87c434e (*works finished filter by freq. docs: add frequency filter toolbar above term selector with persistence), b1f508d (specify freq filter)
+
 ### 2025-09-29 - Session 11
 **Features:** Complete wizard development environment setup with Vite build system, Tailwind CSS v3 integration, comprehensive theme toggle system with localStorage persistence, TypeScript configuration with proper build pipeline
 **Fixes:** Development server configuration for port 3000 with auto-opening, theme persistence across sessions, CSS integration with Tailwind directives
