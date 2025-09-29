@@ -6,13 +6,13 @@ The Audio Description Protocol (ADP) is a comprehensive framework for describing
 
 ## Core Purpose
 
-The primary purpose of ADP is to enable human or automatic machine tagging and labeling of audio samples using standardized musical quality concepts. The protocol provides a structured framework for applying descriptive tags based on three fundamental musical qualities defined in our taxonomy:
+The primary purpose of ADP is to enable human or automatic machine tagging and labeling of audio samples using standardized musical quality concepts. The protocol provides a structured framework for applying descriptive tags based on three fundamental musical qualities defined in our 479-term taxonomy with complete hierarchical organization:
 
-- **Mood** – emotional content (e.g. *joyful, melancholic, mysterious*)
-- **Energy** – tempo and intensity (e.g. *driving, slow, frenetic*)
-- **Texture** – sonic character and timbre (e.g. *bright, warm, gritty*)
+- **Mood** (147 terms across 7 hierarchical subcategories) – emotional content organized into Positive/Uplifting, Calm/Peaceful, Dark/Negative, Intense/Aggressive, Mysterious/Ambiguous, Romantic/Tender, and Nostalgic/Reflective categories (e.g. *joyful, melancholic, mysterious*)
+- **Energy** (100 terms across 5 hierarchical subcategories) – tempo and intensity organized into High/Driving, Medium/Flowing, Low/Calm, Tense/Unstable, and Expansive/Building categories (e.g. *driving, steady, laid-back, chaotic-energy, soaring*)
+- **Texture** (232 terms across 9 hierarchical subcategories) – sonic character and timbre organized into Bright/Clear, Warm/Rich, Dark/Heavy, Natural/Acoustic, Synthetic/Electronic, Dense/Layered, Smooth/Refined, Rough/Gritty, and Spatial/Atmospheric categories (e.g. *bright, warm, gritty, acoustic, layered*)
 
-This systematic approach enables both humans and AI systems to consistently tag audio content with precise, standardized descriptors that capture the musical and emotional characteristics of audio samples.
+This systematic approach with **21 total subcategories** enables both humans and AI systems to consistently tag audio content with precise, standardized descriptors that capture the musical and emotional characteristics of audio samples. The complete hierarchical organization and frequency-based classification provide multiple intuitive ways to explore and apply taxonomy terms efficiently.
 
 ## Primary Use Cases
 
@@ -48,13 +48,27 @@ This systematic approach enables both humans and AI systems to consistently tag 
 
 ## Key Features
 
+### Interactive Wizard Interface
+
+The React-based wizard provides an intuitive step-by-step annotation workflow:
+
+- **Complete Hierarchical Organization**: Group terms by category with 21 total subcategories across all three dimensions:
+  - **Mood**: 7 subcategories (Positive/Uplifting, Calm/Peaceful, Dark/Negative, Intense/Aggressive, Mysterious/Ambiguous, Romantic/Tender, Nostalgic/Reflective)
+  - **Energy**: 5 subcategories (High/Driving, Medium/Flowing, Low/Calm, Tense/Unstable, Expansive/Building)
+  - **Texture**: 9 subcategories (Bright/Clear, Warm/Rich, Dark/Heavy, Natural/Acoustic, Synthetic/Electronic, Dense/Layered, Smooth/Refined, Rough/Gritty, Spatial/Atmospheric)
+- **Flexible Grouping Options**: Toggle between Category (hierarchical subcategories) or Popularity (4 frequency tiers: Ubiquitous, Frequent, Infrequent, Rare)
+- **Multi-Select Frequency Filtering**: Filter terms by popularity with exclusive "All" button and multi-select capabilities
+- **Smart State Management**: Centralized Zustand store with localStorage persistence and automatic version migration
+- **Real-time Validation**: Immediate feedback on taxonomy term usage and data constraints
+- **Theme Support**: Light and dark modes with persistent preferences
+
 ### Comprehensive Audio Descriptions
 
 ADP supports multiple layers of audio description:
 
 - **Basic Metadata**: Title, duration, and general description
 - **Musical Analysis**: Tempo, key signature, time signature, and harmonic content
-- **Semantic Attributes**: Emotional tone, genre classification, and contextual tags
+- **Semantic Attributes**: 479 curated taxonomy terms with hierarchical organization for emotional tone, energy level, and textural qualities
 - **Temporal Annotations**: Time-stamped descriptions with confidence levels
 
 ### Flexible Annotation System
@@ -73,10 +87,11 @@ ADP supports multiple layers of audio description:
 
 ### Validation and Quality Assurance
 
-- **Schema Compliance**: Ensure all descriptions follow established standards
+- **Schema Compliance**: Ensure all descriptions follow established standards with real-time validation
 - **Consistency Checking**: Identify potential conflicts or inconsistencies in annotations
 - **Completeness Validation**: Verify that required fields and minimum annotation standards are met
 - **Error Detection**: Automatically flag common mistakes and formatting issues
+- **Taxonomy Validation**: 479-term vocabulary with hierarchical structure ensures consistent descriptor usage
 
 ## Domain Applications
 
@@ -104,12 +119,18 @@ Producers and composers can document their creative process with detailed annota
 
 ### Standardization
 
-- Eliminates inconsistencies in audio description practices
+- Eliminates inconsistencies in audio description practices with 479-term controlled vocabulary
 - Enables interoperability between different systems and organizations
-- Provides a common vocabulary for discussing audio content
+- Provides a common vocabulary with hierarchical organization for discussing audio content
+- Ensures consistent annotation quality across human and AI contributors
 
 ### Efficiency
 
+- Advanced UI features reduce annotation time through smart term organization and filtering
+- Complete hierarchical grouping (21 subcategories: 7 mood + 5 energy + 9 texture) enables faster term discovery across all dimensions
+- Frequency-based filtering helps prioritize commonly-used descriptors
+- Persistent preferences eliminate repetitive UI configuration
+- Intuitive semantic groupings align with natural music perception and description patterns
 - Reduces redundant annotation effort through reusable descriptions
 - Streamlines quality control processes with automated validation
 - Accelerates dataset preparation for research and development

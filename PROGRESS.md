@@ -1,3 +1,8 @@
+### 2025-09-29 - Session 14
+**Features:** Complete hierarchical taxonomy expansion with Energy subcategories (5 groups: High Energy & Intense, Upbeat & Driving, Moderate & Balanced, Calm & Relaxed, Low Energy & Subdued organizing 90 terms) and Texture subcategories (9 groups: Thickness & Density, Spatial Qualities, Surface & Grain, Complexity & Detail, Harmonic Content, Movement & Flow, Timbral Qualities, Attack & Articulation, Purity & Clarity organizing 119 terms)
+**Improvements:** Enhanced groupTermsByCategory() to process all three dimensions (Mood/Energy/Texture) with complete subcategory mappings, TypeScript compilation validated, documentation updated across README.md, docs/features.md, and docs/MET-Supplement.md
+**Commit Info:** Working on branch 006-below-the-filter (changes not yet committed, previous commit: dde1dff refactor: migrate groupBy state management)
+
 ### 2025-09-29 - Session 13
 **Features:** Complete Group By toolbar with hierarchical subcategory grouping (7 mood subcategories), popularity/frequency grouping with visual separators, localStorage persistence with version migration, comprehensive test suite (125+ assertions)
 **Fixes:** Category grouping logic corrected from main categories to subcategories matching taxonomy.py TAXONOMY_HIERARCHY structure

@@ -45,6 +45,76 @@ const MOOD_SUBCATEGORIES: Record<string, string[]> = {
   ]
 };
 
+const ENERGY_SUBCATEGORIES: Record<string, string[]> = {
+  'High / Driving': [
+    'high-energy', 'driving', 'vigorous', 'propulsive', 'pumping', 'dynamic-energy', 'explosive',
+    'kinetic', 'punchy', 'pulsating', 'frenetic', 'relentless', 'urgent', 'vibrant', 'bouncy',
+    'brisk', 'electrifying', 'high-octane', 'turbocharged', 'thumping'
+  ],
+  'Medium / Flowing': [
+    'flowing', 'steady', 'moderate', 'balanced-energy', 'measured', 'rolling', 'rhythmic',
+    'groovy', 'medium-energy', 'cascading', 'undulating', 'swinging', 'pulsing', 'unhurried',
+    'cruising', 'mid-tempo', 'paced'
+  ],
+  'Low / Calm': [
+    'laid-back', 'low-energy', 'ambient', 'chill', 'mellow-energy', 'gentle-energy', 'subdued',
+    'restrained', 'placid', 'still', 'relaxed-energy', 'downtempo', 'languid', 'serene-energy',
+    'hushed', 'delicate-energy', 'soft-energy', 'sedate', 'hypnotic'
+  ],
+  'Tense / Unstable': [
+    'tense-energy', 'anxious-energy', 'chaotic-energy', 'agitated', 'erratic', 'unstable',
+    'jarring-energy', 'dissonant-energy', 'turbulent', 'unsettling-energy', 'fragmented',
+    'static-energy', 'restless', 'jittery', 'hectic', 'disjointed'
+  ],
+  'Expansive / Building': [
+    'expansive', 'soaring', 'lifting', 'transcendent-energy', 'boundless', 'sweeping',
+    'majestic-energy', 'panoramic', 'vast', 'cosmic', 'breathless', 'gradual', 'crescendoing',
+    'swelling', 'decaying', 'wavering', 'oscillating', 'spiraling'
+  ]
+};
+
+const TEXTURE_SUBCATEGORIES: Record<string, string[]> = {
+  'Bright / Clear': [
+    'bright', 'crisp', 'clear', 'brilliant', 'sparkling', 'crystalline', 'shimmering', 'radiant',
+    'gleaming', 'airy', 'polished', 'pristine', 'shiny', 'luminous'
+  ],
+  'Warm / Rich': [
+    'warm', 'rich', 'full', 'lush', 'creamy', 'honeyed', 'golden', 'mellow', 'rounded',
+    'embracing', 'enveloping', 'cozy', 'sumptuous', 'velvety', 'buttery', 'silky', 'soft-texture'
+  ],
+  'Dark / Heavy': [
+    'dark', 'muddy', 'harsh', 'gritty-texture', 'murky', 'raspy', 'buzzy', 'distorted',
+    'coarse', 'abrasive', 'shadowy-texture', 'veiled', 'obscured', 'heavy', 'dense', 'thick',
+    'clouded', 'muffled', 'oppressive'
+  ],
+  'Natural / Acoustic': [
+    'acoustic', 'organic', 'natural', 'raw-texture', 'live', 'authentic', 'unprocessed',
+    'woody', 'breathy', 'human', 'intimate', 'close-miked', 'hollow', 'earthy', 'fibrous',
+    'resonant', 'textured', 'grainy'
+  ],
+  'Synthetic / Electronic': [
+    'electronic', 'synthetic', 'digital', 'processed', 'programmed', 'artificial', 'computerized',
+    'robotic', 'futuristic', 'cyber', 'pixelated', 'metallic', 'glassy', 'analog', 'mechanical',
+    'glitchy'
+  ],
+  'Dense / Layered': [
+    'layered', 'complex', 'rich-density', 'full-bodied', 'orchestrated', 'intricate', 'detailed',
+    'multi-textured', 'stratified', 'elaborate', 'sparse', 'minimalistic', 'polyphonic',
+    'homophonic', 'monophonic', 'heterophonic'
+  ],
+  'Smooth / Refined': [
+    'smooth', 'silky-texture', 'polished-texture', 'refined', 'sleek', 'elegant', 'sophisticated',
+    'seamless', 'effortless', 'fluid', 'graceful'
+  ],
+  'Rough / Gritty': [
+    'rough', 'gritty', 'grainy-texture', 'coarse-texture', 'jagged', 'harsh-texture',
+    'raw-finish', 'unpolished', 'edgy', 'abrasive-texture', 'crunchy', 'distorted-texture', 'ratty'
+  ],
+  'Spatial / Atmospheric': [
+    'spacious', 'reverberant', 'wet', 'dry', 'intimate-space', 'echoey', 'atmospheric', 'cinematic'
+  ]
+};
+
 // Pre-computed term sets for O(1) category lookups (main categories)
 const MOOD_TERMS: Set<string> = new Set([
   // Positive / Uplifting
@@ -192,8 +262,27 @@ export function groupTermsByCategory(terms: string[]): TermGroup[] {
     }
   }
 
-  // TODO: Add Energy and Texture subcategories when available
-  // For now, only mood terms will be grouped by subcategory
+  // Group by energy subcategories
+  for (const [subcategoryLabel, subcategoryTerms] of Object.entries(ENERGY_SUBCATEGORIES)) {
+    const matchingTerms = terms.filter(term => subcategoryTerms.includes(term));
+    if (matchingTerms.length > 0) {
+      sortedGroups.push({
+        label: subcategoryLabel,
+        terms: sortTermsByFrequency(matchingTerms)
+      });
+    }
+  }
+
+  // Group by texture subcategories
+  for (const [subcategoryLabel, subcategoryTerms] of Object.entries(TEXTURE_SUBCATEGORIES)) {
+    const matchingTerms = terms.filter(term => subcategoryTerms.includes(term));
+    if (matchingTerms.length > 0) {
+      sortedGroups.push({
+        label: subcategoryLabel,
+        terms: sortTermsByFrequency(matchingTerms)
+      });
+    }
+  }
 
   return sortedGroups;
 }
