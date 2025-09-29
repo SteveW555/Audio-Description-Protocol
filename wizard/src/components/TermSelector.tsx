@@ -1,5 +1,4 @@
 import React from 'react';
-import { memo } from 'react';
 import { TermSelectorProps } from '../types/filter';
 import { groupTermsByCategory, groupTermsByPopularity } from '../utils/termGrouping';
 
@@ -14,7 +13,7 @@ const getNextDisabledState = (selected: string | string[] | undefined, multi?: b
     return !selected;
 };
 
-export const TermSelector = memo(({ terms, onSelect, selected, multi, onNext, onSkip, groupByMethod }: TermSelectorProps) => {
+export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip, groupByMethod }: TermSelectorProps) => {
 
     const handleSelect = (term: string) => {
         if (multi) {
@@ -133,6 +132,4 @@ export const TermSelector = memo(({ terms, onSelect, selected, multi, onNext, on
             </div>
         </div>
     );
-});
-
-TermSelector.displayName = 'TermSelector';
+};
