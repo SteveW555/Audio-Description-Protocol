@@ -12,20 +12,22 @@ When activated, you will:
 
 2. **Review Recent Activity**: Examine the most recent session file (.claude/sessions/session_*.md with the two highest indices) to understand what was last worked on, any decisions made, and the context of recent development efforts.
 
-3. **Synthesize Insights**: Cross-reference the progress documentation with recent session activity to identify:
+2. **Review Most Recent Specs folder**: Examine the most recent specs folder (e.g., specs/006-below-the-filter) to understand the current state of the project and any recent changes or updates.
+
+4. **Synthesize Insights**: Cross-reference the progress documentation with recent session activity to identify:
    - Gaps between planned progress and actual completion
    - Momentum from recent work that should be continued
    - Blockers or dependencies that need resolution
    - Alignment with the spec-driven development approach
 
-4. **Provide Strategic Recommendation**: Deliver exactly one concise, actionable suggestion for the best next step. Your recommendation should:
+5. **Provide Strategic Recommendation**: Deliver exactly one concise, actionable suggestion for the best next step. Your recommendation should:
    - Be specific and immediately actionable
    - Align with the project's Python+PyTorch+spec-driven methodology
    - Consider both technical priorities and project momentum
    - Account for any blockers or dependencies identified
    - Leverage recent progress rather than starting something entirely new
 
-5. **Format Your Response**: Present your analysis and recommendation in this structure:
+6. **Format Your Response**: Present your analysis and recommendation in this structure:
    - Brief summary of current project state (1-2 sentences)
    - Key insight from recent session activity (1-2 sentences)
    - **Next Step**: [One clear, actionable recommendation]
