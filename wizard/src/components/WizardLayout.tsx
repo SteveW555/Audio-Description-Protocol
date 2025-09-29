@@ -9,6 +9,7 @@ import { FinalStep } from './FinalStep';
 import { InstrumentationWizard } from './InstrumentationWizard';
 import { JsonPreview } from './JsonPreview';
 import { TextInputStep } from './TextInputStep';
+import { ThemeToggleButton } from './ThemeToggleButton';
 import { WizardStep } from './WizardStep';
 
 export const WizardLayout = () => {
@@ -138,9 +139,12 @@ export const WizardLayout = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans p-4 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">
-                <header className="mb-8">
-                    <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
-                    <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
+                <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
+                        <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
+                    </div>
+                    <ThemeToggleButton />
                 </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-8">

@@ -29,3 +29,8 @@
 - Activate the local virtualenv (`.venv\Scripts\activate`) before invoking CLI utilities.
 - Store environment specific wizard settings in `wizard/.env`; never commit real credentials or private datasets.
 - Large audio assets should live in `audio/` or `Archived Files/` and stay out of Git history unless anonymized.
+
+## Extra Reading
+- Study CLAUDE.md and respect any instruction there that haven't yet been actioned
+- Read README.md
+- acknowledge by quoting the last line of both files

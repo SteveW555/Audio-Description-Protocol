@@ -1,12 +1,15 @@
 import React from 'react';
+import { ThemeProvider } from './context/ThemeContext';
 import { WizardProvider } from './context/WizardContext';
 import { WizardLayout } from './components/WizardLayout';
 
 function App() {
     return (
-        <WizardProvider>
-            <WizardLayout />
-        </WizardProvider>
+        <ThemeProvider>
+            <WizardProvider>
+                <WizardLayout />
+            </WizardProvider>
+        </ThemeProvider>
     );
 }
 
