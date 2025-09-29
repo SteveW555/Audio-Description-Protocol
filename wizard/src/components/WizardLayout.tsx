@@ -175,8 +175,11 @@ export const WizardLayout = () => {
                         {renderStep()}
                     </div>
 
-                    <div className="h-[32rem] lg:h-auto">
-                        <JsonPreview />
+                    <div className="mt-6 h-[24rem] lg:mt-8 lg:h-[30rem] flex flex-col">
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Live JSON Preview:</h3>
+                        <div className="flex-1 min-h-0">
+                            <JsonPreview />
+                        </div>
                     </div>
                 </div>
             </div>

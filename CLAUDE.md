@@ -39,4 +39,8 @@ Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standa
 <!-- MANUAL ADDITIONS START -->
 ## Extra Reading
 - Read README.md
+
+# **Ultra Important**
+- Take care not to break the UI, always ask before modifying wizard\src\components\TermSelector.tsx
 <!-- MANUAL ADDITIONS END -->
+- never edit the terms styling in TermSelector.tsx without asking
