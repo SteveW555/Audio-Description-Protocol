@@ -5,7 +5,9 @@ import { useWizardStore } from '../context/WizardContext';
 import { getValueAtPath } from '../utils/dataPaths';
 import { TermSelector } from './TermSelector';
 import { FrequencyFilter } from './FrequencyFilter';
+import { GroupByFilter } from './GroupByFilter';
 import { useFrequencyFilter } from '../hooks/useFrequencyFilter';
+import { useGroupByFilter } from '../hooks/useGroupByFilter';
 import { convertToTermsWithFrequency } from '../utils/termFrequencies';
 
 interface WizardStepProps {
@@ -21,6 +23,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext 
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const { filterTerms } = useFrequencyFilter();
+    const { groupByMethod } = useGroupByFilter();
 
     const resolvedTerms = useMemo(() => (typeof terms === 'function' ? terms(data) : terms), [data, terms]);
     const currentValue = useMemo(() => getValueAtPath(data, path), [data, path]);
@@ -38,7 +41,10 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext 
                 {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
             </p>
             {resolvedTerms && resolvedTerms.length > 0 && (
-                <FrequencyFilter terms={termsWithFrequency} />
+                <>
+                    <FrequencyFilter terms={termsWithFrequency} />
+                    <GroupByFilter />
+                </>
             )}
             <TermSelector
                 terms={filteredTermValues}
@@ -50,6 +56,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext 
                     updateData(path, multi ? ['tbc'] : 'tbc');
                     onNext();
                 }}
+                groupByMethod={groupByMethod}
             />
         </div>
     );

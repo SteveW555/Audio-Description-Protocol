@@ -1,4 +1,5 @@
 import { FrequencyCategory } from './frequency';
+import { GroupByMethod } from './grouping';
 
 export interface FilterState {
   selectedFrequencies: FrequencyCategory[];
@@ -37,4 +38,17 @@ export interface StoredFilterState {
   version: '2.0.0';
   selectedFrequencies: FrequencyCategory[];
   lastUpdated: string;
+}
+
+/**
+ * Props for TermSelector component with optional grouping support
+ */
+export interface TermSelectorProps {
+  terms: string[];
+  onSelect: (value: string | string[]) => void;
+  selected?: string | string[];
+  multi?: boolean;
+  onNext: () => void;
+  onSkip: () => void;
+  groupByMethod?: GroupByMethod;
 }

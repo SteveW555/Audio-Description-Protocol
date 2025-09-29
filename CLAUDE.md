@@ -1,12 +1,10 @@
 # Audio Description Protocol Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-09-26
+Auto-generated from all feature plans. Last updated: 2025-09-29
 
 ## Project Purpose
 Creating a spec-driven framework (Audio Description Protocol, ADP) for describing musical audio clips with text so humans ⟷ AIs can interoperate. Include dictionary labels, annotations with time ranges/confidence, dataset manifests, and model outputs. Python+PyTorch preferred.
 '''
-
-## Spec Kit & Spec Driven Development
 The .specify and specs folders show the Spec Kit approach to development. .claude/commands have slash commands to drive the 4-step sdd iterations
 
 
@@ -32,9 +30,10 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standard conventions
 
 ## Recent Changes
+- 006-below-the-filter: Added Group By toolbar with category/popularity grouping, localStorage persistence, TDD implementation
+- 005-add-a-filter: Multi-select frequency filter with exclusive "All" button logic, enhanced visual design
 - 004-make-all-attribute: Added TypeScript (wizard interface), Python 3.11+ (backend) + React, CSS/styled-components, FastAPI
 - 003-integrate-wizard-interface: Added Python 3.11+ (primary), TypeScript (wizard interface) + PyTorch, jsonschema, FastAPI, Node.js/TypeScript runtime
-- 002-advanced-audio-processing: Added Python 3.11+ (constitutional requirement: Python + PyTorch first) + PyTorch, torchaudio, librosa, jsonschema, pytes
 
 <!-- MANUAL ADDITIONS START -->
 ## Extra Reading
