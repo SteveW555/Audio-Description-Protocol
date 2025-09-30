@@ -119,12 +119,19 @@ export const WizardLayout = () => {
                             placeholder={currentStepConfig.placeholder}
                             stepNumber={stepNumber}
                             onNext={goToNextStep}
+                            numericOnly={currentStepConfig.path === 'theory.bpm'}
                         />
                     );
                 default:
                     break;
             }
         }
+
+        // Check if this is a Music Theory step (BPM, Key, Scale)
+        const isMusicTheoryStep = 'path' in currentStepConfig &&
+            (currentStepConfig.path === 'theory.bpm' ||
+             currentStepConfig.path === 'theory.key' ||
+             currentStepConfig.path === 'theory.scale');
 
         return (
             <WizardStep
@@ -134,6 +141,7 @@ export const WizardLayout = () => {
                 multi={'multi' in currentStepConfig ? currentStepConfig.multi : undefined}
                 stepNumber={stepNumber}
                 onNext={goToNextStep}
+                isMusicTheoryStep={isMusicTheoryStep}
             />
         );
     };
@@ -180,13 +188,13 @@ export const WizardLayout = () => {
                     </div>
 
                     <div className="mt-6 lg:mt-8 flex flex-col gap-4">
-                        <div className="h-[24rem] lg:h-[30rem] flex flex-col">
+                        <div className="h-[18rem] lg:h-[22.5rem] flex flex-col">
                             <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Live JSON Preview:</h3>
                             <div className="flex-1 min-h-0">
                                 <JsonPreview />
                             </div>
                         </div>
-                        <div className="h-[24rem] lg:h-[30rem] flex flex-col">
+                        <div className="h-[14.4rem] lg:h-[18rem] flex flex-col">
                             <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Human-Readable Summary:</h3>
                             <div className="flex-1 min-h-0">
                                 <HumanReadablePreview />

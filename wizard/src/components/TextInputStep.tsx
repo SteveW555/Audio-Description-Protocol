@@ -10,13 +10,26 @@ interface TextInputStepProps {
     placeholder?: string;
     stepNumber: number;
     onNext: () => void;
+    numericOnly?: boolean;
 }
 
-export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext }: TextInputStepProps) => {
+export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, numericOnly }: TextInputStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
 
     const currentValue = useMemo(() => getValueAtPath(data, path), [data, path]);
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (numericOnly) {
+            // Allow only digits and optional decimal point
+            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                updateData(path, value);
+            }
+        } else {
+            updateData(path, value);
+        }
+    };
 
     return (
         <div className="p-1">
@@ -27,7 +40,7 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext }: 
             <input
                 type="text"
                 value={currentValue === 'tbc' ? '' : (currentValue ?? '')}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => updateData(path, event.target.value)}
+                onChange={handleChange}
                 placeholder={placeholder ?? 'e.g., 120.5'}
                 className="w-full p-3 mt-4 border border-gray-300 rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />

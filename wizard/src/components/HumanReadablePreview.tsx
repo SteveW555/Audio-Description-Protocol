@@ -17,7 +17,7 @@ export const HumanReadablePreview = memo(() => {
 
     return (
         <div className="h-full bg-gray-900 rounded-lg p-4 overflow-auto">
-            <div className="text-[10px] text-gray-300 space-y-2 font-mono">
+            <div className="text-[10px] text-gray-300 space-y-[5.6px] font-mono">
                 {/* Genre Information */}
                 <div>
                     <span className="text-blue-400">Genre:</span> {formatValue(data.semantic_description?.primary_genre)}

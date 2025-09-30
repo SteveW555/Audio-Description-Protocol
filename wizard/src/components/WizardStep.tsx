@@ -17,9 +17,10 @@ interface WizardStepProps {
     multi?: boolean;
     stepNumber: number;
     onNext: () => void;
+    isMusicTheoryStep?: boolean;
 }
 
-export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext }: WizardStepProps) => {
+export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, isMusicTheoryStep }: WizardStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const { filterTerms } = useFrequencyFilter();
@@ -40,7 +41,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext 
             <p className="text-gray-500 dark:text-gray-400 mb-4">
                 {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
             </p>
-            {resolvedTerms && resolvedTerms.length > 0 && (
+            {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
                 <>
                     <FrequencyFilter terms={termsWithFrequency} />
                     <GroupByFilter />

@@ -1,3 +1,8 @@
+### 2025-09-30 - Session 16
+**Features:** Conditional toolbar visibility (Filter-By and Group-By hidden during Music Theory steps: BPM/Key/Scale), numeric-only BPM input validation with regex pattern
+**Improvements:** Preview panel height optimizations (Human-Readable reduced to 60% at 14.4rem, JSON Preview reduced to 75% at 18rem), line spacing reduction by 30% (8px → 5.6px) for more compact layout, enhanced component props (isMusicTheoryStep, numericOnly) for context-aware UI behavior
+**Commit Info:** 511bc24 (feat: implement HumanReadablePreview component for enhanced data visualization; refine UI with dual preview layout and improved validation feedback; streamline workflow by commenting out secondary genre steps)
+
 ### 2025-09-30 - Session 15
 **Features:** HumanReadablePreview component with dual preview system (JSON + human-readable side-by-side), contextual validation messages for attribute selection, enhanced attributeType prop system
 **Fixes:** Attempted music theory navigation fix (incomplete - may need further debugging), cleaned up 30+ vocabulary terms by removing redundant "-mood" suffix
