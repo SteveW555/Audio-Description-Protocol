@@ -51,4 +51,5 @@ export interface TermSelectorProps {
   onNext: () => void;
   onSkip: () => void;
   groupByMethod?: GroupByMethod;
+  attributeType?: string;
 }

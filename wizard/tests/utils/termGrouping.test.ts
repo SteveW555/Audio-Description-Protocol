@@ -42,37 +42,45 @@ describe('termGrouping utilities', () => {
   });
 
   describe('groupTermsByCategory', () => {
-    it('should return 3 groups in semantic order (Mood, Energy, Texture)', () => {
+    it('should return groups with subcategory labels (not main categories)', () => {
       const terms = ['joyful', 'high-energy', 'bright', 'peaceful', 'driving', 'warm'];
       const groups = groupTermsByCategory(terms);
 
-      expect(groups).toHaveLength(3);
-      expect(groups[0].label).toBe('Mood');
-      expect(groups[1].label).toBe('Energy');
-      expect(groups[2].label).toBe('Texture');
+      // joyful→Positive/Uplifting, peaceful→Calm/Peaceful, high-energy+driving→High/Driving,
+      // bright→Bright/Clear, warm→Warm/Rich = 5 subcategory groups
+      expect(groups).toHaveLength(5);
+      expect(groups[0].label).toBe('Positive / Uplifting'); // joyful
+      expect(groups[1].label).toBe('Calm / Peaceful'); // peaceful
+      expect(groups[2].label).toBe('High / Driving'); // high-energy, driving
+      expect(groups[3].label).toBe('Bright / Clear'); // bright
+      expect(groups[4].label).toBe('Warm / Rich'); // warm
     });
 
-    it('should group terms correctly by category', () => {
+    it('should group terms correctly by subcategory', () => {
       const terms = ['joyful', 'high-energy', 'bright', 'peaceful'];
       const groups = groupTermsByCategory(terms);
 
-      expect(groups[0].label).toBe('Mood');
+      // joyful → Positive/Uplifting, peaceful → Calm/Peaceful
+      expect(groups[0].label).toBe('Positive / Uplifting');
       expect(groups[0].terms).toContain('joyful');
-      expect(groups[0].terms).toContain('peaceful');
 
-      expect(groups[1].label).toBe('Energy');
-      expect(groups[1].terms).toContain('high-energy');
+      expect(groups[1].label).toBe('Calm / Peaceful');
+      expect(groups[1].terms).toContain('peaceful');
 
-      expect(groups[2].label).toBe('Texture');
-      expect(groups[2].terms).toContain('bright');
+      expect(groups[2].label).toBe('High / Driving');
+      expect(groups[2].terms).toContain('high-energy');
+
+      expect(groups[3].label).toBe('Bright / Clear');
+      expect(groups[3].terms).toContain('bright');
     });
 
     it('should filter out empty groups', () => {
-      const terms = ['joyful', 'peaceful']; // Only mood terms
+      const terms = ['joyful', 'peaceful']; // joyful=Positive/Uplifting, peaceful=Calm/Peaceful
       const groups = groupTermsByCategory(terms);
 
-      expect(groups).toHaveLength(1);
-      expect(groups[0].label).toBe('Mood');
+      expect(groups).toHaveLength(2); // Two different mood subcategories
+      expect(groups[0].label).toBe('Positive / Uplifting');
+      expect(groups[1].label).toBe('Calm / Peaceful');
     });
 
     it('should sort terms by frequency within each group (most common first)', () => {

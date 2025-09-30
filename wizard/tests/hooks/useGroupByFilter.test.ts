@@ -4,9 +4,10 @@
  * Task: T005
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useGroupByFilter } from '../../src/hooks/useGroupByFilter';
+import { useGroupByStore } from '../../src/store/groupByStore';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -33,6 +34,8 @@ Object.defineProperty(window, 'localStorage', {
 describe('useGroupByFilter hook', () => {
   beforeEach(() => {
     localStorageMock.clear();
+    // Force persist middleware to rehydrate from storage (will use default since storage is empty)
+    useGroupByStore.persist.rehydrate();
   });
 
   describe('Hook interface', () => {
@@ -109,16 +112,19 @@ describe('useGroupByFilter hook', () => {
       expect(stored).toBeTruthy();
 
       const parsed = JSON.parse(stored!);
-      expect(parsed.method).toBe('popularity');
+      // Zustand persist format: {state: {...}, version: N}
+      expect(parsed.state.groupByMethod).toBe('popularity');
       expect(parsed.version).toBe(1);
     });
 
     it('should load from localStorage on mount', () => {
-      // Pre-populate localStorage
+      // Pre-populate localStorage with Zustand persist format
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ method: 'popularity', version: 1 })
+        JSON.stringify({ state: { groupByMethod: 'popularity' }, version: 1 })
       );
+      // Force rehydration from storage
+      useGroupByStore.persist.rehydrate();
 
       const { result } = renderHook(() => useGroupByFilter());
 
@@ -149,7 +155,7 @@ describe('useGroupByFilter hook', () => {
     it('should reset to default if stored version is not 1', () => {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ method: 'popularity', version: 2 })
+        JSON.stringify({ state: { groupByMethod: 'popularity' }, version: 2 })
       );
 
       const { result } = renderHook(() => useGroupByFilter());
@@ -161,7 +167,7 @@ describe('useGroupByFilter hook', () => {
     it('should reset to default if version field is missing', () => {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ method: 'popularity' })
+        JSON.stringify({ state: { groupByMethod: 'popularity' } })
       );
 
       const { result } = renderHook(() => useGroupByFilter());
@@ -172,8 +178,10 @@ describe('useGroupByFilter hook', () => {
     it('should accept version 1 data', () => {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ method: 'popularity', version: 1 })
+        JSON.stringify({ state: { groupByMethod: 'popularity' }, version: 1 })
       );
+      // Force rehydration from storage
+      useGroupByStore.persist.rehydrate();
 
       const { result } = renderHook(() => useGroupByFilter());
 

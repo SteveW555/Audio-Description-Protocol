@@ -30,6 +30,13 @@ export const useGroupByStore = create<GroupByStore>()(
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       version: 1,
+      migrate: (persistedState: any, version: number) => {
+        // Only accept version 1 data - reset to default for any other version
+        if (version !== 1) {
+          return { groupByMethod: 'category' };
+        }
+        return persistedState as GroupByStore;
+      },
       partialize: (state) => ({
         groupByMethod: state.groupByMethod,
       }),

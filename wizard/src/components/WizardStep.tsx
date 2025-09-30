@@ -57,6 +57,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext 
                     onNext();
                 }}
                 groupByMethod={groupByMethod}
+                attributeType={title}
             />
         </div>
     );

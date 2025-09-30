@@ -13,7 +13,7 @@ const getNextDisabledState = (selected: string | string[] | undefined, multi?: b
     return !selected;
 };
 
-export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip, groupByMethod }: TermSelectorProps) => {
+export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip, groupByMethod, attributeType }: TermSelectorProps) => {
 
     const handleSelect = (term: string) => {
         if (multi) {
@@ -121,14 +121,21 @@ export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip,
                 >
                     Skip
                 </button>
-                <button
-                    type="button"
-                    onClick={onNext}
-                    disabled={isNextDisabled}
-                    className="px-6 py-2 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Next &rarr;
-                </button>
+                <div className="flex flex-col items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={onNext}
+                        disabled={isNextDisabled}
+                        className="px-6 py-2 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Next &rarr;
+                    </button>
+                    {isNextDisabled && attributeType && (
+                        <p className="text-xs" style={{ color: '#D87710' }}>
+                            Choose at least 1 {attributeType}
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     );
