@@ -21,26 +21,26 @@ export const TERM_FREQUENCY_GROUPS = {
 export const VOCABULARY = {
     mood: [
         // Positive / Uplifting
-        'upbeat', 'energetic-mood', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive-mood',
+        'upbeat', 'energetic', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive',
         'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic',
-        'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly-mood',
+        'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly',
         // Calm / Peaceful
         'peaceful', 'calm', 'relaxed', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing',
-        'gentle', 'contemplative', 'restful', 'ethereal-mood', 'atmospheric-mood', 'flowing-mood',
-        'smooth-mood', 'gossamer-mood',
+        'gentle', 'contemplative', 'restful', 'ethereal', 'atmospheric', 'flowing',
+        'smooth', 'gossamer',
         // Dark / Negative
-        'dark-mood', 'melancholic', 'sad', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting',
+        'dark', 'melancholic', 'sad', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting',
         'moody', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing',
-        'shadowy-mood', 'plaintive', 'negative-mood',
+        'shadowy', 'plaintive', 'negative',
         // Intense / Aggressive
-        'intense-mood', 'aggressive', 'driving-mood', 'powerful-mood', 'forceful', 'fierce',
-        'raw-mood', 'edgy-mood', 'explosive-mood', 'menacing', 'angry', 'violent', 'furious',
-        'tense', 'harsh-mood', 'thunderous', 'blistering', 'snarling', 'chaotic-mood',
+        'intense', 'aggressive', 'driving', 'powerful', 'forceful', 'fierce',
+        'raw', 'edgy', 'explosive', 'menacing', 'angry', 'violent', 'furious',
+        'tense', 'harsh', 'thunderous', 'blistering', 'snarling', 'chaotic',
         // Mysterious / Ambiguous
         'mysterious', 'enigmatic', 'ethereal-ambience', 'otherworldly', 'mystical', 'cryptic',
-        'elusive', 'veiled-mood', 'obscure-mood', 'twilight', 'liminal', 'majestic', 'epic', 'strange',
+        'elusive', 'veiled', 'obscure', 'twilight', 'liminal', 'majestic', 'epic', 'strange',
         // Romantic / Tender
-        'tender', 'affectionate', 'intimate-mood', 'loving', 'sensual', 'warm-hearted', 'sultry',
+        'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'warm-hearted', 'sultry',
         'passionate', 'yearning', 'longing',
         // Nostalgic / Reflective
         'nostalgic', 'reflective', 'bittersweet', 'reminiscent', 'pensive', 'poignant',
@@ -184,10 +184,10 @@ export const DEFAULT_INSTRUMENT: InstrumentationEntry = {
 
 // Taxonomy-based term organization by frequency
 export const MOOD_TERMS_BY_FREQUENCY = {
-    ubiquitous: ['upbeat', 'energetic-mood', 'joyful', 'positive-mood', 'peaceful', 'calm', 'relaxed', 'dark-mood', 'sad', 'intense-mood', 'aggressive'],
-    frequent: ['happy', 'cheerful', 'uplifting', 'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic', 'exuberant', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing', 'gentle', 'melancholic', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting', 'moody', 'driving-mood', 'powerful-mood', 'forceful', 'fierce', 'raw-mood', 'edgy-mood', 'explosive-mood', 'menacing', 'angry', 'mysterious', 'enigmatic', 'ethereal-ambience', 'majestic', 'epic', 'strange', 'tender', 'affectionate', 'intimate-mood', 'loving', 'sensual', 'passionate', 'nostalgic', 'reflective', 'bittersweet', 'smooth-mood'],
-    infrequent: ['euphoric', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'contemplative', 'restful', 'ethereal-mood', 'atmospheric-mood', 'flowing-mood', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing', 'violent', 'furious', 'tense', 'harsh-mood', 'thunderous', 'chaotic-mood', 'otherworldly', 'mystical', 'cryptic', 'obscure-mood', 'warm-hearted', 'sultry', 'yearning', 'longing', 'reminiscent', 'pensive', 'poignant', 'retrospective'],
-    rare: ['sparkly-mood', 'gossamer-mood', 'shadowy-mood', 'plaintive', 'blistering', 'snarling', 'elusive', 'veiled-mood', 'twilight', 'liminal', 'memory-laden']
+    ubiquitous: ['upbeat', 'energetic', 'joyful', 'positive', 'peaceful', 'calm', 'relaxed', 'dark', 'sad', 'intense', 'aggressive'],
+    frequent: ['happy', 'cheerful', 'uplifting', 'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic', 'exuberant', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing', 'gentle', 'melancholic', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting', 'moody', 'driving', 'powerful', 'forceful', 'fierce', 'raw', 'edgy', 'explosive', 'menacing', 'angry', 'mysterious', 'enigmatic', 'ethereal-ambience', 'majestic', 'epic', 'strange', 'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'passionate', 'nostalgic', 'reflective', 'bittersweet', 'smooth'],
+    infrequent: ['euphoric', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'contemplative', 'restful', 'ethereal', 'atmospheric', 'flowing', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing', 'violent', 'furious', 'tense', 'harsh', 'thunderous', 'chaotic', 'otherworldly', 'mystical', 'cryptic', 'obscure', 'warm-hearted', 'sultry', 'yearning', 'longing', 'reminiscent', 'pensive', 'poignant', 'retrospective'],
+    rare: ['sparkly', 'gossamer', 'shadowy', 'plaintive', 'blistering', 'snarling', 'elusive', 'veiled', 'twilight', 'liminal', 'memory-laden']
 } as const;
 
 export const ENERGY_TERMS_BY_FREQUENCY = {

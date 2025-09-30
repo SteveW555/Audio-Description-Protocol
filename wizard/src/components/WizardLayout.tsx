@@ -139,17 +139,19 @@ export const WizardLayout = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans p-4 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">
-                <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <header className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
-                        <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
+                        <p className="mt-1.5 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
                     </div>
                     <ThemeToggleButton />
                 </header>
 
+                <hr className="border-t-2 border-gray-300 dark:border-slate-700 mb-4" />
+
                 <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-8">
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg p-6 lg:p-8">
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Sample Title</h2>
+                        <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Sample Title</h2>
                         <input
                             ref={titleInputRef}
                             autoFocus
@@ -157,7 +159,7 @@ export const WizardLayout = () => {
                             value={data.path === 'tbc' ? '' : data.path}
                             onChange={(event: ChangeEvent<HTMLInputElement>) => updateData('path', event.target.value)}
                             placeholder="e.g., Cool_Synth_Loop_01.wav"
-                            className="w-full p-3 mt-4 border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
+                            className="w-full px-2.5 py-2 mt-2.5 text-sm border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
                         />
                         <p className="text-xs text-gray-500 dark:text-slate-400 mt-2 ml-1">(In production this will be auto-filled from the audio sample)</p>
 
