@@ -1,0 +1,142 @@
+# Tasks: AI-Generated Natural Language Description
+
+**Feature**: 008-add-a-feature
+**Branch**: `008-add-a-feature`
+**Prerequisites**: Phase 0-2 complete (research, design, task planning)
+
+## Format
+- `[ID]` = Task number (T001, T002, etc.)
+- `[P]` = Can run in parallel (different files, no dependencies)
+- Include exact file paths in descriptions
+
+## Phase 3.1: Setup & Environment (6 tasks)
+
+- [ ] **T001** Create backend directory structure: `backend/src/{services,routes,middleware}`, `backend/tests/{unit,integration,contract}`
+- [ ] **T002** Initialize backend Node.js project with package.json, install: `openai@^4.0.0`, `express@^4.18.0`, `nodemailer@^6.9.0`, `lodash@^4.17.0`, `uuid@^9.0.0`, `typescript@^5.0.0`, `jest@^29.0.0`, `@types/node`, `@types/express`
+- [ ] **T003 [P]** Configure backend tsconfig.json, ESLint, Jest config
+- [ ] **T004 [P]** Install frontend dependencies: `lodash@^4.17.0` in wizard/, update types
+- [ ] **T005** Create `.env.example` with: OPENAI_API_KEY, SMTP_HOST, SMTP_USER, SMTP_PASS, NOTIFY_EMAIL, PORT
+- [ ] **T006 [P]** Update `schemas/musical_annotation.schema.json`: add nl_phrase field to semantic_description object (string|null, minLength 10, maxLength 200, optional)
+
+## Phase 3.2: Tests First (TDD) - 15 tasks
+
+⚠️ **CRITICAL**: Write tests, verify they FAIL, then proceed to Phase 3.3
+
+### Schema & Contract Tests (4 tasks)
+- [ ] **T007 [P]** Schema test: `tests/schema/nl-phrase-validation.test.ts` - valid phrase, missing (optional), too short/long, wrong type **(MUST FAIL)**
+- [ ] **T008 [P]** Contract test: `backend/tests/contract/generate-phrase-success.test.ts` - POST /api/generate-phrase success 200 **(MUST FAIL)**
+- [ ] **T009 [P]** Contract test: `backend/tests/contract/generate-phrase-ratelimit.test.ts` - 30/min limit, expect 429 **(MUST FAIL)**
+- [ ] **T010 [P]** Contract test: `backend/tests/contract/generate-phrase-validation.test.ts` - no genre, expect 400 **(MUST FAIL)**
+
+### Backend Unit Tests (3 tasks)
+- [ ] **T011 [P]** Unit test: `backend/tests/unit/openai-client.test.ts` - retry logic, 2s delay, error classification **(MUST FAIL)**
+- [ ] **T012 [P]** Unit test: `backend/tests/unit/rate-limiter.test.ts` - sliding window, min/hour/concurrent limits **(MUST FAIL)**
+- [ ] **T013 [P]** Unit test: `backend/tests/unit/cost-tracker.test.ts` - $0.10 session, $0.50 daily limits **(MUST FAIL)**
+
+### Frontend Unit Tests (3 tasks)
+- [ ] **T014 [P]** Unit test: `wizard/tests/unit/phraseValidator.test.ts` - word count 10-30, inappropriate content **(MUST FAIL)**
+- [ ] **T015 [P]** Unit test: `wizard/tests/unit/aiPhraseGenerator.test.ts` - request format excludes key/scale/chords **(MUST FAIL)**
+- [ ] **T016 [P]** Unit test: `wizard/tests/unit/apiRateLimiter.test.ts` - client-side rate tracking **(MUST FAIL)**
+
+### Integration Tests (5 tasks)
+- [ ] **T017 [P]** Integration test: `wizard/tests/integration/nl-phrase-complete-flow.test.ts` - full wizard, verify phrase after each step, 750ms debounce, JSON includes nl_phrase **(MUST FAIL)**
+- [ ] **T018 [P]** Integration test: `wizard/tests/integration/nl-phrase-partial-data.test.ts` - genre+mood valid, genre only invalid **(MUST FAIL)**
+- [ ] **T019 [P]** Integration test: `wizard/tests/integration/nl-phrase-error-retry.test.ts` - API timeout, retry 2s, show last valid phrase **(MUST FAIL)**
+- [ ] **T020 [P]** Integration test: `wizard/tests/integration/nl-phrase-rate-limit.test.ts` - trigger limit, error, email notification **(MUST FAIL)**
+- [ ] **T021 [P]** Integration test: `wizard/tests/integration/nl-phrase-nav-backwards.test.ts` - change previous step, phrase regenerates **(MUST FAIL)**
+
+## Phase 3.3: Core Implementation - 15 tasks
+
+### Type Definitions (2 tasks)
+- [ ] **T022 [P]** Define types in `wizard/src/types/wizard.ts`: NLPhraseState, AIGenerationRequest, AIGenerationResponse
+- [ ] **T023 [P]** Define types in `backend/src/types/index.ts`: RateLimitState, ValidationResult, EmailNotification
+
+### Backend Services (4 tasks)
+- [ ] **T024 [P]** Implement `backend/src/services/openai-client.ts`: SDK init, generatePhrase, prompt template, tiktoken, retry (2s, error class), 900 token limit
+- [ ] **T025 [P]** Implement `backend/src/services/rate-limiter.ts`: sliding window min/hour, semaphore (max 3 concurrent), enforce FR-015/016
+- [ ] **T026 [P]** Implement `backend/src/services/cost-tracker.ts`: session (in-memory), daily (file JSON), enforce FR-017 ($0.10/$0.50), reset logic
+- [ ] **T027 [P]** Implement `backend/src/services/email-notifier.ts`: nodemailer+Gmail, sendLimitNotification(limit, current, threshold, sessionId), error handling
+
+### Backend API (2 tasks)
+- [ ] **T028** Implement `backend/src/routes/generate-phrase.ts`: POST /api/generate-phrase, validate AIGenerationRequest (FR-007), check limits, call openAI, validate phrase, track cost, return response/error, trigger email
+- [ ] **T029 [P]** Create `backend/src/index.ts`: Express app, register routes, error middleware, CORS, start server
+
+### Frontend Services (3 tasks)
+- [ ] **T030 [P]** Implement `wizard/src/services/phraseValidator.ts`: word count (10-30), profanity filter, return ValidationResult
+- [ ] **T031 [P]** Implement `wizard/src/services/aiPhraseGenerator.ts`: POST /api/generate-phrase, build request (exclude key/scale/chords FR-002), UUID requestId, handle response/errors
+- [ ] **T032 [P]** Implement `wizard/src/services/apiRateLimiter.ts`: client-side min/hour/session tracking, canMakeRequest boolean
+
+### Frontend State & Hook (2 tasks)
+- [ ] **T033** Update `wizard/src/context/WizardContext.ts`: add NLPhraseState (currentPhrase, previousPhrase, isGenerating, error, timestamp), actions: updateNLPhrase, setGenerating, setError
+- [ ] **T034** Implement `wizard/src/hooks/useAIPhraseGeneration.ts`: lodash.debounce (750ms FR-012), watch wizardData, validate min data (FR-007), check limits, call generator, handle success/error, retry validation failures (FR-014). Backend handles API failure retries (FR-011), validate phrase (FR-014), update context
+
+### UI Components (2 tasks)
+- [ ] **T035 [P]** Create `wizard/src/components/NLPhraseDisplay.tsx`: display currentPhrase (read-only div, text-[0.4375rem], line-clamp-2), spinner+"...regenerating" if isGenerating, error message, handle null
+- [ ] **T036** Update `wizard/src/components/WizardLayout.tsx`: integrate useAIPhraseGeneration, add NLPhraseDisplay below Human-Readable Summary (line 203-208), wire state
+
+## Phase 3.4: Integration & Polish - 10 tasks
+
+### Integration (3 tasks)
+- [ ] **T037** Connect backend to frontend: update wizard API config to http://localhost:PORT/api/generate-phrase, add proxy in vite.config.ts
+- [ ] **T038 [P]** Implement `backend/src/middleware/error-handler.ts`: catch errors, log context, return proper HTTP status
+- [ ] **T039 [P]** Implement `backend/src/middleware/logger.ts`: log requests (method, path, body), responses (status, duration), structured logging
+
+### Validation (3 tasks)
+- [ ] **T040** Run all tests: `npm test` in backend/ and wizard/, verify all pass (previously failing now green)
+- [ ] **T041** Manual testing: start backend/wizard, complete flow, verify phrase generation, test errors
+- [ ] **T042** Performance validation: measure latency (<750ms p95), verify 750ms debounce, check rate limits, monitor cost
+
+### Documentation & Cleanup (4 tasks)
+- [ ] **T043 [P]** Update CLAUDE.md: run `.specify/scripts/bash/update-agent-context.sh claude` (adds OpenAI API, rate limiting, nodemailer)
+- [ ] **T044 [P]** Create `backend/README.md`: env setup, how to run, API docs, rate limit details
+- [ ] **T045** Remove duplication: DRY validation logic, extract error handling, consolidate rate checks
+- [ ] **T046** Final review: verify FR-001 through FR-019, constitutional compliance, test coverage >80%
+
+## Dependencies
+
+**Setup** (T001-T006) → **Tests** (T007-T021) → **Implementation** (T022-T039) → **Validation** (T040-T046)
+
+**Key dependencies**:
+- T022-T023 (types) before T024-T034 (services)
+- T024-T027 (backend services) before T028 (API)
+- T030-T032 (frontend services) before T034 (hook)
+- T033 (context) before T034-T036 (hook & components)
+- T022-T036 before T037-T039 (integration)
+
+## Parallel Execution Examples
+
+**Group 1 - Setup**: T003, T004, T006 (3 parallel)
+**Group 2 - Contract Tests**: T007-T010 (4 parallel)
+**Group 3 - Backend Unit Tests**: T011-T013 (3 parallel)
+**Group 4 - Frontend Unit Tests**: T014-T016 (3 parallel)
+**Group 5 - Integration Tests**: T017-T021 (5 parallel)
+**Group 6 - Types**: T022-T023 (2 parallel)
+**Group 7 - Backend Services**: T024-T027 (4 parallel)
+**Group 8 - Frontend Services**: T030-T032 (3 parallel)
+**Group 9 - UI**: T029, T035, T038, T039 (4 parallel)
+**Group 10 - Docs**: T043-T044 (2 parallel)
+
+## Validation Checklist
+
+- [x] All contracts have tests (T008-T010)
+- [x] All entities have types (T022-T023)
+- [x] Tests before implementation (T007-T021 → T022-T039)
+- [x] Parallel tasks independent (verified no file conflicts)
+- [x] Exact file paths specified
+- [x] 5 integration scenarios (T017-T021)
+- [x] 19 FR requirements covered
+
+## Notes
+
+- **TDD Critical**: ALL T007-T021 must FAIL before starting T022
+- **Commit frequently**: After each task or small groups
+- **Environment**: Create .env from .env.example before running backend
+- **Cost monitoring**: Watch daily cost file to avoid $0.50 limit
+- **Email testing**: Use test service or log-only during dev
+
+---
+
+**Total**: 46 tasks
+**Parallel Groups**: 10
+**Estimated**: 3-5 days parallel, 7-10 days sequential
+**Critical Path**: T001→T002→T007-T021→T022→T024-T027→T028→T034→T036→T040

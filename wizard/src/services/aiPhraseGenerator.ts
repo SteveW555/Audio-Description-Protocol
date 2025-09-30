@@ -1,0 +1,95 @@
+import { v4 as uuidv4 } from 'uuid';
+import type { AIGenerationRequest, AIGenerationResponse } from '../types/wizard';
+import type { AudioProtocolData } from '../types/protocol';
+
+// Use relative URL for Vite proxy
+const API_BASE_URL = '';
+
+/**
+ * Filters wizard data to exclude key, scale, and chords per FR-002
+ */
+function filterWizardData(data: Partial<AudioProtocolData>): any {
+  const filtered: any = {};
+
+  // Include allowed fields
+  if ((data as any).genre) {
+    filtered.genre = (data as any).genre;
+  }
+
+  if ((data as any).mood) {
+    filtered.mood = (data as any).mood;
+  }
+
+  if ((data as any).energy) {
+    filtered.energy = (data as any).energy;
+  }
+
+  if ((data as any).texture) {
+    filtered.texture = (data as any).texture;
+  }
+
+  if ((data as any).instrumentation) {
+    filtered.instrumentation = (data as any).instrumentation;
+  }
+
+  if ((data as any).vocals) {
+    filtered.vocals = (data as any).vocals;
+  }
+
+  if ((data as any).bpm) {
+    filtered.bpm = (data as any).bpm;
+  }
+
+  // Explicitly exclude key, scale, chords per FR-002
+  // (not included in filtered object)
+
+  return filtered;
+}
+
+/**
+ * Gets or creates session ID from sessionStorage
+ */
+function getSessionId(): string {
+  let sessionId = sessionStorage.getItem('audio-protocol-session-id');
+  if (!sessionId) {
+    sessionId = uuidv4();
+    sessionStorage.setItem('audio-protocol-session-id', sessionId);
+  }
+  return sessionId;
+}
+
+/**
+ * Generates AI phrase by calling backend API
+ */
+export async function generatePhrase(
+  wizardData: Partial<AudioProtocolData>
+): Promise<AIGenerationResponse> {
+  const sessionId = getSessionId();
+  const requestId = uuidv4();
+
+  const filteredData = filterWizardData(wizardData);
+
+  const request: AIGenerationRequest = {
+    wizardData: filteredData,
+    sessionId,
+    requestId,
+  };
+
+  const response = await fetch(`${API_BASE_URL}/api/generate-phrase`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData.error || `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  const data: AIGenerationResponse = await response.json();
+  return data;
+}

@@ -3,6 +3,7 @@ import { create, StoreApi, UseBoundStore } from 'zustand';
 
 import { getInitialState } from '../constants/initialState';
 import { AudioProtocolData } from '../types/protocol';
+import { NLPhraseState } from '../types/wizard';
 import { setValueAtPath } from '../utils/dataPaths';
 
 export interface WizardState {
@@ -12,6 +13,7 @@ export interface WizardState {
     currentInstrumentIndex: number;
     addSecondaryGenre: boolean;
     addTheory: boolean;
+    nlPhrase: NLPhraseState;
     setStep: (step: number) => void;
     setInstrumentStep: (step: number) => void;
     setCurrentInstrumentIndex: (index: number) => void;
@@ -19,6 +21,9 @@ export interface WizardState {
     setAddTheory: (value: boolean) => void;
     updateData: (path: string, value: unknown) => void;
     replaceData: (data: AudioProtocolData) => void;
+    updateNLPhrase: (phrase: string | null) => void;
+    setNLGenerating: (isGenerating: boolean) => void;
+    setNLError: (error: string | null) => void;
     reset: () => void;
 }
 
@@ -27,7 +32,7 @@ type WizardStoreSetter = (
         | WizardState
         | Partial<WizardState>
         | ((state: WizardState) => WizardState | Partial<WizardState>),
-    replace?: boolean
+    replace?: boolean | undefined
 ) => void;
 
 const createWizardStore = () => {
@@ -38,6 +43,13 @@ const createWizardStore = () => {
         currentInstrumentIndex: 0,
         addSecondaryGenre: false,
         addTheory: false,
+        nlPhrase: {
+            currentPhrase: null,
+            previousPhrase: null,
+            isGenerating: false,
+            error: null,
+            timestamp: null,
+        },
         setStep: (step: number) => set({ step }),
         setInstrumentStep: (instrumentStep: number) => set({ instrumentStep }),
         setCurrentInstrumentIndex: (currentInstrumentIndex: number) => set({ currentInstrumentIndex }),
@@ -51,6 +63,31 @@ const createWizardStore = () => {
             set({
                 data,
             }),
+        updateNLPhrase: (phrase: string | null) =>
+            set((state) => ({
+                nlPhrase: {
+                    ...state.nlPhrase,
+                    previousPhrase: state.nlPhrase.currentPhrase,
+                    currentPhrase: phrase,
+                    timestamp: new Date().toISOString(),
+                    error: null,
+                },
+            })),
+        setNLGenerating: (isGenerating: boolean) =>
+            set((state) => ({
+                nlPhrase: {
+                    ...state.nlPhrase,
+                    isGenerating,
+                },
+            })),
+        setNLError: (error: string | null) =>
+            set((state) => ({
+                nlPhrase: {
+                    ...state.nlPhrase,
+                    error,
+                    isGenerating: false,
+                },
+            })),
         reset: () =>
             set({
                 data: getInitialState(),
@@ -59,6 +96,13 @@ const createWizardStore = () => {
                 currentInstrumentIndex: 0,
                 addSecondaryGenre: false,
                 addTheory: false,
+                nlPhrase: {
+                    currentPhrase: null,
+                    previousPhrase: null,
+                    isGenerating: false,
+                    error: null,
+                    timestamp: null,
+                },
             }),
     });
 

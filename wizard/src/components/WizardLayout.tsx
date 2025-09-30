@@ -3,17 +3,21 @@ import { type ChangeEvent, useEffect, useMemo, useRef } from 'react';
 
 import { StepType } from '../types/wizard';
 import { useWizardNavigation } from '../hooks/useWizardNavigation';
+import { useAIPhraseGeneration } from '../hooks/useAIPhraseGeneration';
 import { useWizardStore } from '../context/WizardContext';
 import { AskStep } from './AskStep';
 import { FinalStep } from './FinalStep';
 import { InstrumentationWizard } from './InstrumentationWizard';
 import { JsonPreview } from './JsonPreview';
 import { HumanReadablePreview } from './HumanReadablePreview';
+import { NLPhraseDisplay } from './NLPhraseDisplay';
 import { TextInputStep } from './TextInputStep';
 import { ThemeToggleButton } from './ThemeToggleButton';
 import { WizardStep } from './WizardStep';
 
 export const WizardLayout = () => {
+    // Initialize AI phrase generation hook
+    useAIPhraseGeneration();
     const titleInputRef = useRef<HTMLInputElement>(null);
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
@@ -200,12 +204,7 @@ export const WizardLayout = () => {
                                 <HumanReadablePreview />
                             </div>
                         </div>
-                        <div className="flex flex-col">
-                            <label className="text-xs font-semibold text-gray-500 dark:text-white mb-2">NL Phrase:</label>
-                            <div className="w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-300 text-[0.4375rem] font-mono px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 line-clamp-2">
-                                Euphoric atmospheric EDM with rich chords, piano, and female vox
-                            </div>
-                        </div>
+                        <NLPhraseDisplay />
                     </div>
                 </div>
             </div>

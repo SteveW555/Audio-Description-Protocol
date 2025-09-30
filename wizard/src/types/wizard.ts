@@ -29,3 +29,36 @@ export interface WizardSpecialStep extends BaseStep {
 }
 
 export type WizardStepConfig = WizardPathStep | WizardSpecialStep;
+
+/**
+ * AI-Generated Natural Language Phrase State
+ */
+export interface NLPhraseState {
+    currentPhrase: string | null;
+    previousPhrase: string | null;
+    isGenerating: boolean;
+    error: string | null;
+    timestamp: string | null;
+}
+
+export interface AIGenerationRequest {
+    wizardData: Partial<AudioProtocolData>;
+    sessionId: string;
+    requestId: string;
+}
+
+export interface AIGenerationResponse {
+    phrase: string;
+    confidence: number;
+    tokensUsed: number;
+    costUSD: number;
+    requestId: string;
+    timestamp: string;
+}
+
+export interface ValidationResult {
+    isValid: boolean;
+    errors: string[];
+    wordCount: number;
+    hasInappropriateContent: boolean;
+}

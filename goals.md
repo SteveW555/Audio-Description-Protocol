@@ -69,6 +69,15 @@ Ensure that diverse descriptions like:
 
 **Produce similar musical outputs** when submitted to different music generation AIs.
 
+## Human Use in Development, Testing and Training - AI Use in Productionm
+
+The machine-learning algorithms will eventually complete this wizard themselves.
+However, during development and testing it has important:
+- Add customized descriptions to test edge cases
+- Add customized descriptions where suitable training example can't be found
+- Review or edit training data in an easily readable/editable format
+- Edit trained outputs examples for improvement (Reinforcement Learning)
+
 ---
 
 ## Current Status

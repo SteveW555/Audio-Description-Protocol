@@ -1,0 +1,163 @@
+# Feature Specification: AI-Generated Natural Language Description
+
+**Feature Branch**: `008-add-a-feature`
+**Created**: 2025-09-30
+**Status**: Draft
+**Input**: User description: "add a feature that uses a function to take the currently entered values from the wizard (excluding key, scale, chords), and attempts to construct a natural-language phrase to describe the music. The function will call an openAI chat model to construct a detailed prompt. When the phrase is constructed, show it in the NL Phrase label field. The algorithm will run, display, update after Every Step."
+
+## Execution Flow (main)
+```
+1. Parse user description from Input
+   → ✓ Feature description provided
+2. Extract key concepts from description
+   → Identified: AI generation, wizard data aggregation, real-time updates, NL phrase display
+3. For each unclear aspect:
+   → [NEEDS CLARIFICATION: Which OpenAI model should be used?]
+   → [NEEDS CLARIFICATION: What happens if API call fails or times out?]
+   → [NEEDS CLARIFICATION: Should there be rate limiting or cost controls?]
+   → [NEEDS CLARIFICATION: Should users be able to edit the generated phrase?]
+   → [NEEDS CLARIFICATION: Should the phrase be persisted in the output JSON?]
+4. Fill User Scenarios & Testing section
+   → ✓ User flow: data entry → automatic generation → display
+5. Generate Functional Requirements
+   → ✓ Requirements defined with testable criteria
+6. Identify Key Entities
+   → ✓ NL Phrase, Wizard State identified
+7. Run Review Checklist
+   → ⚠ WARN "Spec has uncertainties - clarifications needed"
+8. Return: SUCCESS (spec ready for planning after clarifications)
+```
+
+---
+
+## ⚡ Quick Guidelines
+- ✅ Focus on WHAT users need and WHY
+- ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
+- 👥 Written for business stakeholders, not developers
+
+### Section Requirements
+- **Mandatory sections**: Must be completed for every feature
+- **Optional sections**: Include only when relevant to the feature
+- When a section doesn't apply, remove it entirely (don't leave as "N/A")
+
+### For AI Generation
+When creating this spec from a user prompt:
+1. **Mark all ambiguities**: Use [NEEDS CLARIFICATION: specific question] for any assumption you'd need to make
+2. **Don't guess**: If the prompt doesn't specify something (e.g., "login system" without auth method), mark it
+3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
+4. **Common underspecified areas**:
+   - User types and permissions
+   - Data retention/deletion policies  
+   - Performance targets and scale
+   - Error handling behaviors
+   - Integration requirements
+   - Security/compliance needs
+
+---
+
+## Clarifications
+
+### Session 2025-09-30
+- Q: Should the AI-generated NL phrase be included in the final JSON output that gets exported/saved? → A: Yes, persist in JSON - Include as a new field in the output schema (e.g., `"nl_phrase": "..."`)
+- Q: When the AI API call fails or times out, what should happen? → A: Silent retry once, then display the last successfully generated phrase with error indication "Unable to generate phrase. Retrying automatically..."
+- Q: While the AI phrase is being generated, how should this be communicated to the user? → A: Show last generated phrase with spinner and "...regenerating"
+- Q: Should users be able to manually edit the AI-generated phrase? → A: Read-only - Display only, no editing allowed
+- Q: Should rapid successive wizard step completions trigger multiple API calls or be throttled? → A: Debounce (750ms) - Wait 750ms after last step change before generating, and don't generate if a section is skipped
+- Q: Which AI model/provider should be used for phrase generation? → A: GPT-5 Nano
+- Q: Confirm rationale for excluding key, scale, and chords from phrase generation? → A: Not relevant to creative description - Music theory fields are too technical for natural language creative summaries
+- Q: What's the minimum data required to generate a meaningful phrase? → A: Genre + at least one attribute - Minimum viable phrase requires genre context plus at least one descriptive attribute (mood, energy, texture, instrumentation, or vocals)
+- Q: How will API credentials be managed and secured? → A: Environment variables - API keys stored in environment variables for secure credential management
+- Q: What should happen if the AI generates an inappropriate, nonsensical, or empty phrase? → A: Retry generation, then error message - Attempt regeneration once silently; if invalid content persists, display error indication and keep last valid phrase
+- Q: What API usage limits should be enforced? → A: Rate limits (30/min, 1000/hour), concurrency (max 3), cost limits ($0.10/session, $0.50/day), token limit (900/request); when limits reached, notify user and send details via email to joeyfoursheds@gmail.com
+- Q: What constitutes "appropriate content" for phrase validation? → A: Basic profanity filter (common offensive words), coherent English syntax, and relevance to musical domain. Phrases must form complete grammatical statements about music characteristics.
+- Q: What format should email notifications use when limits are reached? → A: Plain text email with subject "Audio Protocol Wizard - API Usage Limit Reached", body containing: limit type (rate/cost), current value, threshold, session ID, timestamp. Sender: SMTP_USER configured in environment. Recipient: joeyfoursheds@gmail.com.
+
+---
+
+## User Scenarios & Testing *(mandatory)*
+
+### Primary User Story
+As a user annotating an audio clip in the wizard, I want to see a continuously updated natural-language summary of my selections so that I can quickly understand how my choices translate into a human-readable description without manually writing it myself.
+
+### Acceptance Scenarios
+1. **Given** a user is on Step 1 (Mood) and selects "Uplifting, Emotional", **When** the selection is made, **Then** a natural language phrase appears in the NL Phrase field incorporating those mood terms
+2. **Given** a user has progressed to Step 5 (Featured Instruments) and added "Piano" with "Main melody" role and "Bright, Reverberant" descriptors, **When** this data is entered, **Then** the NL Phrase updates to include the instrumentation details (e.g., "featuring sparkling piano")
+3. **Given** a user completes the entire wizard with Genre (EDM/Trance), Mood (Uplifting, Emotional), Energy (Pumping, High_Energy), Texture (Polished, Lush), Piano (Main melody, Bright, Reverberant), Female vocals (Lead, Breathy, Ethereal, Echo, Sparse), and BPM (135), **When** all steps are completed, **Then** the NL Phrase displays: "Uplifting trance track with full, lush arrangement featuring sparkling piano and haunting female vocals"
+4. **Given** a user is viewing the NL Phrase field during data entry, **When** the phrase generation is in progress, **Then** the user sees the last generated phrase with a spinner and "...regenerating" indicator
+5. **Given** a user has entered data and navigates backwards to change a selection, **When** they update a previous choice, **Then** the NL Phrase regenerates to reflect the change
+
+### Edge Cases
+- What happens when the user has only entered partial data (e.g., only Genre and Mood)? System generates phrase if minimum requirements met (genre + at least one attribute); otherwise no phrase generated
+- How does the system handle API failures, timeouts, or service unavailability? System retries once silently, then shows last successful phrase with "Unable to generate phrase. Retrying automatically..." error message
+- What happens if the AI generates an inappropriate, nonsensical, or empty phrase? System validates phrase quality; if invalid, retries generation once silently, then displays error indication while keeping last valid phrase
+- Phrase generation uses 750ms debounce delay after last step change to avoid excessive API calls during rapid user input
+- What happens if a user skips optional steps (e.g., no instrumentation or vocals)? No phrase generation triggered for skipped sections
+- Key, Scale, and Chords are excluded from ALL phrase generations because these music theory fields are too technical for natural language creative descriptions
+- What happens when API usage limits are reached? System notifies user with clear message and sends usage details via email to joeyfoursheds@gmail.com; phrase generation is paused until limits reset
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+- **FR-001**: System MUST aggregate current wizard state (genre, sub-genre, mood, energy, texture, instrumentation, vocals, BPM) after each step completion
+- **FR-002**: System MUST exclude key, scale, and chords fields from the data sent for phrase generation (rationale: these music theory fields are too technical for natural language creative descriptions)
+- **FR-003**: System MUST invoke GPT-5 Nano AI model with the aggregated data to generate a natural-language description
+- **FR-004**: System MUST construct a detailed prompt for the AI that includes structured data labels and context about music description
+- **FR-005**: System MUST display the generated phrase in the "NL Phrase" label field located immediately below the Human-Readable Summary panel (after WizardLayout.tsx line 202)
+- **FR-006**: System MUST update the NL Phrase after EVERY wizard step completion (real-time regeneration)
+- **FR-007**: System MUST handle partial wizard data gracefully, generating meaningful phrases when at least genre plus one attribute (mood, energy, texture, instrumentation, or vocals) are populated; do not generate phrases with insufficient data
+- **FR-008**: System MUST persist the generated phrase in the final JSON output as a new field (e.g., `"nl_phrase": "..."`) in the protocol schema
+- **FR-009**: System MUST display the generated phrase as read-only text without allowing user editing
+- **FR-010**: System MUST display the last generated phrase with a spinner animation and "...regenerating" indicator during phrase generation without blocking user interaction
+- **FR-011**: System MUST automatically retry API failures once silently, then on second failure display the last successfully generated phrase with error indication "Unable to generate phrase. Retrying automatically..."
+- **FR-012**: System MUST debounce phrase generation with 750ms delay after the last wizard step change to reduce API call frequency
+- **FR-013**: System MUST NOT trigger phrase generation when a user skips optional sections (instrumentation, vocals, BPM, secondary genre, music theory)
+- **FR-014**: Frontend MUST validate generated phrases for quality (10-30 word count, non-empty, coherent English text, no profanity or offensive content); if validation fails, retry generation once silently (see FR-011 for API failure retry), then display error indication while keeping last valid phrase
+- **FR-015**: System MUST enforce rate limits of maximum 30 API calls per minute and 1000 API calls per hour
+- **FR-016**: System MUST limit concurrent API requests to maximum 3 simultaneous requests
+- **FR-017**: System MUST track and enforce cost limits of $0.10 per session and $0.50 per day
+- **FR-018**: System MUST limit token usage to maximum 900 tokens per API request; requests exceeding this limit MUST be rejected with error message "Request too complex. Please simplify your selections."
+- **FR-019**: System MUST notify user with in-app message when any API usage limit is reached AND send detailed usage report via email to joeyfoursheds@gmail.com (subject: "Audio Protocol Wizard - API Usage Limit Reached", plain text format with limit type, current value, threshold, session ID, timestamp)
+- **FR-019b**: System MUST display user-facing notification in the wizard UI when rate or cost limits are reached, showing: limit type, retry timeframe, and contact information for support
+
+### Key Entities
+- **NL Phrase**: A natural-language text string (exactly 10-30 words) that summarizes the musical characteristics based on wizard selections, displayed to the user in real-time
+- **Wizard State**: The aggregated collection of user selections from all completed wizard steps, excluding key/scale/chords, used as input for phrase generation
+- **AI Prompt**: The structured request sent to the language model, containing formatted wizard data and instructions for generating a concise musical description
+
+---
+
+## Review & Acceptance Checklist
+*GATE: Automated checks run during main() execution*
+
+### Content Quality
+- [x] No implementation details (languages, frameworks, APIs)
+- [x] Focused on user value and business needs
+- [x] Written for non-technical stakeholders
+- [x] All mandatory sections completed
+
+### Requirement Completeness
+- [x] No [NEEDS CLARIFICATION] markers remain (13 clarifications resolved)
+- [x] Requirements are testable and unambiguous
+- [x] Success criteria are measurable
+- [x] Scope is clearly bounded
+- [x] Dependencies and assumptions identified
+
+---
+
+## Execution Status
+*Updated by main() during processing*
+
+- [x] User description parsed
+- [x] Key concepts extracted
+- [x] Ambiguities marked (10 clarifications identified)
+- [x] User scenarios defined
+- [x] Requirements generated
+- [x] Entities identified
+- [x] All clarifications resolved
+- [x] Review checklist passed
+
+---
+
+## Clarifications Needed
+
+✅ **All clarifications resolved** - Ready to proceed to planning phase (`/plan`)
