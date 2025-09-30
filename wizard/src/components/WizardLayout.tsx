@@ -200,6 +200,12 @@ export const WizardLayout = () => {
                                 <HumanReadablePreview />
                             </div>
                         </div>
+                        <div className="flex flex-col">
+                            <label className="text-xs font-semibold text-gray-500 dark:text-white mb-2">NL Phrase:</label>
+                            <div className="w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-300 text-[0.4375rem] font-mono px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 line-clamp-2">
+                                Euphoric atmospheric EDM with rich chords, piano, and female vox
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
