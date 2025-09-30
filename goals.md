@@ -1,7 +1,7 @@
 
 # Audio Description Protocol (ADP)
 
-To see this document properly formatted open in VS Code and use Cmd-Shift-V, or view on Github
+* *To see this document properly formatted open in VS Code and use Cmd-Shift-V, or view on Github*
 
 ## Vision
 
