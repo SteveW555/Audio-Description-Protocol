@@ -8,6 +8,7 @@ import { AskStep } from './AskStep';
 import { FinalStep } from './FinalStep';
 import { InstrumentationWizard } from './InstrumentationWizard';
 import { JsonPreview } from './JsonPreview';
+import { HumanReadablePreview } from './HumanReadablePreview';
 import { TextInputStep } from './TextInputStep';
 import { ThemeToggleButton } from './ThemeToggleButton';
 import { WizardStep } from './WizardStep';
@@ -81,7 +82,8 @@ export const WizardLayout = () => {
                             prompt="Do you want to add music theory details, or leave that to auto-detection?"
                             onYes={() => {
                                 setAddTheory(true);
-                                goToNextStep();
+                                // Manually jump to BPM step (next step after ASK_THEORY)
+                                setStep(step + 1);
                             }}
                             onNo={() => {
                                 setAddTheory(false);
@@ -177,10 +179,18 @@ export const WizardLayout = () => {
                         {renderStep()}
                     </div>
 
-                    <div className="mt-6 h-[24rem] lg:mt-8 lg:h-[30rem] flex flex-col">
-                        <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Live JSON Preview:</h3>
-                        <div className="flex-1 min-h-0">
-                            <JsonPreview />
+                    <div className="mt-6 lg:mt-8 flex flex-col gap-4">
+                        <div className="h-[24rem] lg:h-[30rem] flex flex-col">
+                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Live JSON Preview:</h3>
+                            <div className="flex-1 min-h-0">
+                                <JsonPreview />
+                            </div>
+                        </div>
+                        <div className="h-[24rem] lg:h-[30rem] flex flex-col">
+                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Human-Readable Summary:</h3>
+                            <div className="flex-1 min-h-0">
+                                <HumanReadablePreview />
+                            </div>
                         </div>
                     </div>
                 </div>

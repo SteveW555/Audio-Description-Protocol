@@ -7,7 +7,6 @@ import { getSubgenresFor, shouldShowVocalDetails } from '../utils/genreHelpers';
 
 export const useWizardSteps = (): WizardStepConfig[] => {
     const data = useWizardStore((state) => state.data);
-    const addSecondaryGenre = useWizardStore((state) => state.addSecondaryGenre);
     const addTheory = useWizardStore((state) => state.addTheory);
 
     return useMemo(() => {
@@ -45,21 +44,6 @@ export const useWizardSteps = (): WizardStepConfig[] => {
                 path: 'semantic_description.genre.primary_subgenres',
                 terms: (draft) => getSubgenresFor(draft.semantic_description.genre.primary),
                 multi: true,
-            },
-            { title: 'Add Secondary Genre?', special: StepType.ASK_SECONDARY_GENRE },
-            {
-                title: 'Secondary Genres',
-                path: 'semantic_description.genre.secondary',
-                terms: [...VOCABULARY.secondary_genre],
-                multi: true,
-                condition: () => addSecondaryGenre,
-            },
-            {
-                title: 'Secondary Subgenres',
-                path: 'semantic_description.genre.secondary_subgenres',
-                terms: (draft) => getSubgenresFor(draft.semantic_description.genre.secondary),
-                multi: true,
-                condition: () => addSecondaryGenre,
             },
             { title: 'Instrumentation', special: StepType.INSTRUMENTATION },
             { title: 'Music Theory', special: StepType.ASK_THEORY },
@@ -103,5 +87,5 @@ export const useWizardSteps = (): WizardStepConfig[] => {
         ];
 
         return steps;
-    }, [addSecondaryGenre, addTheory, data]);
+    }, [data, addTheory]);
 };
