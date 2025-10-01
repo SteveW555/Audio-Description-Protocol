@@ -1,0 +1,15 @@
+# Production dependencies for FastAPI validation service
+# Lightweight - no PyTorch/audio processing needed for schema validation
+
+# Core validation dependencies
+jsonschema>=4.19.0
+pydantic>=2.0.0
+typing-extensions>=4.0.0
+click>=8.0.0
+
+# FastAPI web service dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+aiofiles>=23.2.0
+httpx>=0.25.0
+rfc3339-validator>=0.1.4
