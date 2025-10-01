@@ -28,7 +28,7 @@ export const JsonPreview = memo(({ data, validation, format = 'json', theme = 'd
     return (
         <div className={`h-full rounded-lg overflow-hidden border ${theme === 'dark' ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
             <div className={`flex items-center justify-between px-4 py-2 text-xs font-semibold ${theme === 'dark' ? 'text-gray-300 bg-gray-800 border-b border-gray-700' : 'text-gray-700 bg-gray-100 border-b border-gray-200'}`}>
-                <span>Preview · {formatLabels[format]}</span>
+                <span>Preview | {formatLabels[format]}</span>
                 {onFormatChange && (
                     <div className="space-x-1">
                         {(Object.keys(formatLabels) as Array<WizardSettings['previewFormat']>).map(option => (

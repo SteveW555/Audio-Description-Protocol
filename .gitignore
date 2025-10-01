@@ -146,6 +146,9 @@ dmypy.json
 # Data files
 *.csv
 *.json
+!package.json
+!*/package.json
+!railway.json
 *.yaml
 *.yml
 
