@@ -3,9 +3,9 @@
 
 * *To see this document properly formatted open in VS Code and use Cmd-Shift-V, or view on Github*
 
-## Vision
+## Target
 
-A standardized protocol for describing music that enables **consistent communication** between humans, LLMs, and music generation AIs.
+An **Intelligent Linguist Tool** that a standardized protocol for describing music that enables **consistent communication** between humans, LLMs, and music generation AIs.
 
 ## The Problem
 

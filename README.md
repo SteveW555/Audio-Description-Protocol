@@ -1,12 +1,12 @@
 # Audio Description Protocol (ADP)
 
-A Python-first framework for describing musical audio clips with structured text annotations, featuring a comprehensive 479-term taxonomy and interactive React wizard interface for seamless human-AI interoperability.
+A Python-first framework for describing musical audio clips with structured text annotations, featuring a comprehensive **322-term multi-category taxonomy** and interactive React wizard interface for seamless human-AI interoperability.
 
 ## 🎯 Project Overview
 
 The Audio Description Protocol (ADP) provides a complete ecosystem for musical audio annotation:
 
-- **479-Term Taxonomy**: Comprehensive mood, energy, and texture descriptors with hierarchical organization
+- **322-Term Multi-Category Taxonomy**: Comprehensive mood, energy, and texture descriptors with clean IDs and hierarchical organization
 - **Python Backend**: Robust data models, validation, and audio processing with PyTorch/librosa
 - **React Wizard Interface**: User-friendly web application for creating annotations step-by-step
 - **TypeScript Bridge**: Type-safe data exchange between frontend and backend
@@ -15,11 +15,11 @@ The Audio Description Protocol (ADP) provides a complete ecosystem for musical a
 
 ### Key Features
 
-- 🎵 **Comprehensive Taxonomy**: 479 curated terms across mood (147), energy (100), and texture (232) dimensions
+- 🎵 **Comprehensive Multi-Category Taxonomy**: 322 curated terms (Mood: 108, Energy: 90, Texture: 124) with clean IDs and genuine semantic diversity
 - 🐍 **Python-First Architecture**: Core data models and validation using Pydantic with PyTorch integration
 - ⚛️ **Interactive Wizard**: React-based web interface with real-time validation, hierarchical term organization, and multi-select filtering
-- 🔗 **TypeScript Bridge**: Maintains type safety and data consistency between Python backend and React frontend
-- 🎨 **Smart UI Organization**: Group by category (7 mood subcategories) or popularity (4 frequency tiers) with persistent preferences
+- 🔗 **TypeScript Single Source of Truth**: `wizard/src/constants/taxonomy.ts` drives all derived data structures
+- 🎨 **Smart UI Organization**: Group by category (21 subcategories) or popularity (4 frequency tiers) with persistent preferences
 - 🕒 **Temporal Precision**: Time-range annotations with microsecond accuracy and validation
 - 🤖 **Human-AI Interoperability**: Full provenance tracking for annotation sources and confidence scoring
 - 📊 **Professional Quality**: Supports musical analysis, spectral features, and hierarchical musical structures
@@ -215,47 +215,69 @@ graph TB
 - **Performance**: Schema validation <100ms
 - **Storage**: File-based JSON with optional database future support
 
-## 🎵 Taxonomy Overview
+## 🎵 Taxonomy Overview (Recently Refactored)
 
-### 479-Term Classification System
+### 322-Term Multi-Category Classification System
 
-The ADP taxonomy organizes musical descriptors into three main dimensions:
+The ADP taxonomy organizes musical descriptors into three main dimensions with **multi-category support** (terms can appear in multiple categories when semantically distinct):
 
-#### **Mood Descriptors (147 terms across 7 hierarchical subcategories)**
-- **Positive/Uplifting** (22 terms): upbeat, energetic-mood, joyful, happy, cheerful, uplifting, positive-mood, hopeful, playful, romantic, sentimental, triumphant, heroic, optimistic, euphoric, exuberant, ecstatic, elated, celebratory, festive, inspiring, sparkly-mood
-- **Calm/Peaceful** (16 terms): peaceful, calm, relaxed, serene, dreamy, tranquil, meditative, soothing, gentle, contemplative, restful, ethereal-mood, atmospheric-mood, flowing-mood, smooth-mood, gossamer-mood
-- **Dark/Negative** (19 terms): dark-mood, melancholic, sad, somber, brooding, mournful, gloomy, haunting, moody, desolate, forlorn, wistful, tragic, lonely, ominous, disturbing, shadowy-mood, plaintive, negative-mood
-- **Intense/Aggressive** (19 terms): intense-mood, aggressive, driving-mood, powerful-mood, forceful, fierce, raw-mood, edgy-mood, explosive-mood, menacing, angry, violent, furious, tense, harsh-mood, thunderous, blistering, snarling, chaotic-mood
-- **Mysterious/Ambiguous** (14 terms): mysterious, enigmatic, ethereal-ambience, otherworldly, mystical, cryptic, elusive, veiled-mood, obscure-mood, twilight, liminal, majestic, epic, strange
-- **Romantic/Tender** (10 terms): tender, affectionate, intimate-mood, loving, sensual, warm-hearted, sultry, passionate, yearning, longing
+**Key Refactoring Changes (2025-10-01)**:
+- ✅ **Clean IDs**: Removed redundant suffixes (`energetic-mood` → `energetic`, `soft-energy` → `soft`)
+- ✅ **Multi-category terms**: 20 terms appear in 2+ categories (e.g., `soft` = low energy intensity vs smooth texture)
+- ✅ **Single source of truth**: `wizard/src/constants/taxonomy.ts` with derived data structures
+- ✅ **Zero breaking changes**: Category field disambiguates, existing code works unchanged
+
+#### **Mood Descriptors (108 terms across 7 hierarchical subcategories)**
+- **Positive/Uplifting** (22 terms): upbeat, energetic, joyful, happy, cheerful, uplifting, positive, hopeful, playful, romantic, sentimental, triumphant, heroic, optimistic, euphoric, exuberant, ecstatic, elated, celebratory, festive, inspiring, sparkly
+- **Calm/Peaceful** (16 terms): peaceful, calm, relaxed, serene, dreamy, tranquil, meditative, soothing, gentle, contemplative, restful, ethereal, atmospheric, flowing, smooth, gossamer
+- **Dark/Negative** (19 terms): dark, melancholic, sad, somber, brooding, mournful, gloomy, haunting, moody, desolate, forlorn, wistful, tragic, lonely, ominous, disturbing, shadowy, plaintive, negative
+- **Intense/Aggressive** (19 terms): intense, aggressive, driving, powerful, forceful, fierce, raw, edgy, explosive, menacing, angry, violent, furious, tense, harsh, thunderous, blistering, snarling, chaotic
+- **Mysterious/Ambiguous** (14 terms): mysterious, enigmatic, ethereal-ambience, otherworldly, mystical, cryptic, elusive, veiled, obscure, twilight, liminal, majestic, epic, strange
+- **Romantic/Tender** (10 terms): tender, affectionate, intimate, loving, sensual, warm-hearted, sultry, passionate, yearning, longing
 - **Nostalgic/Reflective** (8 terms): nostalgic, reflective, bittersweet, reminiscent, pensive, poignant, memory-laden, retrospective
 
-#### **Energy Descriptors (100 terms across 5 hierarchical subcategories)**
-- **High/Driving** (20 terms): high-energy, driving, vigorous, propulsive, pumping, dynamic-energy, explosive, kinetic, punchy, pulsating, frenetic, relentless, urgent, vibrant, bouncy, brisk, electrifying, high-octane, turbocharged, thumping
-- **Medium/Flowing** (17 terms): flowing, steady, moderate, balanced-energy, measured, rolling, rhythmic, groovy, medium-energy, cascading, undulating, swinging, pulsing, unhurried, cruising, mid-tempo, paced
-- **Low/Calm** (19 terms): laid-back, low-energy, ambient, chill, mellow-energy, gentle-energy, subdued, restrained, placid, still, relaxed-energy, downtempo, languid, serene-energy, hushed, delicate-energy, soft-energy, sedate, hypnotic
-- **Tense/Unstable** (16 terms): tense-energy, anxious-energy, chaotic-energy, agitated, erratic, unstable, jarring-energy, dissonant-energy, turbulent, unsettling-energy, fragmented, static-energy, restless, jittery, hectic, disjointed
-- **Expansive/Building** (18 terms): expansive, soaring, lifting, transcendent-energy, boundless, sweeping, majestic-energy, panoramic, vast, cosmic, breathless, gradual, crescendoing, swelling, decaying, wavering, oscillating, spiraling
+#### **Energy Descriptors (90 terms across 6 hierarchical subcategories)**
+- **High/Driving** (20 terms): high-energy, driving, vigorous, propulsive, pumping, dynamic, explosive, kinetic, punchy, pulsating, frenetic, relentless, urgent, vibrant, bouncy, brisk, electrifying, high-octane, turbocharged, thumping
+- **Medium/Flowing** (17 terms): flowing, steady, moderate, balanced, measured, rolling, rhythmic, groovy, medium-energy, cascading, undulating, swinging, pulsing, unhurried, cruising, mid-tempo, paced
+- **Low/Calm** (19 terms): laid-back, low-energy, ambient, chill, mellow, gentle, subdued, restrained, placid, still, relaxed, downtempo, languid, serene, hushed, delicate, soft, sedate, hypnotic
+- **Tense/Unstable** (16 terms): tense, anxious, chaotic, agitated, erratic, unstable, jarring, dissonant, turbulent, unsettling, fragmented, static, restless, jittery, hectic, disjointed
+- **Expansive/Building** (18 terms): expansive, soaring, lifting, transcendent, boundless, sweeping, majestic, panoramic, vast, cosmic, breathless, gradual, crescendoing, swelling, decaying, wavering, oscillating, spiraling
 
-#### **Texture Descriptors (232 terms across 9 hierarchical subcategories)**
+#### **Texture Descriptors (124 terms across 8 hierarchical subcategories)**
 - **Bright/Clear** (14 terms): bright, crisp, clear, brilliant, sparkling, crystalline, shimmering, radiant, gleaming, airy, polished, pristine, shiny, luminous
-- **Warm/Rich** (17 terms): warm, rich, full, lush, creamy, honeyed, golden, mellow, rounded, embracing, enveloping, cozy, sumptuous, velvety, buttery, silky, soft-texture
-- **Dark/Heavy** (19 terms): dark, muddy, harsh, gritty-texture, murky, raspy, buzzy, distorted, coarse, abrasive, shadowy-texture, veiled, obscured, heavy, dense, thick, clouded, muffled, oppressive
-- **Natural/Acoustic** (19 terms): acoustic, organic, natural, raw-texture, live, authentic, unprocessed, woody, breathy, human, intimate, close-miked, hollow, earthy, fibrous, resonant, textured, grainy
+- **Warm/Rich** (17 terms): warm, rich, full, lush, creamy, honeyed, golden, mellow, rounded, embracing, enveloping, cozy, sumptuous, velvety, buttery, silky, soft
+- **Dark/Heavy** (19 terms): dark, muddy, harsh, gritty, murky, raspy, buzzy, distorted, coarse, abrasive, shadowy, veiled, obscured, heavy, dense, thick, clouded, muffled, oppressive
+- **Natural/Acoustic** (19 terms): acoustic, organic, natural, raw, live, authentic, unprocessed, woody, breathy, human, intimate, close-miked, hollow, earthy, fibrous, resonant, textured, grainy
 - **Synthetic/Electronic** (16 terms): electronic, synthetic, digital, processed, programmed, artificial, computerized, robotic, futuristic, cyber, pixelated, metallic, glassy, analog, mechanical, glitchy
 - **Dense/Layered** (16 terms): layered, complex, rich-density, full-bodied, orchestrated, intricate, detailed, multi-textured, stratified, elaborate, sparse, minimalistic, polyphonic, homophonic, monophonic, heterophonic
-- **Smooth/Refined** (11 terms): smooth, silky-texture, polished-texture, refined, sleek, elegant, sophisticated, seamless, effortless, fluid, graceful
-- **Rough/Gritty** (13 terms): rough, gritty, grainy-texture, coarse-texture, jagged, harsh-texture, raw-finish, unpolished, edgy, abrasive-texture, crunchy, distorted-texture, ratty
+- **Smooth/Refined** (9 terms): smooth, refined, sleek, elegant, sophisticated, seamless, effortless, fluid, graceful
+- **Rough/Gritty** (7 terms): rough, jagged, raw-finish, unpolished, edgy, crunchy, ratty
 - **Spatial/Atmospheric** (8 terms): spacious, reverberant, wet, dry, intimate-space, echoey, atmospheric, cinematic
+
+#### **Multi-Category Terms (20 terms appearing in 2+ categories)**
+These terms have genuinely different meanings in different contexts:
+- `soft`: Energy (low intensity) + Texture (smooth/velvety timbre)
+- `dark`: Mood (emotional) + Texture (frequencies/timbre)
+- `flowing`: Mood (peaceful continuity) + Energy (rhythmic movement)
+- `smooth`: Mood (peaceful feeling) + Texture (polished sound)
+- `atmospheric`: Mood (ambient feeling) + Texture (spatial/reverberant)
+- `raw`: Mood (intense emotion) + Texture (unprocessed sound)
+- `intimate`: Mood (closeness) + Texture (close-miked space)
+- `driving`: Mood (intense feeling) + Energy (propulsive rhythm)
+- `gentle`: Mood (tender) + Energy (low-intensity)
+- `harsh`: Mood (intense) + Texture (abrasive)
+- `edgy`: Mood (tense) + Texture (rough)
+- ...and 9 more terms
 
 ### Example Usage
 ```python
-# Semantic annotation using taxonomy terms
+# Semantic annotation using clean taxonomy IDs
 semantic_attributes = SemanticAttributes(
-    mood=["upbeat", "joyful", "optimistic"],      # Positive mood cluster
-    energy=["high-energy", "driving"],           # High energy cluster
-    texture=["bright", "crisp", "warm"]          # Mixed texture qualities
+    mood=["upbeat", "joyful", "optimistic"],      # Positive mood cluster (clean IDs)
+    energy=["high-energy", "driving", "soft"],    # High energy + soft intensity
+    texture=["bright", "crisp", "soft"]           # Mixed texture (soft appears in both!)
 )
+# Note: 'soft' can legitimately appear in both energy and texture with different meanings
 ```
 
 ## 🔧 JSON Schema Examples
@@ -323,12 +345,21 @@ semantic_attributes = SemanticAttributes(
 
 ### Recent Achievements (September 2025)
 
-#### **Latest Features (Session 14 - Complete Taxonomy Expansion)**
+#### **Latest Features (2025-10-01 - Taxonomy Refactoring)**
+- **Clean IDs**: Removed all redundant category suffixes (`energetic-mood` → `energetic`, `soft-energy` → `soft`)
+- **Multi-Category Support**: 20 terms now appear in multiple categories with distinct meanings
+  - Example: `soft` = low intensity (Energy) vs smooth timbre (Texture)
+  - Example: `dark` = emotional darkness (Mood) vs murky frequencies (Texture)
+- **Single Source of Truth**: `wizard/src/constants/taxonomy.ts` (~700 lines) with derived structures
+- **Reduced from 479 to 322 terms**: Eliminated artificial duplication while preserving semantic diversity
+- **Zero Breaking Changes**: Category field disambiguates; existing code works unchanged
+
+#### **Session 14 (2025-09-29) - Complete Taxonomy Expansion**
 - **Complete Hierarchical Organization**: All three dimensions now have subcategory groupings
-  - **Mood**: 7 subcategories organizing 147 terms (Positive/Uplifting, Calm/Peaceful, Dark/Negative, Intense/Aggressive, Mysterious/Ambiguous, Romantic/Tender, Nostalgic/Reflective)
-  - **Energy**: 5 subcategories organizing 90 terms (High/Driving, Medium/Flowing, Low/Calm, Tense/Unstable, Expansive/Building)
-  - **Texture**: 9 subcategories organizing 119 terms (Bright/Clear, Warm/Rich, Dark/Heavy, Natural/Acoustic, Synthetic/Electronic, Dense/Layered, Smooth/Refined, Rough/Gritty, Spatial/Atmospheric)
-- **Total**: 21 subcategories organizing 356+ taxonomy terms for enhanced discoverability
+  - **Mood**: 7 subcategories organizing 108 terms
+  - **Energy**: 6 subcategories organizing 90 terms
+  - **Texture**: 8 subcategories organizing 124 terms
+- **Total**: 21 subcategories organizing 322 unique taxonomy terms for enhanced discoverability
 
 #### **Session 13 - Feature 006 (Group By Toolbar)**
 - **Group By Toolbar**: Toggle between Category (hierarchical) and Popularity (frequency-based) organization
@@ -439,18 +470,18 @@ Default dataset license: **CC0-1.0** (Creative Commons Public Domain)
 3. **Validate Results**: Comprehensive real-time feedback ensures quality
 
 ### For Developers
-1. **Explore the Taxonomy**: `python -c "from adp_core.taxonomy import TAXONOMY_TERMS; print(len(TAXONOMY_TERMS))"`
+1. **Explore the Taxonomy**: Check `wizard/src/constants/taxonomy.ts` (322 multi-category terms with clean IDs)
 2. **Run Tests**: `pytest tests/python/` for backend, `cd wizard/app && npm test` for frontend
 3. **Read the Tutorial**: Complete architecture overview in `tutorial.md`
 
 ### For AI/ML Practitioners
 1. **Review Data Models**: Check `src/adp_core/models/` for annotation structures
-2. **Understand Taxonomy**: 479 curated terms for consistent model training
+2. **Understand Taxonomy**: 322 curated terms with multi-category support for consistent model training
 3. **Export Datasets**: Use wizard or programmatic interface for dataset creation
 
 ---
 
 **Status**: Core implementation complete with advanced UI features, production ready for annotation workflows
-**Architecture**: Python backend + React frontend with 479-term taxonomy and complete hierarchical organization
-**Latest Features**: Complete taxonomy expansion with 21 subcategories (7 mood + 5 energy + 9 texture), multi-select frequency filtering, centralized state management
-**Last Updated**: 2025-09-29 (Session 14: Complete Hierarchical Taxonomy Expansion)
+**Architecture**: Python backend + React frontend with 322-term multi-category taxonomy and complete hierarchical organization
+**Latest Features**: Taxonomy refactoring with clean IDs and multi-category support (322 terms, 21 subcategories), multi-select frequency filtering, centralized state management
+**Last Updated**: 2025-10-01 (Taxonomy Refactoring: Clean IDs + Multi-Category Support)

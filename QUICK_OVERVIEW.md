@@ -4,21 +4,23 @@
 
 ## What It Is
 
-Production-ready framework for **musical audio annotation** with structured text descriptions. Features a comprehensive 479-term taxonomy and interactive React wizard interface for seamless human-AI interoperability in audio analysis and dataset creation.
+Production-ready framework for **musical audio annotation** with structured text descriptions. Features a comprehensive **322-term multi-category taxonomy** and interactive React wizard interface for seamless human-AI interoperability in audio analysis and dataset creation.
 
 ## Core Purpose
 
 - **Standardized audio annotation** using versioned JSON schemas
-- **479-term taxonomy** with hierarchical organization (mood/energy/texture)
+- **322-term clean taxonomy** with multi-category support and hierarchical organization (mood/energy/texture)
 - **Interactive wizard interface** for step-by-step annotation creation
 - **Type-safe data exchange** between Python backend and React frontend
 
 ## Key Features
 
-### Taxonomy System
-- **479 curated terms** across three dimensions: Mood (147), Energy (100), Texture (232)
-- **21 subcategories**: 7 Mood + 5 Energy + 9 Texture hierarchical groups
-- **Frequency-based filtering**: Very Common, Common, Moderate, Rare tiers
+### Taxonomy System (Recently Refactored)
+- **322 curated terms** across three dimensions: Mood (108), Energy (90), Texture (124)
+- **Multi-category support**: Terms like `soft`, `dark`, `flowing` can appear in multiple categories with different meanings
+- **Clean IDs**: No redundant suffixes - `energetic` instead of `energetic-mood`, category field disambiguates
+- **21 subcategories**: 7 Mood + 6 Energy + 8 Texture hierarchical groups
+- **Frequency-based filtering**: Ubiquitous, Frequent, Infrequent, Rare tiers
 - **Multi-select organization**: Toggle between Category (hierarchical) and Popularity (frequency) views
 
 ### Backend (Python)
@@ -36,8 +38,8 @@ Production-ready framework for **musical audio annotation** with structured text
 ## Current State
 
 **Status**: Core implementation complete, production-ready for annotation workflows
-**Latest**: Session 14 - Complete hierarchical taxonomy expansion with Energy/Texture subcategories
-**Branch**: 006-below-the-filter (Group By toolbar with category/popularity grouping)
+**Latest**: Taxonomy Refactoring - Clean IDs with multi-category support (322 terms, no redundant suffixes)
+**Branch**: 008-add-a-feature (AI phrase generation specification + taxonomy refactor)
 
 ## Project Structure
 
@@ -104,12 +106,12 @@ Audio Description Protocol/
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `src/adp_core/taxonomy.py` | ~2,000 | 479-term taxonomy with hierarchy |
-| `wizard/app/src/components/TermSelector.tsx` | ~800 | Main term selection UI |
-| `wizard/app/src/utils/termGrouping.ts` | ~500 | Hierarchical grouping logic |
-| `src/adp_core/models/annotation.py` | ~400 | Core annotation data models |
-| `wizard/app/src/context/wizardStore.ts` | ~300 | Zustand state management |
-| `src/adp_core/validation/validator.py` | ~600 | Multi-level validation engine |
+| `wizard/src/constants/taxonomy.ts` | ~700 | **322-term taxonomy** with clean IDs, multi-category support |
+| `wizard/src/types/protocol.ts` | ~339 | TypeScript type definitions (MoodTerm, EnergyTerm, TextureTerm) |
+| `wizard/src/components/TermSelector.tsx` | ~800 | Main term selection UI |
+| `wizard/src/utils/termGrouping.ts` | ~173 | Hierarchical grouping (imports from taxonomy) |
+| `wizard/src/context/wizardStore.ts` | ~300 | Zustand state management |
+| `src/adp_core/taxonomy.py` | ~60 | Python stub (TypeScript is source of truth) |
 
 ## Workflow Commands
 
@@ -175,10 +177,17 @@ ruff check src/
 
 ## Recent Achievements
 
-### Session 14 (2025-09-29) - Latest
+### Taxonomy Refactoring (2025-10-01) - Latest
+- **Clean IDs**: Removed redundant category suffixes (`energetic-mood` → `energetic`)
+- **Multi-category support**: 20 terms now appear in multiple categories (e.g., `soft` in Energy & Texture)
+- **Reduced from 479 to 322 terms**: Eliminated artificial duplication, kept genuine semantic diversity
+- **Single source of truth**: `wizard/src/constants/taxonomy.ts` (~700 lines) with derived data structures
+- **Zero breaking changes**: Backward compatible with existing code
+
+### Session 14 (2025-09-29)
 - Complete hierarchical taxonomy expansion
-- Energy: 5 subcategories organizing 100 terms
-- Texture: 9 subcategories organizing 232 terms
+- Energy: 6 subcategories organizing 90 terms
+- Texture: 8 subcategories organizing 124 terms
 - Total: 21 subcategories across all three dimensions
 
 ### Session 13 (2025-09-29)
@@ -204,4 +213,4 @@ ruff check src/
 
 **Quick Start**: `cd wizard/app && npm run dev` → Open http://localhost:3000
 **Test Backend**: `pytest tests/python/`
-**Explore Taxonomy**: `python -c "from adp_core.taxonomy import TAXONOMY_TERMS; print(len(TAXONOMY_TERMS))"`
+**Explore Taxonomy**: Check `wizard/src/constants/taxonomy.ts` (322 terms with multi-category support)
