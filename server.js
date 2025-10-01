@@ -15,6 +15,11 @@ console.log(`Environment PORT=${rawPort}`);
 console.log(`Serving static files from ${distDir}`);
 console.log(`Dist exists: ${fs.existsSync(distDir)}`);
 
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  next();
+});
+
 app.use(express.static(distDir));
 
 app.get('*', (req, res) => {
