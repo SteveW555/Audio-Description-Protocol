@@ -41,6 +41,18 @@ export const useInstrumentationFlow = () => {
         [currentInstrumentIndex, instrumentation, updateData]
     );
 
+    const overwriteCurrentInstrument = useCallback(
+        (nextEntry: InstrumentationEntry) => {
+            const nextInstruments = [...instrumentation];
+            nextInstruments[currentInstrumentIndex] = {
+                ...emptyInstrument(),
+                ...nextEntry,
+            };
+            updateData('semantic_description.instrumentation', nextInstruments);
+        },
+        [currentInstrumentIndex, instrumentation, updateData]
+    );
+
     const descriptorOptions = useMemo(
         () => getInstrumentDescriptors(currentInstrument.instrument),
         [currentInstrument.instrument]
@@ -59,6 +71,7 @@ export const useInstrumentationFlow = () => {
         instrumentation,
         addInstrument,
         updateInstrumentField,
+        overwriteCurrentInstrument,
         descriptorOptions,
         roleOptions,
         instrumentOptions: [...VOCABULARY.instrument],

@@ -13,7 +13,17 @@ const getNextDisabledState = (selected: string | string[] | undefined, multi?: b
     return !selected;
 };
 
-export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip, groupByMethod, attributeType }: TermSelectorProps) => {
+export const TermSelector = ({
+    terms,
+    onSelect,
+    selected,
+    multi,
+    onNext,
+    onSkip,
+    groupByMethod,
+    attributeType,
+    controlsLayout = 'default',
+}: TermSelectorProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const handleSelect = (term: string) => {
@@ -29,6 +39,10 @@ export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip,
     const isNextDisabled = getNextDisabledState(selected, multi);
 
     useEffect(() => {
+        if (controlsLayout === 'none') {
+            return undefined;
+        }
+
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key !== 'Enter') {
                 return;
@@ -57,7 +71,7 @@ export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip,
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isNextDisabled, onNext]);
+    }, [controlsLayout, isNextDisabled, onNext]);
 
     // Use all terms without filtering to match original simplicity
     const filteredTerms = terms;
@@ -145,32 +159,34 @@ export const TermSelector = ({ terms, onSelect, selected, multi, onNext, onSkip,
                 )}
             </div>
 
-            <div className="flex items-start justify-center gap-4 mt-5">
-                <button
-                    type="button"
-                    onClick={onSkip}
-                    data-role="skip-button"
-                    className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800/60 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-                >
-                    Skip
-                </button>
-                <div className="flex flex-col items-center gap-2">
+            {controlsLayout === 'default' && (
+                <div className="flex items-start justify-center gap-4 mt-5">
                     <button
                         type="button"
-                        onClick={onNext}
-                        disabled={isNextDisabled}
-                        data-role="next-button"
-                        className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={onSkip}
+                        data-role="skip-button"
+                        className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800/60 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
                     >
-                        Next &rarr;
+                        Skip
                     </button>
-                    {isNextDisabled && attributeType && (
-                        <p className="text-xs" style={{ color: '#D87710' }}>
-                            Choose at least 1 {attributeType}
-                        </p>
-                    )}
+                    <div className="flex flex-col items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={onNext}
+                            disabled={isNextDisabled}
+                            data-role="next-button"
+                            className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next &rarr;
+                        </button>
+                        {isNextDisabled && attributeType && (
+                            <p className="text-xs" style={{ color: '#D87710' }}>
+                                Choose at least 1 {attributeType}
+                            </p>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

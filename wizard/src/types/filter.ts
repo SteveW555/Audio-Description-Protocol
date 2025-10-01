@@ -52,4 +52,5 @@ export interface TermSelectorProps {
   onSkip: () => void;
   groupByMethod?: GroupByMethod;
   attributeType?: string;
+  controlsLayout?: 'default' | 'none';
 }

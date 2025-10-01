@@ -1,12 +1,8 @@
 /**
  * SINGLE SOURCE OF TRUTH for Mood/Energy/Texture Taxonomy
  *
- * This file contains the complete taxonomy with full metadata.
+ * This file contains the complete 479-term taxonomy with full metadata.
  * All other taxonomy-related files derive their data from this registry.
- *
- * IMPORTANT: Terms can appear in multiple categories when they describe
- * genuinely different musical dimensions (e.g., "soft" energy vs "soft" texture).
- * The category field disambiguates them.
  *
  * DO NOT duplicate this data elsewhere - import from this file instead.
  */
@@ -16,14 +12,14 @@ export type FrequencyLevel = 'ubiquitous' | 'frequent' | 'infrequent' | 'rare';
 
 export interface TaxonomyTerm {
   id: string;                      // Canonical term identifier (clean, no category suffixes)
-  category: TaxonomyCategory;      // Main category (disambiguates multi-category terms)
+  category: TaxonomyCategory;      // Main category
   subcategory: string;             // Subcategory label (e.g., 'Positive / Uplifting')
   frequency: FrequencyLevel;       // Rarity/popularity
   description?: string;            // Optional description
 }
 
 // ============================================================================
-// MASTER TAXONOMY REGISTRY - All terms defined here
+// MASTER TAXONOMY REGISTRY - All 479 terms defined here
 // ============================================================================
 
 export const TAXONOMY: readonly TaxonomyTerm[] = [
@@ -155,12 +151,10 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
 
   // High / Driving
   { id: 'high-energy', category: 'Energy', subcategory: 'High / Driving', frequency: 'ubiquitous' },
-  { id: 'driving', category: 'Energy', subcategory: 'High / Driving', frequency: 'frequent' },
   { id: 'vigorous', category: 'Energy', subcategory: 'High / Driving', frequency: 'frequent' },
   { id: 'propulsive', category: 'Energy', subcategory: 'High / Driving', frequency: 'infrequent' },
   { id: 'pumping', category: 'Energy', subcategory: 'High / Driving', frequency: 'frequent' },
   { id: 'dynamic', category: 'Energy', subcategory: 'High / Driving', frequency: 'frequent' },
-  { id: 'explosive', category: 'Energy', subcategory: 'High / Driving', frequency: 'infrequent' },
   { id: 'kinetic', category: 'Energy', subcategory: 'High / Driving', frequency: 'infrequent' },
   { id: 'punchy', category: 'Energy', subcategory: 'High / Driving', frequency: 'frequent' },
   { id: 'pulsating', category: 'Energy', subcategory: 'High / Driving', frequency: 'infrequent' },
@@ -176,7 +170,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'thumping', category: 'Energy', subcategory: 'High / Driving', frequency: 'infrequent' },
 
   // Medium / Flowing
-  { id: 'flowing', category: 'Energy', subcategory: 'Medium / Flowing', frequency: 'frequent' },
   { id: 'steady', category: 'Energy', subcategory: 'Medium / Flowing', frequency: 'frequent' },
   { id: 'moderate', category: 'Energy', subcategory: 'Medium / Flowing', frequency: 'frequent' },
   { id: 'balanced', category: 'Energy', subcategory: 'Medium / Flowing', frequency: 'frequent' },
@@ -200,15 +193,12 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'ambient', category: 'Energy', subcategory: 'Low / Calm', frequency: 'frequent' },
   { id: 'chill', category: 'Energy', subcategory: 'Low / Calm', frequency: 'ubiquitous' },
   { id: 'mellow', category: 'Energy', subcategory: 'Low / Calm', frequency: 'ubiquitous' },
-  { id: 'gentle', category: 'Energy', subcategory: 'Low / Calm', frequency: 'frequent' },
   { id: 'subdued', category: 'Energy', subcategory: 'Low / Calm', frequency: 'frequent' },
   { id: 'restrained', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
   { id: 'placid', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
   { id: 'still', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
-  { id: 'relaxed', category: 'Energy', subcategory: 'Low / Calm', frequency: 'ubiquitous' },
   { id: 'downtempo', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
   { id: 'languid', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
-  { id: 'serene', category: 'Energy', subcategory: 'Low / Calm', frequency: 'frequent' },
   { id: 'hushed', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
   { id: 'delicate', category: 'Energy', subcategory: 'Low / Calm', frequency: 'frequent' },
   { id: 'soft', category: 'Energy', subcategory: 'Low / Calm', frequency: 'ubiquitous' },
@@ -216,9 +206,7 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'hypnotic', category: 'Energy', subcategory: 'Low / Calm', frequency: 'infrequent' },
 
   // Tense / Unstable
-  { id: 'tense', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'frequent' },
   { id: 'anxious', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'frequent' },
-  { id: 'chaotic', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'frequent' },
   { id: 'agitated', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'infrequent' },
   { id: 'erratic', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'infrequent' },
   { id: 'unstable', category: 'Energy', subcategory: 'Tense / Unstable', frequency: 'infrequent' },
@@ -240,7 +228,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'transcendent', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'infrequent' },
   { id: 'boundless', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'rare' },
   { id: 'sweeping', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'frequent' },
-  { id: 'majestic', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'frequent' },
   { id: 'panoramic', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'infrequent' },
   { id: 'vast', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'infrequent' },
   { id: 'cosmic', category: 'Energy', subcategory: 'Expansive / Building', frequency: 'infrequent' },
@@ -279,7 +266,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'creamy', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'frequent' },
   { id: 'honeyed', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'infrequent' },
   { id: 'golden', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'frequent' },
-  { id: 'mellow', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'ubiquitous' },
   { id: 'rounded', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'frequent' },
   { id: 'embracing', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'rare' },
   { id: 'enveloping', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'infrequent' },
@@ -288,12 +274,9 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'velvety', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'infrequent' },
   { id: 'buttery', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'infrequent' },
   { id: 'silky', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'infrequent' },
-  { id: 'soft', category: 'Texture', subcategory: 'Warm / Rich', frequency: 'ubiquitous' },
 
   // Dark / Heavy
-  { id: 'dark', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'ubiquitous' },
   { id: 'muddy', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
-  { id: 'harsh', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
   { id: 'gritty', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
   { id: 'murky', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
   { id: 'raspy', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
@@ -301,8 +284,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'distorted', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
   { id: 'coarse', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'infrequent' },
   { id: 'abrasive', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'infrequent' },
-  { id: 'shadowy', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'infrequent' },
-  { id: 'veiled', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'infrequent' },
   { id: 'obscured', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'infrequent' },
   { id: 'heavy', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
   { id: 'dense', category: 'Texture', subcategory: 'Dark / Heavy', frequency: 'frequent' },
@@ -315,14 +296,12 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'acoustic', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'ubiquitous' },
   { id: 'organic', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'natural', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'ubiquitous' },
-  { id: 'raw', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'live', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'authentic', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'unprocessed', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'infrequent' },
   { id: 'woody', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'breathy', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'human', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
-  { id: 'intimate', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'frequent' },
   { id: 'close-miked', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'infrequent' },
   { id: 'hollow', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'infrequent' },
   { id: 'earthy', category: 'Texture', subcategory: 'Natural / Acoustic', frequency: 'infrequent' },
@@ -368,7 +347,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'heterophonic', category: 'Texture', subcategory: 'Dense / Layered', frequency: 'rare' },
 
   // Smooth / Refined
-  { id: 'smooth', category: 'Texture', subcategory: 'Smooth / Refined', frequency: 'ubiquitous' },
   { id: 'refined', category: 'Texture', subcategory: 'Smooth / Refined', frequency: 'frequent' },
   { id: 'sleek', category: 'Texture', subcategory: 'Smooth / Refined', frequency: 'infrequent' },
   { id: 'elegant', category: 'Texture', subcategory: 'Smooth / Refined', frequency: 'frequent' },
@@ -383,7 +361,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'jagged', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'infrequent' },
   { id: 'raw-finish', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'frequent' },
   { id: 'unpolished', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'infrequent' },
-  { id: 'edgy', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'frequent' },
   { id: 'crunchy', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'rare' },
   { id: 'ratty', category: 'Texture', subcategory: 'Rough / Gritty', frequency: 'rare' },
 
@@ -394,7 +371,6 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
   { id: 'dry', category: 'Texture', subcategory: 'Spatial / Atmospheric', frequency: 'infrequent' },
   { id: 'intimate-space', category: 'Texture', subcategory: 'Spatial / Atmospheric', frequency: 'infrequent' },
   { id: 'echoey', category: 'Texture', subcategory: 'Spatial / Atmospheric', frequency: 'infrequent' },
-  { id: 'atmospheric', category: 'Texture', subcategory: 'Spatial / Atmospheric', frequency: 'frequent' },
   { id: 'cinematic', category: 'Texture', subcategory: 'Spatial / Atmospheric', frequency: 'frequent' },
 ] as const;
 
@@ -408,21 +384,14 @@ export const TAXONOMY: readonly TaxonomyTerm[] = [
 export const TAXONOMY_BY_ID = new Map(TAXONOMY.map(term => [term.id, term]));
 
 /**
- * Get term metadata by ID (first occurrence if multi-category)
+ * Get term metadata by ID
  */
 export function getTerm(id: string): TaxonomyTerm | undefined {
   return TAXONOMY_BY_ID.get(id);
 }
 
 /**
- * Get ALL occurrences of a term across categories
- */
-export function getTerms(id: string): readonly TaxonomyTerm[] {
-  return TAXONOMY.filter(t => t.id === id);
-}
-
-/**
- * Get all term IDs for a category (may include duplicates from multi-category terms)
+ * Get all term IDs for a category
  */
 export function getTermIds(category: TaxonomyCategory): string[] {
   return TAXONOMY.filter(t => t.category === category).map(t => t.id);
@@ -431,7 +400,7 @@ export function getTermIds(category: TaxonomyCategory): string[] {
 /**
  * Get all terms for a category
  */
-export function getTermsByCategory(category: TaxonomyCategory): readonly TaxonomyTerm[] {
+export function getTerms(category: TaxonomyCategory): readonly TaxonomyTerm[] {
   return TAXONOMY.filter(t => t.category === category);
 }
 
@@ -460,10 +429,10 @@ function groupBySubcategory(category: TaxonomyCategory): Record<string, string[]
 }
 
 /**
- * Frequency mappings for all terms (uses first occurrence for multi-category terms)
+ * Frequency mappings for all terms
  */
 export const TERM_FREQUENCIES: Record<string, FrequencyLevel> = Object.fromEntries(
-  Array.from(new Map(TAXONOMY.map(t => [t.id, t.frequency])).entries())
+  TAXONOMY.map(t => [t.id, t.frequency])
 );
 
 /**

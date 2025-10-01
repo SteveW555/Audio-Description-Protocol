@@ -27,24 +27,24 @@ export type MoodTerm =
 
 export type EnergyTerm =
     // High / Positive Drive
-    | 'high-energy' | 'vigorous' | 'propulsive' | 'pumping' | 'dynamic' | 'kinetic'
-    | 'punchy' | 'pulsating' | 'frenetic' | 'relentless' | 'urgent' | 'vibrant' | 'bouncy'
+    | 'high-energy' | 'driving' | 'vigorous' | 'propulsive' | 'pumping' | 'dynamic' | 'explosive'
+    | 'kinetic' | 'punchy' | 'pulsating' | 'frenetic' | 'relentless' | 'urgent' | 'vibrant' | 'bouncy'
     | 'brisk' | 'electrifying' | 'high-octane' | 'turbocharged' | 'thumping'
     // Medium / Flowing
-    | 'steady' | 'moderate' | 'balanced' | 'measured' | 'rolling' | 'rhythmic'
+    | 'flowing' | 'steady' | 'moderate' | 'balanced' | 'measured' | 'rolling' | 'rhythmic'
     | 'groovy' | 'medium-energy' | 'cascading' | 'undulating' | 'swinging' | 'pulsing' | 'unhurried'
     | 'cruising' | 'mid-tempo' | 'paced'
     // Low / Peaceful
-    | 'laid-back' | 'low-energy' | 'ambient' | 'chill' | 'mellow' | 'subdued'
-    | 'restrained' | 'placid' | 'still' | 'downtempo' | 'languid' | 'hushed'
-    | 'delicate' | 'soft' | 'sedate' | 'hypnotic'
+    | 'laid-back' | 'low-energy' | 'ambient' | 'chill' | 'mellow' | 'gentle' | 'subdued'
+    | 'restrained' | 'placid' | 'still' | 'relaxed' | 'downtempo' | 'languid' | 'serene'
+    | 'hushed' | 'delicate' | 'soft' | 'sedate' | 'hypnotic'
     // Negative / Unstable
-    | 'anxious' | 'agitated' | 'erratic' | 'unstable'
+    | 'tense' | 'anxious' | 'chaotic' | 'agitated' | 'erratic' | 'unstable'
     | 'jarring' | 'dissonant' | 'turbulent' | 'unsettling' | 'fragmented'
     | 'static' | 'restless' | 'jittery' | 'hectic' | 'disjointed'
     // Expansive / Other
     | 'expansive' | 'soaring' | 'lifting' | 'transcendent' | 'boundless' | 'sweeping'
-    | 'panoramic' | 'vast' | 'cosmic' | 'breathless' | 'gradual' | 'crescendoing'
+    | 'majestic' | 'panoramic' | 'vast' | 'cosmic' | 'breathless' | 'gradual' | 'crescendoing'
     | 'swelling' | 'decaying' | 'wavering' | 'oscillating' | 'spiraling';
 
 export type TextureTerm =
@@ -52,15 +52,15 @@ export type TextureTerm =
     | 'bright' | 'crisp' | 'clear' | 'brilliant' | 'sparkling' | 'crystalline' | 'shimmering' | 'radiant'
     | 'gleaming' | 'airy' | 'polished' | 'pristine' | 'shiny' | 'luminous'
     // Warm / Peaceful
-    | 'warm' | 'rich' | 'full' | 'lush' | 'creamy' | 'honeyed' | 'golden' | 'rounded'
-    | 'embracing' | 'enveloping' | 'cozy' | 'sumptuous' | 'velvety' | 'buttery' | 'silky'
+    | 'warm' | 'rich' | 'full' | 'lush' | 'creamy' | 'honeyed' | 'golden' | 'mellow' | 'rounded'
+    | 'embracing' | 'enveloping' | 'cozy' | 'sumptuous' | 'velvety' | 'buttery' | 'silky' | 'soft'
     // Dark / Negative
-    | 'muddy' | 'gritty' | 'murky' | 'raspy' | 'buzzy' | 'distorted'
-    | 'coarse' | 'abrasive' | 'obscured' | 'heavy' | 'dense' | 'thick'
+    | 'dark' | 'muddy' | 'harsh' | 'gritty' | 'murky' | 'raspy' | 'buzzy' | 'distorted'
+    | 'coarse' | 'abrasive' | 'shadowy' | 'veiled' | 'obscured' | 'heavy' | 'dense' | 'thick'
     | 'clouded' | 'muffled' | 'oppressive'
     // Natural / Acoustic
-    | 'acoustic' | 'organic' | 'natural' | 'live' | 'authentic' | 'unprocessed'
-    | 'woody' | 'breathy' | 'human' | 'close-miked' | 'hollow' | 'earthy' | 'fibrous'
+    | 'acoustic' | 'organic' | 'natural' | 'raw' | 'live' | 'authentic' | 'unprocessed'
+    | 'woody' | 'breathy' | 'human' | 'intimate' | 'close-miked' | 'hollow' | 'earthy' | 'fibrous'
     | 'resonant' | 'textured' | 'grainy'
     // Synthetic / Electronic
     | 'electronic' | 'synthetic' | 'digital' | 'processed' | 'programmed' | 'artificial' | 'computerized'
@@ -71,13 +71,13 @@ export type TextureTerm =
     | 'multi-textured' | 'stratified' | 'elaborate' | 'sparse' | 'minimalistic' | 'polyphonic'
     | 'homophonic' | 'monophonic' | 'heterophonic'
     // Smooth / Refined
-    | 'refined' | 'sleek' | 'elegant' | 'sophisticated'
+    | 'smooth' | 'refined' | 'sleek' | 'elegant' | 'sophisticated'
     | 'seamless' | 'effortless' | 'fluid' | 'graceful'
     // Rough / Gritty
     | 'rough' | 'jagged'
-    | 'raw-finish' | 'unpolished' | 'crunchy' | 'ratty'
+    | 'raw-finish' | 'unpolished' | 'edgy' | 'crunchy' | 'ratty'
     // Space & Atmosphere
-    | 'spacious' | 'reverberant' | 'wet' | 'dry' | 'intimate-space' | 'echoey' | 'cinematic';
+    | 'spacious' | 'reverberant' | 'wet' | 'dry' | 'intimate-space' | 'echoey' | 'atmospheric' | 'cinematic';
 
 export type PrimaryGenre =
     | 'electronic'
