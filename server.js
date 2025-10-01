@@ -14,6 +14,9 @@ const distDir = path.join(__dirname, "wizard", "dist");
 console.log(`Environment PORT=${rawPort}`);
 console.log(`Serving static files from ${distDir}`);
 console.log(`Dist exists: ${fs.existsSync(distDir)}`);
+if (fs.existsSync(distDir)) {
+  console.log(`Dist contents:`, fs.readdirSync(distDir));
+}
 
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
