@@ -134,8 +134,8 @@ export const WizardLayout = () => {
         // Check if this is a Music Theory step (BPM, Key, Scale)
         const isMusicTheoryStep = 'path' in currentStepConfig &&
             (currentStepConfig.path === 'theory.bpm' ||
-             currentStepConfig.path === 'theory.key' ||
-             currentStepConfig.path === 'theory.scale');
+                currentStepConfig.path === 'theory.key' ||
+                currentStepConfig.path === 'theory.scale');
 
         return (
             <WizardStep
@@ -163,9 +163,12 @@ export const WizardLayout = () => {
 
                 <hr className="border-t-2 border-gray-300 dark:border-slate-700 mb-4" />
 
-                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-8">
-                    <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg p-6 lg:p-8">
-                        <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Sample Title</h2>
+                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-8">
+                    <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg px-6 pb-6 pt-2 md:px-8 md:pb-8 md:pt-4">
+                        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <h2 className="text-base font-bold text-gray-800 dark:text-white">Sample Title</h2>
+                            <p className="text-xs text-gray-500 dark:text-slate-400 sm:ml-auto">(In production this will be auto-filled from the audio sample)</p>
+                        </div>
                         <input
                             ref={titleInputRef}
                             autoFocus
@@ -173,9 +176,8 @@ export const WizardLayout = () => {
                             value={data.path === 'tbc' ? '' : data.path}
                             onChange={(event: ChangeEvent<HTMLInputElement>) => updateData('path', event.target.value)}
                             placeholder="e.g., Cool_Synth_Loop_01.wav"
-                            className="w-full px-2.5 py-2 mt-2.5 text-sm border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
+                            className="w-full px-2 py-1 mt-2 text-sm border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
                         />
-                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-2 ml-1">(In production this will be auto-filled from the audio sample)</p>
 
                         <hr className="my-6 border-gray-200 dark:border-slate-700" />
 
@@ -191,15 +193,15 @@ export const WizardLayout = () => {
                         {renderStep()}
                     </div>
 
-                    <div className="mt-6 lg:mt-8 flex flex-col gap-4">
-                        <div className="h-[18rem] lg:h-[22.5rem] flex flex-col">
-                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Live JSON Preview:</h3>
+                    <div className="mt-4 md:mt-0 flex flex-col gap-3">
+                        <div className="h-[17.82rem] md:h-[22.28rem] flex flex-col">
+                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-2">Live JSON Preview:</h3>
                             <div className="flex-1 min-h-0">
                                 <JsonPreview />
                             </div>
                         </div>
-                        <div className="h-[14.4rem] lg:h-[18rem] flex flex-col">
-                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-3">Human-Readable Summary:</h3>
+                        <div className="h-[19.01rem] md:h-[23.76rem] flex flex-col border-t border-gray-200 dark:border-slate-700 pt-3">
+                            <h3 className="text-[12px] font-semibold text-gray-500 dark:text-white mb-2">Human-Readable Summary:</h3>
                             <div className="flex-1 min-h-0">
                                 <HumanReadablePreview />
                             </div>

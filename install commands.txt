@@ -1,0 +1,3 @@
+npm install @anthropic-ai/claude-code
+
+npm install -g @openai/codex

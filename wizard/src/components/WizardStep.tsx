@@ -38,14 +38,14 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
     return (
         <div className="p-1">
             <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Step {stepNumber}: {title}</h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
             </p>
             {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
-                <>
-                    <FrequencyFilter terms={termsWithFrequency} />
-                    <GroupByFilter />
-                </>
+                <div className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
+                    <FrequencyFilter terms={termsWithFrequency} className="mb-0 bg-transparent dark:bg-transparent" />
+                    <GroupByFilter className="mb-0 bg-transparent dark:bg-transparent" />
+                </div>
             )}
             <TermSelector
                 terms={filteredTermValues}

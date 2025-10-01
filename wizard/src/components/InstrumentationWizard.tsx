@@ -25,8 +25,8 @@ export const InstrumentationWizard = ({ stepNumber, onNext }: InstrumentationWiz
 
     if (instrumentStep === 0) {
         const promptText = instrumentation.length > 0
-            ? 'Would you like to add another instrument with details?'
-            : 'Would you like to add an instrument with details?';
+            ? 'Would you like to add more instrument details?'
+            : 'Would you like to add some instrument details?';
 
         return (
             <AskStep

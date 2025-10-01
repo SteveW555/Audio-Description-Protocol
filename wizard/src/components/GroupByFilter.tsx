@@ -18,7 +18,7 @@ export const GroupByFilter = memo<GroupByFilterProps>(({ className }) => {
     <div
       role="group"
       aria-label="Group by method"
-      className={`flex flex-wrap items-center gap-1 mb-4 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg ${className || ''}`}
+      className={`flex flex-wrap items-center gap-1 mb-2 px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded-lg ${className || ''}`}
     >
       <span className="text-gray-600 dark:text-gray-400 text-[12px] font-medium mr-2">
         Group By:
