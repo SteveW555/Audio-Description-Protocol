@@ -465,12 +465,12 @@ Default dataset license: **CC0-1.0** (Creative Commons Public Domain)
 ## 🎯 Getting Started Quickly
 
 ### For Researchers & Annotators
-1. **Use the Wizard**: `cd wizard/app && npm run dev` → Open http://localhost:5173
+1. **Use the Wizard**: `cd wizard/app && npm run dev` → Open http://localhost:3000
 2. **Follow the Steps**: Audio metadata → Genre → Semantic attributes → Export JSON
 3. **Validate Results**: Comprehensive real-time feedback ensures quality
 
 ### For Developers
-1. **Explore the Taxonomy**: Check `wizard/src/constants/taxonomy.ts` (322 multi-category terms with clean IDs)
+1. **Explore the Taxonomy**: Check `wizard/src/constants/vocabulary.ts` (322 multi-category terms with clean IDs)
 2. **Run Tests**: `pytest tests/python/` for backend, `cd wizard/app && npm test` for frontend
 3. **Read the Tutorial**: Complete architecture overview in `tutorial.md`
 

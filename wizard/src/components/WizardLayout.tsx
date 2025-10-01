@@ -39,6 +39,9 @@ export const WizardLayout = () => {
     const [casualPhrase, setCasualPhrase] = useState('');
     const [casualPhraseLoading, setCasualPhraseLoading] = useState(false);
     const [casualPhraseError, setCasualPhraseError] = useState<string | null>(null);
+    const [standardizedPhrase, setStandardizedPhrase] = useState('');
+    const [standardizedPhraseLoading, setStandardizedPhraseLoading] = useState(false);
+    const [standardizedPhraseError, setStandardizedPhraseError] = useState<string | null>(null);
 
     const handleRandomizeAll = () => {
         setHasRandomized(true);
@@ -108,6 +111,85 @@ export const WizardLayout = () => {
             setCasualPhraseError(error.message || 'Failed to generate casual phrase');
         } finally {
             setCasualPhraseLoading(false);
+        }
+    };
+
+    const handleGenerateStandardizedPhrase = () => {
+        setStandardizedPhraseLoading(true);
+        setStandardizedPhraseError(null);
+
+        try {
+            // Generate standardized phrase from current data
+            const parts: string[] = [];
+
+            // Add genre if present
+            if (data.semantic_description?.genre?.primary && data.semantic_description.genre.primary !== 'tbc') {
+                parts.push(data.semantic_description.genre.primary);
+                if (data.semantic_description.genre.primary_subgenres && data.semantic_description.genre.primary_subgenres.length > 0) {
+                    parts.push(`(${data.semantic_description.genre.primary_subgenres.join(', ')})`);
+                }
+            }
+
+            // Add mood, energy, texture
+            const attributes = data.semantic_description?.attributes;
+            if (attributes?.mood && attributes.mood.length > 0) {
+                const validMood = attributes.mood.filter(m => m !== 'tbc');
+                if (validMood.length > 0) {
+                    parts.push(`${validMood.join(', ')} mood`);
+                }
+            }
+            if (attributes?.energy && attributes.energy.length > 0) {
+                const validEnergy = attributes.energy.filter(e => e !== 'tbc');
+                if (validEnergy.length > 0) {
+                    parts.push(`${validEnergy.join(', ')} energy`);
+                }
+            }
+            if (attributes?.texture && attributes.texture.length > 0) {
+                const validTexture = attributes.texture.filter(t => t !== 'tbc');
+                if (validTexture.length > 0) {
+                    parts.push(`${validTexture.join(', ')} texture`);
+                }
+            }
+
+            // Add instrumentation
+            const instruments = data.semantic_description?.instrumentation;
+            if (instruments && instruments.length > 0) {
+                const validInstruments = instruments.filter(i => i.instrument && i.instrument !== 'tbc');
+                if (validInstruments.length > 0) {
+                    const instrumentNames = validInstruments.map(i => i.instrument);
+                    parts.push(`featuring ${instrumentNames.join(', ')}`);
+                }
+            }
+
+            // Add vocals
+            const vocals = data.semantic_description?.vocals;
+            if (vocals?.presence && vocals.presence !== 'none' && vocals.presence) {
+                const vocalParts = [vocals.presence, 'vocals'];
+                if (vocals.gender && vocals.gender !== null) {
+                    vocalParts.splice(1, 0, vocals.gender);
+                }
+                if (vocals.style && vocals.style !== null) {
+                    vocalParts.push(`(${vocals.style})`);
+                }
+                parts.push(`with ${vocalParts.join(' ')}`);
+            }
+
+            // Add music theory
+            const theory = data.theory;
+            if (theory?.bpm && theory.bpm !== 'tbc') {
+                parts.push(`at ${theory.bpm} BPM`);
+            }
+            if (theory?.key && theory.key !== 'tbc' && theory?.scale && theory.scale !== 'tbc') {
+                parts.push(`in ${theory.key} ${theory.scale}`);
+            }
+
+            const phrase = parts.length > 0 ? parts.join(', ') : 'No data available to generate standardized phrase';
+            setStandardizedPhrase(phrase);
+        } catch (error: any) {
+            console.error('❌ Error generating standardized phrase:', error);
+            setStandardizedPhraseError(error.message || 'Failed to generate standardized phrase');
+        } finally {
+            setStandardizedPhraseLoading(false);
         }
     };
 
@@ -383,6 +465,48 @@ export const WizardLayout = () => {
                                                 disabled={casualPhraseLoading}
                                                 placeholder={casualPhraseLoading ? 'Generating casual phrase...' : 'Casual phrase will appear here'}
                                                 className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                                                rows={3}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Generate Random Standardized Phrase Section */}
+                                <div className="space-y-2">
+                                    <div>
+                                        <button
+                                            onClick={handleGenerateStandardizedPhrase}
+                                            disabled={standardizedPhraseLoading}
+                                            className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
+                                        >
+                                            {standardizedPhraseLoading ? 'Generating...' : 'Generate Random Standardized Phrase'}
+                                        </button>
+                                        <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-[0.75px]">
+                                            Generates a random phrase using the standardized structure of this protocol
+                                        </p>
+                                    </div>
+
+                                    {standardizedPhraseError && (
+                                        <p className="text-xs text-red-600 dark:text-red-400">
+                                            Error: {standardizedPhraseError}
+                                        </p>
+                                    )}
+
+                                    {(standardizedPhrase || standardizedPhraseLoading) && (
+                                        <div>
+                                            <label
+                                                htmlFor="standardized-phrase-input"
+                                                className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
+                                            >
+                                                Standardized Response:
+                                            </label>
+                                            <textarea
+                                                id="standardized-phrase-input"
+                                                value={standardizedPhrase}
+                                                onChange={(e) => setStandardizedPhrase(e.target.value)}
+                                                disabled={standardizedPhraseLoading}
+                                                placeholder={standardizedPhraseLoading ? 'Generating standardized phrase...' : 'Standardized phrase will appear here'}
+                                                className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
                                                 rows={3}
                                             />
                                         </div>

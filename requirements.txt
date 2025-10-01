@@ -12,6 +12,7 @@ fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 aiofiles>=23.2.0
 httpx>=0.25.0
+rfc3339-validator>=0.1.4
 
 # Development dependencies
 pytest>=7.0.0

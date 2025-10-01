@@ -28,7 +28,7 @@ Different people and AIs describe the same track using completely different voca
  - Eventually, the trained auto-label AI uses the same process to label samples itself.
  - The focus remains a *consistent, predictable, re-usable description* that the human or AI is forced to adopt
 
-
+![ADP Wizard](ADP%20Wizard.jpg)
 ---
 
 
