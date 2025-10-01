@@ -12,10 +12,10 @@ export interface TermMetadata {
 
 // Frequency-based term groups for UI organization
 export const TERM_FREQUENCY_GROUPS = {
-    ubiquitous: ['ubiquitous'],
-    frequent: ['frequent'],
-    infrequent: ['infrequent'],
-    rare: ['rare']
+    ubiquitous: ['ubiquitous'],  // Very common terms
+    frequent: ['frequent'],      // Common terms
+    infrequent: ['infrequent'],  // Unusual terms
+    rare: ['rare']                // Very rare terms
 } as const;
 
 export const VOCABULARY = {

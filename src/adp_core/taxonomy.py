@@ -1,8 +1,24 @@
 """
 Comprehensive audio taxonomy system for mood, energy, and texture descriptors.
 
-This module provides the 479-term taxonomy extracted from TypeScript definitions,
-maintaining consistency with the wizard UI while serving as the Python source of truth.
+CURRENT STATUS: This is a STUB/SKELETON implementation with only ~60 sample terms.
+The complete 479-term taxonomy lives in the TypeScript wizard UI and is the current
+source of truth for the working application.
+
+PURPOSE OF THIS FILE:
+    - Future backend validation via FastAPI endpoints
+    - AI/ML model integration for automatic description generation
+    - Python-based tooling (testing, training data, model outputs)
+    - Data model validation for musical annotations
+
+WHY IT'S INCOMPLETE BUT THE APP STILL WORKS:
+    - The TypeScript wizard UI has the complete taxonomy and runs independently
+    - The wizard doesn't currently call the Python backend for taxonomy data
+    - This stub provides minimal validation for future backend services
+    - It's aspirational infrastructure for when ML models consume/generate descriptions
+
+TODO: Extract complete taxonomy from TypeScript and populate TAXONOMY_TERMS and
+TAXONOMY_HIERARCHY with all 479 terms across all Mood, Energy, and Texture categories.
 """
 
 from enum import Enum
@@ -40,6 +56,8 @@ class TermDefinition(BaseModel):
 
 
 # Complete 479-term taxonomy registry
+# NOTE: Currently only contains ~60 sample Mood terms as a stub.
+# TODO: Add remaining ~420 terms (rest of Mood, all Energy, all Texture categories)
 TAXONOMY_TERMS: Dict[str, TermDefinition] = {
     # ==================== Mood ====================
     # Positive / Uplifting
@@ -111,6 +129,8 @@ TAXONOMY_TERMS: Dict[str, TermDefinition] = {
 
 
 # Hierarchical organization
+# NOTE: Currently only contains 3 Mood subcategories as a stub.
+# TODO: Add remaining Mood subcategories, all Energy subcategories, all Texture subcategories
 TAXONOMY_HIERARCHY: Dict[QualityCategory, Dict[str, List[str]]] = {
     QualityCategory.MOOD: {
         'Positive / Uplifting': [
