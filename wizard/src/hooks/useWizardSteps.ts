@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { VOCABULARY } from '../constants/vocabulary';
 import { useWizardStore } from '../context/WizardContext';
 import { StepType, WizardStepConfig } from '../types/wizard';
-import { getSubgenresFor, shouldShowVocalDetails } from '../utils/genreHelpers';
+import { shouldShowVocalDetails } from '../utils/genreHelpers';
 
 export const useWizardSteps = (): WizardStepConfig[] => {
     const data = useWizardStore((state) => state.data);
@@ -11,6 +11,7 @@ export const useWizardSteps = (): WizardStepConfig[] => {
 
     return useMemo(() => {
         const steps: WizardStepConfig[] = [
+            { title: 'Genre & Subgenres', special: StepType.GENRE },
             {
                 title: 'Mood',
                 path: 'semantic_description.attributes.mood',
@@ -38,7 +39,6 @@ export const useWizardSteps = (): WizardStepConfig[] => {
                 enableSearch: true,
                 enableFrequencyGroups: true
             },
-            { title: 'Genre & Subgenres', special: StepType.GENRE },
             { title: 'Instrumentation', special: StepType.INSTRUMENTATION },
             { title: 'Music Theory', special: StepType.ASK_THEORY },
             {

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import { useWizardStore } from '../context/WizardContext';
 import { getValueAtPath } from '../utils/dataPaths';
@@ -9,6 +8,8 @@ import { GroupByFilter } from './GroupByFilter';
 import { useFrequencyFilter } from '../hooks/useFrequencyFilter';
 import { useGroupByFilter } from '../hooks/useGroupByFilter';
 import { convertToTermsWithFrequency } from '../utils/termFrequencies';
+import type { GroupByMethod } from '../types/grouping';
+import { useGroupByStore } from '../store/groupByStore';
 
 interface WizardStepProps {
     title: string;
@@ -24,7 +25,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const { filterTerms } = useFrequencyFilter();
-    const { groupByMethod } = useGroupByFilter();
+    const { groupByMethod, setGroupByMethod } = useGroupByFilter();
 
     const resolvedTerms = useMemo(() => (typeof terms === 'function' ? terms(data) : terms), [data, terms]);
     const currentValue = useMemo(() => getValueAtPath(data, path), [data, path]);
@@ -34,6 +35,36 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
 
     // Apply frequency filter to get filtered term values
     const filteredTermValues = useMemo(() => filterTerms(termsWithFrequency), [filterTerms, termsWithFrequency]);
+
+    const isTextureStep = path === 'semantic_description.attributes.texture';
+    const storedGroupByRef = useRef<GroupByMethod | null>(null);
+    const hasStoredGroupByRef = useRef(false);
+
+    useEffect(() => {
+        if (!isTextureStep) {
+            return;
+        }
+
+        const previousGroupBy = useGroupByStore.getState().groupByMethod;
+        storedGroupByRef.current = previousGroupBy;
+        hasStoredGroupByRef.current = true;
+
+        if (previousGroupBy !== 'popularity') {
+            setGroupByMethod('popularity');
+        }
+
+        return () => {
+            if (!hasStoredGroupByRef.current) {
+                return;
+            }
+
+            const fallback = storedGroupByRef.current ?? 'category';
+            hasStoredGroupByRef.current = false;
+            storedGroupByRef.current = null;
+
+            setGroupByMethod(fallback);
+        };
+    }, [isTextureStep, setGroupByMethod]);
 
     return (
         <div className="p-1">
