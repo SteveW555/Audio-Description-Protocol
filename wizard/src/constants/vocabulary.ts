@@ -20,7 +20,7 @@ export const TERM_FREQUENCY_GROUPS = {
 } as const;
 
 // MET vocabulary imported from single source of truth (taxonomy.ts)
-// This replaces the previous hard-coded arrays
+// This replaces the previous  hard-coded arrays
 export const VOCABULARY = {
     mood: VOCABULARY_MET.mood as readonly string[],
     energy: VOCABULARY_MET.energy as readonly string[],
