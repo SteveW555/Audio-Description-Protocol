@@ -11,7 +11,7 @@ export interface TermMetadata {
     cluster?: string;
 }
 
-// Frequency-based term groups for UI organization.
+// Frequency-based term groups for UI organization..
 export const TERM_FREQUENCY_GROUPS = {
     ubiquitous: ['ubiquitous'],  // Very common terms
     frequent: ['frequent'],      // Common terms
