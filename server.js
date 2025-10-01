@@ -6,8 +6,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 8080;
+const rawPort = process.env.PORT;
+const port = Number(rawPort) || 8080;
 const distDir = path.join(__dirname, "wizard", "dist");
+
+console.log(`Environment PORT=${rawPort}`);
+console.log(`Serving static files from ${distDir}`);
 
 app.use(express.static(distDir));
 
