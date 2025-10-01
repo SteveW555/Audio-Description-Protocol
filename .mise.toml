@@ -1,4 +1,4 @@
 # .mise.toml
 [tools]
 python = "3.13.7"   # matches the auto-selected version, keep if you still need Python
-node   = "20.17.0"  # or whatever Node version you use locally
+node   = "20.19.0"  # or whatever Node version you use locally
