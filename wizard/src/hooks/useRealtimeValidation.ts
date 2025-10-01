@@ -24,6 +24,20 @@ interface ApiValidationResponse {
 // API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error';
+  }
+};
+
 class ValidationAPI {
   static async validateSemanticAttributes(attributes: any): Promise<ValidationResult> {
     try {
@@ -42,9 +56,10 @@ class ValidationAPI {
       return await response.json();
     } catch (error) {
       console.error('Validation API error:', error);
+      const message = getErrorMessage(error);
       return {
         valid: false,
-        errors: [{ field: 'api', message: `Validation service unavailable: ${error.message}` }],
+        errors: [{ field: 'api', message: `Validation service unavailable: ${message}` }],
       };
     }
   }
@@ -66,9 +81,10 @@ class ValidationAPI {
       return await response.json();
     } catch (error) {
       console.error('Validation API error:', error);
+      const message = getErrorMessage(error);
       return {
         valid: false,
-        errors: [{ field: 'api', message: `Validation service unavailable: ${error.message}` }],
+        errors: [{ field: 'api', message: `Validation service unavailable: ${message}` }],
       };
     }
   }
@@ -90,9 +106,10 @@ class ValidationAPI {
       return await response.json();
     } catch (error) {
       console.error('Validation API error:', error);
+      const message = getErrorMessage(error);
       return {
         valid: false,
-        errors: [{ field: 'api', message: `Validation service unavailable: ${error.message}` }],
+        errors: [{ field: 'api', message: `Validation service unavailable: ${message}` }],
       };
     }
   }
@@ -118,10 +135,11 @@ class ValidationAPI {
       return await response.json();
     } catch (error) {
       console.error('Code generation API error:', error);
+      const message = getErrorMessage(error);
       return {
         code: '',
         valid: false,
-        errors: [`Code generation service unavailable: ${error.message}`],
+        errors: [`Code generation service unavailable: ${message}`],
       };
     }
   }
@@ -147,7 +165,7 @@ export function useSemanticValidation(attributes: any, debounceMs: number = 300)
       } catch (error) {
         setValidation({
           valid: false,
-          errors: [{ field: 'validation', message: error.message }],
+          errors: [{ field: 'validation', message: getErrorMessage(error) }],
         });
       } finally {
         setIsValidating(false);
@@ -184,7 +202,7 @@ export function useMusicalAnalysisValidation(analysis: any, debounceMs: number =
       } catch (error) {
         setValidation({
           valid: false,
-          errors: [{ field: 'validation', message: error.message }],
+          errors: [{ field: 'validation', message: getErrorMessage(error) }],
         });
       } finally {
         setIsValidating(false);
@@ -221,7 +239,7 @@ export function useAnnotationValidation(annotation: any, debounceMs: number = 75
       } catch (error) {
         setValidation({
           valid: false,
-          errors: [{ field: 'validation', message: error.message }],
+          errors: [{ field: 'validation', message: getErrorMessage(error) }],
         });
       } finally {
         setIsValidating(false);

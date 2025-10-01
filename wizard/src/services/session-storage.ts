@@ -53,13 +53,23 @@ export class SessionStorageManager {
    */
   saveSessionData(sessionId: string, data: Partial<SessionData>): void {
     try {
-      const existingData = this.getSessionData(sessionId) || {};
+      const existingData = this.getSessionData(sessionId);
+      const fallbackData: Partial<SessionData> = existingData ?? {};
 
       const sessionData: SessionData = {
         session_id: sessionId,
-        validation_rules_version: data.validation_rules_version || existingData.validation_rules_version || '1.2.0',
-        protocol_data: data.protocol_data || existingData.protocol_data || {},
-        created_at: data.created_at || existingData.created_at || new Date().toISOString(),
+        validation_rules_version:
+          data.validation_rules_version ??
+          fallbackData.validation_rules_version ??
+          '1.2.0',
+        protocol_data:
+          data.protocol_data ??
+          fallbackData.protocol_data ??
+          {},
+        created_at:
+          data.created_at ??
+          fallbackData.created_at ??
+          new Date().toISOString(),
         last_activity: new Date().toISOString()
       };
 

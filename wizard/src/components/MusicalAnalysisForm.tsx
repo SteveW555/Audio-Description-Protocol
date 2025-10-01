@@ -1,4 +1,3 @@
-import React from 'react';
 import React, { useCallback } from 'react';
 import {
   CheckCircleIcon,

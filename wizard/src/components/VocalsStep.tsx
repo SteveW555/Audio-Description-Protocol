@@ -28,9 +28,15 @@ export const VocalsStep = ({ stepNumber, title, onNext }: VocalsStepProps) => {
     const presenceOptions = useMemo(() => [...VOCABULARY.vocals_presence], []);
     const genderOptions = useMemo(() => [...VOCABULARY.vocals_gender], []);
     const styleOptions = useMemo(() => [...VOCABULARY.vocals_style], []);
-    const descriptorOptions = useMemo(() => [...VOCABULARY.instrument_descriptors['vocals']] || [], []);
+    const descriptorOptions = useMemo(
+        () => [...(VOCABULARY.instrument_descriptors['vocals'] ?? [])],
+        [],
+    );
 
-    const hasPresenceSelection = Boolean(presence && presence !== 'tbc' && presence !== '');
+    const normalizedPresence = presence as string | undefined;
+    const hasPresenceSelection = Boolean(
+        normalizedPresence && normalizedPresence !== 'tbc',
+    );
     // Always show details sections - let user fill them in
     const showDetails = true;
 
@@ -123,7 +129,8 @@ export const VocalsStep = ({ stepNumber, title, onNext }: VocalsStepProps) => {
         onNext();
     };
 
-    const isContinueDisabled = !presence;
+    const isContinueDisabled =
+        !normalizedPresence || normalizedPresence === 'tbc';
 
     return (
         <div className="p-1 space-y-4">

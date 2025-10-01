@@ -1,7 +1,6 @@
-import React from 'react';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRealtimeValidation } from '@hooks/useRealtimeValidation';
-import JsonPreview from './JsonPreview';
+import { JsonPreview } from './JsonPreview';
 import SemanticAttributesForm from './SemanticAttributesForm';
 import MusicalAnalysisForm from './MusicalAnalysisForm';
 import type { MusicalAnnotation, MusicalAnalysis, WizardSettings, ValidationResult } from '@/types';
@@ -48,18 +47,19 @@ const MusicAnnotationWizard: React.FC = () => {
   );
 
   // Handle form field changes
-  const handleFormChange = useCallback((path: string, value: any) => {
-    setAnnotation(prev => {
-      const newAnnotation = { ...prev };
+  const handleFormChange = useCallback((path: string, value: unknown) => {
+    setAnnotation((prev: MusicalAnnotation) => {
+      const newAnnotation: MusicalAnnotation = { ...prev };
       const pathParts = path.split('.');
 
-      let current = newAnnotation;
+      let current: Record<string, unknown> = newAnnotation as Record<string, unknown>;
       for (let i = 0; i < pathParts.length - 1; i++) {
         const part = pathParts[i];
-        if (!(part in current)) {
+        const next = current[part];
+        if (typeof next !== 'object' || next === null) {
           current[part] = {};
         }
-        current = current[part];
+        current = current[part] as Record<string, unknown>;
       }
 
       current[pathParts[pathParts.length - 1]] = value;
@@ -79,7 +79,7 @@ const MusicAnnotationWizard: React.FC = () => {
 
   // Handle settings changes
   const handleSettingsChange = useCallback((setting: keyof WizardSettings, value: any) => {
-    setSettings(prev => ({ ...prev, [setting]: value }));
+    setSettings((prev: WizardSettings) => ({ ...prev, [setting]: value }));
   }, []);
 
   // Get layout classes based on split mode
@@ -282,14 +282,14 @@ const MusicAnnotationWizard: React.FC = () => {
             <MusicalAnalysisForm
               analysis={annotation.musical_analysis}
               onChange={handleAnalysisChange}
-              validation={validation}
+              validation={validation ?? undefined}
             />
 
             {/* Semantic Attributes Form */}
             <SemanticAttributesForm
               attributes={annotation.musical_analysis?.semantic_attributes}
               onChange={handleSemanticChange}
-              validation={validation}
+              validation={validation ?? undefined}
             />
           </div>
         </div>
@@ -299,10 +299,12 @@ const MusicAnnotationWizard: React.FC = () => {
           <div className={getPreviewClasses()}>
             <JsonPreview
               data={annotation}
-              validation={validation}
+              validation={validation ?? undefined}
               format={settings.previewFormat}
               theme={settings.previewTheme}
-              onFormatChange={(format) => handleSettingsChange('previewFormat', format)}
+              onFormatChange={(format: WizardSettings['previewFormat']) =>
+                handleSettingsChange('previewFormat', format)
+              }
             />
           </div>
         )}

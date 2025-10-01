@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useRef } from 'react';
-import { create, StoreApi, UseBoundStore } from 'zustand';
+import { create, StateCreator, StoreApi, UseBoundStore } from 'zustand';
 
 import { getInitialState } from '../constants/initialState';
 import { AudioProtocolData } from '../types/protocol';
@@ -25,16 +25,10 @@ export interface WizardState {
     reset: () => void;
 }
 
-type WizardStoreSetter = (
-    partial:
-        | WizardState
-        | Partial<WizardState>
-        | ((state: WizardState) => WizardState | Partial<WizardState>),
-    replace?: boolean | undefined
-) => void;
+type WizardStore = UseBoundStore<StoreApi<WizardState>>;
 
-const createWizardStore = () => {
-    const initializer = (set: WizardStoreSetter): WizardState => ({
+const createWizardStore = (): WizardStore => {
+    const initializer: StateCreator<WizardState> = (set) => ({
         data: getInitialState(),
         step: 0,
         instrumentStep: 0,
@@ -101,15 +95,13 @@ const createWizardStore = () => {
             }),
     });
 
-    return create(initializer);
+    return create<WizardState>()(initializer);
 };
-
-type WizardStore = UseBoundStore<StoreApi<WizardState>>;
 
 const WizardStoreContext = createContext<WizardStore | undefined>(undefined);
 
 export const WizardProvider = ({ children }: { children: ReactNode }) => {
-    const storeRef = useRef<WizardStore>();
+    const storeRef = useRef<WizardStore | null>(null);
     if (!storeRef.current) {
         storeRef.current = createWizardStore();
     }

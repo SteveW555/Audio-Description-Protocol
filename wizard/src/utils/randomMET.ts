@@ -5,15 +5,107 @@
  */
 
 import { TERMS_BY_FREQUENCY } from '../constants/taxonomy';
-import {
-    generateRandomInstrument as backendGenerateRandomInstrument,
-    generateRandomGenre as backendGenerateRandomGenre,
-    generateRandomVocals as backendGenerateRandomVocals
-} from '../../../backend/src/utils/randomDescription';
+import { VOCABULARY } from '../constants/vocabulary';
+import type {
+  InstrumentationEntry,
+  InstrumentName,
+  GenericRole,
+  GenericDescriptor,
+  PrimaryGenre,
+  VocalsDetails,
+} from '../types/protocol';
 
-export const generateRandomInstrument = backendGenerateRandomInstrument;
-export const generateRandomGenre = backendGenerateRandomGenre;
-export const generateRandomVocals = backendGenerateRandomVocals;
+type InstrumentRoleKey = keyof typeof VOCABULARY.instrument_roles;
+type InstrumentDescriptorKey = keyof typeof VOCABULARY.instrument_descriptors;
+
+function pickRandom<T>(items: readonly T[], count = 1): T[] {
+  return [...items].sort(() => Math.random() - 0.5).slice(0, count);
+}
+
+function pickOne<T>(items: readonly T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+type SecondaryGenreKey = keyof typeof VOCABULARY.secondary_genres;
+
+function genreToKey(primary: PrimaryGenre): SecondaryGenreKey {
+  const mapping: Record<PrimaryGenre, SecondaryGenreKey> = {
+    'Electronic': 'electronic',
+    'Rock': 'rock',
+    'Pop': 'pop',
+    'Hip-Hop': 'hip_hop',
+    'R&B / Soul': 'rnb_soul',
+    'Jazz': 'jazz',
+    'Blues': 'blues',
+    'Country': 'country',
+    'Classical': 'classical',
+    'Folk': 'folk',
+    'Latin': 'latin',
+    'Reggae': 'reggae',
+    'World': 'world',
+    'Soundtrack': 'soundtrack',
+    'Ambient': 'ambient',
+    'Spoken Word': 'spoken_word',
+    'Sound Effect': 'sound_effect',
+  };
+
+  return mapping[primary] ?? 'electronic';
+}
+
+export function generateRandomInstrument(): InstrumentationEntry {
+  const instrument = pickOne(VOCABULARY.instrument) as InstrumentName;
+  const instrumentKey = instrument as InstrumentRoleKey & InstrumentDescriptorKey;
+
+  const roles =
+    VOCABULARY.instrument_roles[instrumentKey as InstrumentRoleKey] ?? ['lead'];
+  const descriptors =
+    VOCABULARY.instrument_descriptors[instrumentKey as InstrumentDescriptorKey] ??
+    ['processed'];
+
+  return {
+    instrument,
+    role: (pickOne(roles) as GenericRole) ?? 'tbc',
+    descriptors: [
+      (pickOne(descriptors) as GenericDescriptor) ?? 'processed',
+    ],
+  };
+}
+
+export function generateRandomGenre(): {
+  primary: PrimaryGenre;
+  subgenres: string[];
+} {
+  const primary = pickOne(VOCABULARY.primary_genres) as PrimaryGenre;
+  const subgenreKey = genreToKey(primary);
+  const options = (VOCABULARY.secondary_genres[subgenreKey] ?? []) as readonly string[];
+  const selectionCount = Math.min(3, Math.max(1, options.length));
+
+  const subgenres = options.length
+    ? pickRandom(options, selectionCount)
+    : ['tbc'];
+
+  return {
+    primary,
+    subgenres,
+  };
+}
+
+export function generateRandomVocals(): VocalsDetails | undefined {
+  if (Math.random() <= 0.5) {
+    return undefined;
+  }
+
+  const descriptors =
+    VOCABULARY.instrument_descriptors['vocals' as InstrumentDescriptorKey] ??
+    ['processed'];
+
+  return {
+    presence: pickOne(VOCABULARY.vocals_presence),
+    gender: pickOne(VOCABULARY.vocals_gender),
+    style: pickOne(VOCABULARY.vocals_style),
+    descriptors: [pickOne(descriptors)],
+  };
+}
 
 /**
  * Returns a weighted random count for MET categories

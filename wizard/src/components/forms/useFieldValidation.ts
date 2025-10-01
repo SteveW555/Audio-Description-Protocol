@@ -58,7 +58,7 @@ export function useFieldValidation(
     status: 'not-validated'
   });
 
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const lastValueRef = useRef<any>(value);
   const sessionStorage = useRef(new SessionStorageManager());
 
@@ -246,23 +246,28 @@ export function useFormValidation(
    */
   const validateField = useCallback(async (fieldPath: string) => {
     try {
-      setFormState(prev => ({
-        ...prev,
-        fieldStates: {
-          ...prev.fieldStates,
-          [fieldPath]: {
-            ...prev.fieldStates[fieldPath],
-            isValidating: true,
-            status: 'pending'
-          } || {
-            isValid: false,
-            isValidating: true,
-            errors: [],
-            warnings: [],
-            status: 'pending'
-          }
-        }
-      }));
+      setFormState(prev => {
+        const existingFieldState = prev.fieldStates[fieldPath];
+        return {
+          ...prev,
+          fieldStates: {
+            ...prev.fieldStates,
+            [fieldPath]: existingFieldState
+              ? {
+                  ...existingFieldState,
+                  isValidating: true,
+                  status: 'pending',
+                }
+              : {
+                  isValid: false,
+                  isValidating: true,
+                  errors: [],
+                  warnings: [],
+                  status: 'pending',
+                },
+          },
+        };
+      });
 
       const request: ValidationRequest = {
         protocol_data: protocolData,
