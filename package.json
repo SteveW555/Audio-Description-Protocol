@@ -9,7 +9,7 @@
     "preview": "cd wizard && npm run preview",
     "lint": "cd wizard && npm run lint",
     "type-check": "cd wizard && npm run type-check",
-    "start": "node server.js",
+    "start": "npm run start --prefix wizard",
     "postinstall": "npm ci --prefix wizard"
   },
   "dependencies": {
