@@ -1,6 +1,7 @@
 import { InstrumentationEntry } from '../types/protocol';
+import { VOCABULARY_MET, TERMS_BY_FREQUENCY } from './taxonomy';
 
-// Taxonomy metadata for terms
+// Taxonomy metadata for terms (kept for backward compatibility)
 export interface TermMetadata {
     id: string;
     term: string;
@@ -18,88 +19,12 @@ export const TERM_FREQUENCY_GROUPS = {
     rare: ['rare']                // Very rare terms
 } as const;
 
+// MET vocabulary imported from single source of truth (taxonomy.ts)
+// This replaces the previous hard-coded arrays
 export const VOCABULARY = {
-    mood: [
-        // Positive / Uplifting
-        'upbeat', 'energetic', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive',
-        'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic',
-        'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly',
-        // Calm / Peaceful
-        'peaceful', 'calm', 'relaxed', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing',
-        'gentle', 'contemplative', 'restful', 'ethereal', 'atmospheric', 'flowing',
-        'smooth', 'gossamer',
-        // Dark / Negative
-        'dark', 'melancholic', 'sad', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting',
-        'moody', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing',
-        'shadowy', 'plaintive', 'negative',
-        // Intense / Aggressive
-        'intense', 'aggressive', 'driving', 'powerful', 'forceful', 'fierce',
-        'raw', 'edgy', 'explosive', 'menacing', 'angry', 'violent', 'furious',
-        'tense', 'harsh', 'thunderous', 'blistering', 'snarling', 'chaotic',
-        // Mysterious / Ambiguous
-        'mysterious', 'enigmatic', 'ethereal-ambience', 'otherworldly', 'mystical', 'cryptic',
-        'elusive', 'veiled', 'obscure', 'twilight', 'liminal', 'majestic', 'epic', 'strange',
-        // Romantic / Tender
-        'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'warm-hearted', 'sultry',
-        'passionate', 'yearning', 'longing',
-        // Nostalgic / Reflective
-        'nostalgic', 'reflective', 'bittersweet', 'reminiscent', 'pensive', 'poignant',
-        'memory-laden', 'retrospective'
-    ] as const,
-    energy: [
-        // High / Positive Drive
-        'high-energy', 'driving', 'vigorous', 'propulsive', 'pumping', 'dynamic-energy', 'explosive',
-        'kinetic', 'punchy', 'pulsating', 'frenetic', 'relentless', 'urgent', 'vibrant', 'bouncy',
-        'brisk', 'electrifying', 'high-octane', 'turbocharged', 'thumping',
-        // Medium / Flowing
-        'flowing', 'steady', 'moderate', 'balanced-energy', 'measured', 'rolling', 'rhythmic',
-        'groovy', 'medium-energy', 'cascading', 'undulating', 'swinging', 'pulsing', 'unhurried',
-        'cruising', 'mid-tempo', 'paced',
-        // Low / Peaceful
-        'laid-back', 'low-energy', 'ambient', 'chill', 'mellow-energy', 'gentle-energy', 'subdued',
-        'restrained', 'placid', 'still', 'relaxed-energy', 'downtempo', 'languid', 'serene-energy',
-        'hushed', 'delicate-energy', 'soft-energy', 'sedate', 'hypnotic',
-        // Negative / Unstable
-        'tense-energy', 'anxious-energy', 'chaotic-energy', 'agitated', 'erratic', 'unstable',
-        'jarring-energy', 'dissonant-energy', 'turbulent', 'unsettling-energy', 'fragmented',
-        'static-energy', 'restless', 'jittery', 'hectic', 'disjointed',
-        // Expansive / Other
-        'expansive', 'soaring', 'lifting', 'transcendent-energy', 'boundless', 'sweeping',
-        'majestic-energy', 'panoramic', 'vast', 'cosmic', 'breathless', 'gradual', 'crescendoing',
-        'swelling', 'decaying', 'wavering', 'oscillating', 'spiraling'
-    ] as const,
-    texture: [
-        // Bright / Positive
-        'bright', 'crisp', 'clear', 'brilliant', 'sparkling', 'crystalline', 'shimmering', 'radiant',
-        'gleaming', 'airy', 'polished', 'pristine', 'shiny', 'luminous',
-        // Warm / Peaceful
-        'warm', 'rich', 'full', 'lush', 'creamy', 'honeyed', 'golden', 'mellow', 'rounded',
-        'embracing', 'enveloping', 'cozy', 'sumptuous', 'velvety', 'buttery', 'silky', 'soft-texture',
-        // Dark / Negative
-        'dark', 'muddy', 'harsh', 'gritty-texture', 'murky', 'raspy', 'buzzy', 'distorted',
-        'coarse', 'abrasive', 'shadowy-texture', 'veiled', 'obscured', 'heavy', 'dense', 'thick',
-        'clouded', 'muffled', 'oppressive',
-        // Natural / Acoustic
-        'acoustic', 'organic', 'natural', 'raw-texture', 'live', 'authentic', 'unprocessed',
-        'woody', 'breathy', 'human', 'intimate', 'close-miked', 'hollow', 'earthy', 'fibrous',
-        'resonant', 'textured', 'grainy',
-        // Synthetic / Electronic
-        'electronic', 'synthetic', 'digital', 'processed', 'programmed', 'artificial', 'computerized',
-        'robotic', 'futuristic', 'cyber', 'pixelated', 'metallic', 'glassy', 'analog', 'mechanical',
-        'glitchy',
-        // Density & Layering
-        'layered', 'complex', 'rich-density', 'full-bodied', 'orchestrated', 'intricate', 'detailed',
-        'multi-textured', 'stratified', 'elaborate', 'sparse', 'minimalistic', 'polyphonic',
-        'homophonic', 'monophonic', 'heterophonic',
-        // Smooth / Refined
-        'smooth', 'silky-texture', 'polished-texture', 'refined', 'sleek', 'elegant', 'sophisticated',
-        'seamless', 'effortless', 'fluid', 'graceful',
-        // Rough / Gritty
-        'rough', 'gritty', 'grainy-texture', 'coarse-texture', 'jagged', 'harsh-texture',
-        'raw-finish', 'unpolished', 'edgy', 'abrasive-texture', 'crunchy', 'distorted-texture', 'ratty',
-        // Space & Atmosphere
-        'spacious', 'reverberant', 'wet', 'dry', 'intimate-space', 'echoey', 'atmospheric', 'cinematic'
-    ] as const,
+    mood: VOCABULARY_MET.mood as readonly string[],
+    energy: VOCABULARY_MET.energy as readonly string[],
+    texture: VOCABULARY_MET.texture as readonly string[],
     primary_genre: ['electronic', 'rock', 'pop', 'hip_hop', 'jazz', 'classical', 'folk', 'world', 'soundtrack', 'ambient', 'sound_effect'] as const,
     secondary_genre: ['dance', 'edm', 'house', 'techno', 'alternative_rock', 'metal', 'indie_pop', 'rnb', 'soul', 'blues', 'country', 'cinematic'] as const,
     subgenres: {
@@ -182,40 +107,19 @@ export const DEFAULT_INSTRUMENT: InstrumentationEntry = {
     descriptors: [],
 };
 
-// Taxonomy-based term organization by frequency
-export const MOOD_TERMS_BY_FREQUENCY = {
-    ubiquitous: ['upbeat', 'energetic', 'joyful', 'positive', 'peaceful', 'calm', 'relaxed', 'dark', 'sad', 'intense', 'aggressive'],
-    frequent: ['happy', 'cheerful', 'uplifting', 'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic', 'exuberant', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing', 'gentle', 'melancholic', 'somber', 'brooding', 'mournful', 'gloomy', 'haunting', 'moody', 'driving', 'powerful', 'forceful', 'fierce', 'raw', 'edgy', 'explosive', 'menacing', 'angry', 'mysterious', 'enigmatic', 'ethereal-ambience', 'majestic', 'epic', 'strange', 'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'passionate', 'nostalgic', 'reflective', 'bittersweet', 'smooth'],
-    infrequent: ['euphoric', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'contemplative', 'restful', 'ethereal', 'atmospheric', 'flowing', 'desolate', 'forlorn', 'wistful', 'tragic', 'lonely', 'ominous', 'disturbing', 'violent', 'furious', 'tense', 'harsh', 'thunderous', 'chaotic', 'otherworldly', 'mystical', 'cryptic', 'obscure', 'warm-hearted', 'sultry', 'yearning', 'longing', 'reminiscent', 'pensive', 'poignant', 'retrospective'],
-    rare: ['sparkly', 'gossamer', 'shadowy', 'plaintive', 'blistering', 'snarling', 'elusive', 'veiled', 'twilight', 'liminal', 'memory-laden']
-} as const;
-
-export const ENERGY_TERMS_BY_FREQUENCY = {
-    ubiquitous: ['high-energy', 'chill', 'mellow-energy', 'relaxed-energy', 'soft-energy'],
-    frequent: ['driving', 'vigorous', 'propulsive', 'pumping', 'dynamic-energy', 'explosive', 'punchy', 'vibrant', 'bouncy', 'flowing', 'steady', 'moderate', 'balanced-energy', 'measured', 'rolling', 'rhythmic', 'groovy', 'swinging', 'laid-back', 'low-energy', 'ambient', 'gentle-energy', 'subdued', 'serene-energy', 'delicate-energy', 'tense-energy', 'anxious-energy', 'chaotic-energy', 'dissonant-energy', 'expansive', 'soaring', 'sweeping', 'majestic-energy', 'gradual', 'swelling', 'mid-tempo'],
-    infrequent: ['kinetic', 'pulsating', 'frenetic', 'relentless', 'urgent', 'brisk', 'electrifying', 'thumping', 'medium-energy', 'cascading', 'undulating', 'pulsing', 'unhurried', 'paced', 'restrained', 'placid', 'still', 'downtempo', 'languid', 'hushed', 'sedate', 'hypnotic', 'agitated', 'erratic', 'unstable', 'jarring-energy', 'turbulent', 'unsettling-energy', 'fragmented', 'restless', 'hectic', 'lifting', 'transcendent-energy', 'panoramic', 'vast', 'cosmic', 'breathless', 'crescendoing', 'decaying'],
-    rare: ['high-octane', 'turbocharged', 'cruising', 'static-energy', 'jittery', 'disjointed', 'boundless', 'wavering', 'oscillating', 'spiraling']
-} as const;
-
-export const TEXTURE_TERMS_BY_FREQUENCY = {
-    ubiquitous: ['bright', 'crisp', 'clear', 'warm', 'rich', 'mellow', 'dark', 'electronic', 'acoustic', 'natural', 'smooth', 'soft-texture'],
-    frequent: ['brilliant', 'sparkling', 'crystalline', 'shimmering', 'airy', 'polished', 'pristine', 'full', 'lush', 'creamy', 'golden', 'rounded', 'muddy', 'harsh', 'gritty-texture', 'murky', 'raspy', 'buzzy', 'distorted', 'heavy', 'dense', 'thick', 'muffled', 'organic', 'raw-texture', 'live', 'authentic', 'woody', 'breathy', 'human', 'intimate', 'resonant', 'textured', 'grainy', 'synthetic', 'digital', 'processed', 'programmed', 'artificial', 'robotic', 'metallic', 'analog', 'layered', 'complex', 'rich-density', 'full-bodied', 'intricate', 'detailed', 'sparse', 'minimalistic', 'silky-texture', 'polished-texture', 'refined', 'elegant', 'sophisticated', 'seamless', 'fluid', 'rough', 'gritty', 'grainy-texture', 'edgy', 'spacious', 'atmospheric', 'cinematic'],
-    infrequent: ['radiant', 'gleaming', 'shiny', 'honeyed', 'enveloping', 'cozy', 'velvety', 'buttery', 'silky', 'coarse', 'abrasive', 'shadowy-texture', 'veiled', 'obscured', 'clouded', 'unprocessed', 'close-miked', 'hollow', 'earthy', 'computerized', 'futuristic', 'cyber', 'glassy', 'mechanical', 'glitchy', 'orchestrated', 'elaborate', 'restrained', 'sleek', 'effortless', 'graceful', 'coarse-texture', 'jagged', 'harsh-texture', 'unpolished', 'abrasive-texture', 'reverberant', 'wet', 'dry', 'intimate-space', 'echoey'],
-    rare: ['luminous', 'embracing', 'sumptuous', 'oppressive', 'fibrous', 'pixelated', 'multi-textured', 'stratified', 'polyphonic', 'homophonic', 'monophonic', 'heterophonic', 'crunchy', 'distorted-texture', 'ratty', 'sedate']
-} as const;
+// Taxonomy-based term organization by frequency (imported from taxonomy.ts)
+export const MOOD_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Mood;
+export const ENERGY_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Energy;
+export const TEXTURE_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Texture;
 
 // Helper functions for taxonomy-based UI
 export function getTermsByFrequency(category: 'mood' | 'energy' | 'texture', frequency: 'ubiquitous' | 'frequent' | 'infrequent' | 'rare'): readonly string[] {
-    switch (category) {
-        case 'mood':
-            return MOOD_TERMS_BY_FREQUENCY[frequency] || [];
-        case 'energy':
-            return ENERGY_TERMS_BY_FREQUENCY[frequency] || [];
-        case 'texture':
-            return TEXTURE_TERMS_BY_FREQUENCY[frequency] || [];
-        default:
-            return [];
-    }
+    const categoryMap = {
+        mood: TERMS_BY_FREQUENCY.Mood,
+        energy: TERMS_BY_FREQUENCY.Energy,
+        texture: TERMS_BY_FREQUENCY.Texture
+    };
+    return categoryMap[category]?.[frequency] || [];
 }
 
 export function getAllTermsForCategory(category: 'mood' | 'energy' | 'texture') {

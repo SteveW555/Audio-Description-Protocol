@@ -1,25 +1,25 @@
 export type MoodTerm =
     // Positive / Uplifting
-    | 'upbeat' | 'energetic-mood' | 'joyful' | 'happy' | 'cheerful' | 'uplifting' | 'positive-mood'
+    | 'upbeat' | 'energetic' | 'joyful' | 'happy' | 'cheerful' | 'uplifting' | 'positive'
     | 'hopeful' | 'playful' | 'romantic' | 'sentimental' | 'triumphant' | 'heroic' | 'optimistic'
-    | 'euphoric' | 'exuberant' | 'ecstatic' | 'elated' | 'celebratory' | 'festive' | 'inspiring' | 'sparkly-mood'
+    | 'euphoric' | 'exuberant' | 'ecstatic' | 'elated' | 'celebratory' | 'festive' | 'inspiring' | 'sparkly'
     // Calm / Peaceful
     | 'peaceful' | 'calm' | 'relaxed' | 'serene' | 'dreamy' | 'tranquil' | 'meditative' | 'soothing'
-    | 'gentle' | 'contemplative' | 'restful' | 'ethereal-mood' | 'atmospheric-mood' | 'flowing-mood'
-    | 'smooth-mood' | 'gossamer-mood'
+    | 'gentle' | 'contemplative' | 'restful' | 'ethereal' | 'atmospheric' | 'flowing'
+    | 'smooth' | 'gossamer'
     // Dark / Negative
-    | 'dark-mood' | 'melancholic' | 'sad' | 'somber' | 'brooding' | 'mournful' | 'gloomy' | 'haunting'
+    | 'dark' | 'melancholic' | 'sad' | 'somber' | 'brooding' | 'mournful' | 'gloomy' | 'haunting'
     | 'moody' | 'desolate' | 'forlorn' | 'wistful' | 'tragic' | 'lonely' | 'ominous' | 'disturbing'
-    | 'shadowy-mood' | 'plaintive' | 'negative-mood'
+    | 'shadowy' | 'plaintive' | 'negative'
     // Intense / Aggressive
-    | 'intense-mood' | 'aggressive' | 'driving-mood' | 'powerful-mood' | 'forceful' | 'fierce'
-    | 'raw-mood' | 'edgy-mood' | 'explosive-mood' | 'menacing' | 'angry' | 'violent' | 'furious'
-    | 'tense' | 'harsh-mood' | 'thunderous' | 'blistering' | 'snarling' | 'chaotic-mood'
+    | 'intense' | 'aggressive' | 'driving' | 'powerful' | 'forceful' | 'fierce'
+    | 'raw' | 'edgy' | 'explosive' | 'menacing' | 'angry' | 'violent' | 'furious'
+    | 'tense' | 'harsh' | 'thunderous' | 'blistering' | 'snarling' | 'chaotic'
     // Mysterious / Ambiguous
     | 'mysterious' | 'enigmatic' | 'ethereal-ambience' | 'otherworldly' | 'mystical' | 'cryptic'
-    | 'elusive' | 'veiled-mood' | 'obscure-mood' | 'twilight' | 'liminal' | 'majestic' | 'epic' | 'strange'
+    | 'elusive' | 'veiled' | 'obscure' | 'twilight' | 'liminal' | 'majestic' | 'epic' | 'strange'
     // Romantic / Tender
-    | 'tender' | 'affectionate' | 'intimate-mood' | 'loving' | 'sensual' | 'warm-hearted' | 'sultry'
+    | 'tender' | 'affectionate' | 'intimate' | 'loving' | 'sensual' | 'warm-hearted' | 'sultry'
     | 'passionate' | 'yearning' | 'longing'
     // Nostalgic / Reflective
     | 'nostalgic' | 'reflective' | 'bittersweet' | 'reminiscent' | 'pensive' | 'poignant'
@@ -27,24 +27,24 @@ export type MoodTerm =
 
 export type EnergyTerm =
     // High / Positive Drive
-    | 'high-energy' | 'driving' | 'vigorous' | 'propulsive' | 'pumping' | 'dynamic-energy' | 'explosive'
-    | 'kinetic' | 'punchy' | 'pulsating' | 'frenetic' | 'relentless' | 'urgent' | 'vibrant' | 'bouncy'
+    | 'high-energy' | 'vigorous' | 'propulsive' | 'pumping' | 'dynamic' | 'kinetic'
+    | 'punchy' | 'pulsating' | 'frenetic' | 'relentless' | 'urgent' | 'vibrant' | 'bouncy'
     | 'brisk' | 'electrifying' | 'high-octane' | 'turbocharged' | 'thumping'
     // Medium / Flowing
-    | 'flowing' | 'steady' | 'moderate' | 'balanced-energy' | 'measured' | 'rolling' | 'rhythmic'
+    | 'steady' | 'moderate' | 'balanced' | 'measured' | 'rolling' | 'rhythmic'
     | 'groovy' | 'medium-energy' | 'cascading' | 'undulating' | 'swinging' | 'pulsing' | 'unhurried'
     | 'cruising' | 'mid-tempo' | 'paced'
     // Low / Peaceful
-    | 'laid-back' | 'low-energy' | 'ambient' | 'chill' | 'mellow-energy' | 'gentle-energy' | 'subdued'
-    | 'restrained' | 'placid' | 'still' | 'relaxed-energy' | 'downtempo' | 'languid' | 'serene-energy'
-    | 'hushed' | 'delicate-energy' | 'soft-energy' | 'sedate' | 'hypnotic'
+    | 'laid-back' | 'low-energy' | 'ambient' | 'chill' | 'mellow' | 'subdued'
+    | 'restrained' | 'placid' | 'still' | 'downtempo' | 'languid' | 'hushed'
+    | 'delicate' | 'soft' | 'sedate' | 'hypnotic'
     // Negative / Unstable
-    | 'tense-energy' | 'anxious-energy' | 'chaotic-energy' | 'agitated' | 'erratic' | 'unstable'
-    | 'jarring-energy' | 'dissonant-energy' | 'turbulent' | 'unsettling-energy' | 'fragmented'
-    | 'static-energy' | 'restless' | 'jittery' | 'hectic' | 'disjointed'
+    | 'anxious' | 'agitated' | 'erratic' | 'unstable'
+    | 'jarring' | 'dissonant' | 'turbulent' | 'unsettling' | 'fragmented'
+    | 'static' | 'restless' | 'jittery' | 'hectic' | 'disjointed'
     // Expansive / Other
-    | 'expansive' | 'soaring' | 'lifting' | 'transcendent-energy' | 'boundless' | 'sweeping'
-    | 'majestic-energy' | 'panoramic' | 'vast' | 'cosmic' | 'breathless' | 'gradual' | 'crescendoing'
+    | 'expansive' | 'soaring' | 'lifting' | 'transcendent' | 'boundless' | 'sweeping'
+    | 'panoramic' | 'vast' | 'cosmic' | 'breathless' | 'gradual' | 'crescendoing'
     | 'swelling' | 'decaying' | 'wavering' | 'oscillating' | 'spiraling';
 
 export type TextureTerm =
@@ -52,15 +52,15 @@ export type TextureTerm =
     | 'bright' | 'crisp' | 'clear' | 'brilliant' | 'sparkling' | 'crystalline' | 'shimmering' | 'radiant'
     | 'gleaming' | 'airy' | 'polished' | 'pristine' | 'shiny' | 'luminous'
     // Warm / Peaceful
-    | 'warm' | 'rich' | 'full' | 'lush' | 'creamy' | 'honeyed' | 'golden' | 'mellow' | 'rounded'
-    | 'embracing' | 'enveloping' | 'cozy' | 'sumptuous' | 'velvety' | 'buttery' | 'silky' | 'soft-texture'
+    | 'warm' | 'rich' | 'full' | 'lush' | 'creamy' | 'honeyed' | 'golden' | 'rounded'
+    | 'embracing' | 'enveloping' | 'cozy' | 'sumptuous' | 'velvety' | 'buttery' | 'silky'
     // Dark / Negative
-    | 'dark' | 'muddy' | 'harsh' | 'gritty-texture' | 'murky' | 'raspy' | 'buzzy' | 'distorted'
-    | 'coarse' | 'abrasive' | 'shadowy-texture' | 'veiled' | 'obscured' | 'heavy' | 'dense' | 'thick'
+    | 'muddy' | 'gritty' | 'murky' | 'raspy' | 'buzzy' | 'distorted'
+    | 'coarse' | 'abrasive' | 'obscured' | 'heavy' | 'dense' | 'thick'
     | 'clouded' | 'muffled' | 'oppressive'
     // Natural / Acoustic
-    | 'acoustic' | 'organic' | 'natural' | 'raw-texture' | 'live' | 'authentic' | 'unprocessed'
-    | 'woody' | 'breathy' | 'human' | 'intimate' | 'close-miked' | 'hollow' | 'earthy' | 'fibrous'
+    | 'acoustic' | 'organic' | 'natural' | 'live' | 'authentic' | 'unprocessed'
+    | 'woody' | 'breathy' | 'human' | 'close-miked' | 'hollow' | 'earthy' | 'fibrous'
     | 'resonant' | 'textured' | 'grainy'
     // Synthetic / Electronic
     | 'electronic' | 'synthetic' | 'digital' | 'processed' | 'programmed' | 'artificial' | 'computerized'
@@ -71,13 +71,13 @@ export type TextureTerm =
     | 'multi-textured' | 'stratified' | 'elaborate' | 'sparse' | 'minimalistic' | 'polyphonic'
     | 'homophonic' | 'monophonic' | 'heterophonic'
     // Smooth / Refined
-    | 'smooth' | 'silky-texture' | 'polished-texture' | 'refined' | 'sleek' | 'elegant' | 'sophisticated'
+    | 'refined' | 'sleek' | 'elegant' | 'sophisticated'
     | 'seamless' | 'effortless' | 'fluid' | 'graceful'
     // Rough / Gritty
-    | 'rough' | 'gritty' | 'grainy-texture' | 'coarse-texture' | 'jagged' | 'harsh-texture'
-    | 'raw-finish' | 'unpolished' | 'edgy' | 'abrasive-texture' | 'crunchy' | 'distorted-texture' | 'ratty'
+    | 'rough' | 'jagged'
+    | 'raw-finish' | 'unpolished' | 'crunchy' | 'ratty'
     // Space & Atmosphere
-    | 'spacious' | 'reverberant' | 'wet' | 'dry' | 'intimate-space' | 'echoey' | 'atmospheric' | 'cinematic';
+    | 'spacious' | 'reverberant' | 'wet' | 'dry' | 'intimate-space' | 'echoey' | 'cinematic';
 
 export type PrimaryGenre =
     | 'electronic'
