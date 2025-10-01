@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./wizard/index.html",
-    "./wizard/src/**/*.{js,jsx,ts,tsx}",
+    "./wizard/src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {},
   },
   plugins: [],
 }
-

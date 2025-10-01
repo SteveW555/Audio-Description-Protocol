@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const encoder = encoding_for_model('gpt-4');
+const encoder = encoding_for_model('gpt-5-nano'); // Adjust model as needed
 
 /**
  * Classifies errors as retryable or terminal
