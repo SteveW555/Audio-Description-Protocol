@@ -8,6 +8,7 @@ import { useWizardStore } from '../context/WizardContext';
 import { AskStep } from './AskStep';
 import { FinalStep } from './FinalStep';
 import { InstrumentationWizard } from './InstrumentationWizard';
+import { GenreStep } from './GenreStep';
 import { JsonPreview } from './JsonPreview';
 import { HumanReadablePreview } from './HumanReadablePreview';
 import { NLPhraseDisplay } from './NLPhraseDisplay';
@@ -100,6 +101,14 @@ export const WizardLayout = () => {
                                     goToNextStep();
                                 }
                             }}
+                        />
+                    );
+                case StepType.GENRE:
+                    return (
+                        <GenreStep
+                            stepNumber={stepNumber}
+                            title={currentStepConfig.title}
+                            onNext={goToNextStep}
                         />
                     );
                 case StepType.INSTRUMENTATION:

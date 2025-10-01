@@ -24,7 +24,13 @@ Different people and AIs describe the same track using completely different voca
 3. **Enables interoperability** between different music generation tools
 4. **Remains human-friendly** with natural language translation
 
+- A Wizard UI is used to guide the human  eveloper through *adding / editing / debugging* training examples
+ - Eventually, the trained auto-label AI uses the same process to label samples itself.
+ - The focus remains a *consistent, predictable, re-usable description* that the human or AI is forced to adopt
+
+
 ---
+
 
 ## Example Description
 

@@ -38,13 +38,7 @@ export const useWizardSteps = (): WizardStepConfig[] => {
                 enableSearch: true,
                 enableFrequencyGroups: true
             },
-            { title: 'Primary Genre', path: 'semantic_description.genre.primary', terms: [...VOCABULARY.primary_genre] },
-            {
-                title: 'Primary Subgenres',
-                path: 'semantic_description.genre.primary_subgenres',
-                terms: (draft) => getSubgenresFor(draft.semantic_description.genre.primary),
-                multi: true,
-            },
+            { title: 'Genre & Subgenres', special: StepType.GENRE },
             { title: 'Instrumentation', special: StepType.INSTRUMENTATION },
             { title: 'Music Theory', special: StepType.ASK_THEORY },
             {

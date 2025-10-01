@@ -1,7 +1,7 @@
 import React from 'react';
 import { AskStep } from './AskStep';
 import { TermSelector } from './TermSelector';
-import { useInstrumentationFlow } from '../hooks/useInstrumentationFlow';
+import { MAX_NUM_INSTRUMENTS, useInstrumentationFlow } from '../hooks/useInstrumentationFlow';
 import { InstrumentationEntry } from '../types/protocol';
 
 interface InstrumentationWizardProps {
@@ -25,15 +25,27 @@ export const InstrumentationWizard = ({ stepNumber, onNext }: InstrumentationWiz
     } = useInstrumentationFlow();
 
     if (instrumentStep === 0) {
+        if (instrumentation.length >= MAX_NUM_INSTRUMENTS) {
+            onNext();
+            return null;
+        }
+
         const promptText = instrumentation.length > 0
             ? 'Would you like to add more instrument details?'
             : 'Would you like to add some instrument details?';
+
+        const handleAddInstrument = () => {
+            const added = addInstrument();
+            if (!added) {
+                onNext();
+            }
+        };
 
         return (
             <AskStep
                 title={`Step ${stepNumber}: Instrumentation`}
                 prompt={promptText}
-                onYes={addInstrument}
+                onYes={handleAddInstrument}
                 onNo={onNext}
             />
         );
@@ -43,6 +55,10 @@ export const InstrumentationWizard = ({ stepNumber, onNext }: InstrumentationWiz
         const markInstrumentUnknown = () => updateInstrumentField('instrument', 'tbc');
         const markRoleUnknown = () => updateInstrumentField('role', 'tbc');
         const markDescriptorsUnknown = () => updateInstrumentField('descriptors', ['tbc']);
+
+        const isNameSelected = Boolean(currentInstrument.instrument && currentInstrument.instrument !== 'tbc');
+
+        const disableSave = !isNameSelected;
 
         const handleSaveInstrument = () => {
             const nextInstrument: InstrumentationEntry = {
@@ -139,11 +155,17 @@ export const InstrumentationWizard = ({ stepNumber, onNext }: InstrumentationWiz
                     />
                 </section>
 
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-end">
+                    {!isNameSelected && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400">
+                            Choose an instrument name to enable saving.
+                        </p>
+                    )}
                     <button
                         type="button"
                         onClick={handleSaveInstrument}
-                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900"
+                        disabled={disableSave}
+                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
                     >
                         Save Instrument
                     </button>

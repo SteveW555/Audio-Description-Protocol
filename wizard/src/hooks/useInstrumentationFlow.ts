@@ -5,6 +5,8 @@ import { useWizardStore } from '../context/WizardContext';
 import { InstrumentationEntry } from '../types/protocol';
 import { getInstrumentDescriptors, getInstrumentRoles } from '../utils/instrumentation';
 
+export const MAX_NUM_INSTRUMENTS = 2;
+
 const emptyInstrument = (): InstrumentationEntry => ({
     instrument: '',
     role: '',
@@ -23,10 +25,15 @@ export const useInstrumentationFlow = () => {
     const currentInstrument = instrumentation[currentInstrumentIndex] ?? emptyInstrument();
 
     const addInstrument = useCallback(() => {
+        if (instrumentation.length >= MAX_NUM_INSTRUMENTS) {
+            return false;
+        }
+
         const nextInstruments = [...instrumentation, emptyInstrument()];
         updateData('semantic_description.instrumentation', nextInstruments);
         setCurrentInstrumentIndex(nextInstruments.length - 1);
         setInstrumentStep(1);
+        return true;
     }, [instrumentation, setCurrentInstrumentIndex, setInstrumentStep, updateData]);
 
     const updateInstrumentField = useCallback(
