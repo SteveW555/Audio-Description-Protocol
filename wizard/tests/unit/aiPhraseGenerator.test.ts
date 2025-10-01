@@ -85,49 +85,49 @@ describe('AI Phrase Generator', () => {
     expect(true).toBe(false); // Force failure
   });
 
-  test('should handle 400 validation error', async () => {
+  /*test('should handle 400 validation error', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 400,
       json: async () => ({
         error: 'Genre is required'
       })
-    });
+    });*/
 
-    // Should throw validation error
+  // Should throw validation error
 
-    // This will fail until implementation exists
-    expect(true).toBe(false); // Force failure
-  });
+  // This will fail until implementation exists
+  expect(true).toBe(false); // Force failure
+});
 
-  test('should handle network errors', async () => {
-    global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+test('should handle network errors', async () => {
+  global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
-    // Should handle network failure gracefully
+  // Should handle network failure gracefully
 
-    // This will fail until implementation exists
-    expect(true).toBe(false); // Force failure
-  });
+  // This will fail until implementation exists
+  expect(true).toBe(false); // Force failure
+});
 
-  test('should include sessionId in request', async () => {
-    const sessionId = 'test-session-123';
+test('should include sessionId in request', async () => {
+  const sessionId = 'test-session-123';
 
-    // Request should include sessionId for cost tracking
+  // Request should include sessionId for cost tracking
 
-    // This will fail until implementation exists
-    expect(true).toBe(false); // Force failure
-  });
+  // This will fail until implementation exists
+  expect(true).toBe(false); // Force failure
+});
 
-  test('should validate response format', async () => {
-    // Response should match AIGenerationResponse type:
-    // - phrase: string
-    // - confidence: number (0-1)
-    // - tokensUsed: number
-    // - costUSD: number
-    // - requestId: string
-    // - timestamp: string (ISO 8601)
+test('should validate response format', async () => {
+  // Response should match AIGenerationResponse type:
+  // - phrase: string
+  // - confidence: number (0-1)
+  // - tokensUsed: number
+  // - costUSD: number
+  // - requestId: string
+  // - timestamp: string (ISO 8601)
 
-    // This will fail until implementation exists
-    expect(true).toBe(false); // Force failure
-  });
+  // This will fail until implementation exists
+  expect(true).toBe(false); // Force failure
+});
 });

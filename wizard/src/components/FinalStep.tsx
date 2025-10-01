@@ -5,9 +5,10 @@ import { useWizardStore } from '../context/WizardContext';
 
 interface FinalStepProps {
     onRestart: () => void;
+    onBack?: () => void;
 }
 
-export const FinalStep = ({ onRestart }: FinalStepProps) => {
+export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
     const data = useWizardStore((state) => state.data);
     const [notification, setNotification] = useState('');
     const [actionTaken, setActionTaken] = useState(false);
@@ -50,6 +51,15 @@ export const FinalStep = ({ onRestart }: FinalStepProps) => {
 
     return (
         <div className="p-1">
+            {onBack && (
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                    &larr; Back
+                </button>
+            )}
             <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100 mb-1">Protocol Generated</h2>
             <p className="text-gray-500 dark:text-slate-400 mb-4">
                 You can now copy or download the structured JSON data.
@@ -84,6 +94,9 @@ export const FinalStep = ({ onRestart }: FinalStepProps) => {
                 >
                     Create New Record
                 </button>
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                    *Note: In production the result will be injected directly into the database or training set
+                </p>
             </div>
         </div>
     );

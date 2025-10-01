@@ -1,7 +1,11 @@
-"""Test AI phrase translation with random selection from phrase list."""
+"""Test AI phrase translation with random selection from phrase list.
+
+Tests translation from casual phrases (colloquial/informal language)
+to standardized phrases (ADP vocabulary).
+"""
 import random
 from adp_core.ai_clients.openai_client import OpenAIClient
-from adp_core.constants import ARBITRARY_PHRASES
+from adp_core.constants import CASUAL_PHRASES
 
 
 def load_translator_prompt():
@@ -76,11 +80,15 @@ def analyze_translation(original, translated):
 
 
 def test_random_phrase_translation(num_tests=5):
-    """Test translation with randomly selected phrases."""
+    """Test translation with randomly selected casual phrases.
+
+    Args:
+        num_tests: Number of casual phrases to test translation for
+    """
 
     print("\n" + "="*80)
     print("RANDOM PHRASE TRANSLATION TEST")
-    print(f"Testing {num_tests} randomly selected phrases from {len(ARBITRARY_PHRASES)} total")
+    print(f"Testing {num_tests} randomly selected casual phrases from {len(CASUAL_PHRASES)} total")
     print("="*80)
 
     # Initialize OpenAI client
@@ -89,8 +97,8 @@ def test_random_phrase_translation(num_tests=5):
     # Load translator prompt
     system_prompt = load_translator_prompt()
 
-    # Randomly select phrases
-    selected_phrases = random.sample(ARBITRARY_PHRASES, min(num_tests, len(ARBITRARY_PHRASES)))
+    # Randomly select casual phrases
+    selected_phrases = random.sample(CASUAL_PHRASES, min(num_tests, len(CASUAL_PHRASES)))
 
     results = []
 
@@ -100,10 +108,10 @@ def test_random_phrase_translation(num_tests=5):
         print(f"{'='*40}")
 
         # Show phrase index from original list
-        phrase_index = ARBITRARY_PHRASES.index(casual_phrase) + 1
+        phrase_index = CASUAL_PHRASES.index(casual_phrase) + 1
         print(f"Phrase #{phrase_index} from list")
 
-        print(f"\n🗣️ Casual Input:")
+        print(f"\n🗣️ Casual Phrase Input:")
         print(f'"{casual_phrase}"')
 
         # Call OpenAI with translator prompt
@@ -117,7 +125,7 @@ def test_random_phrase_translation(num_tests=5):
 
         standardized_phrase = response.choices[0].message.content.strip('"')
 
-        print(f"\n📝 Standardized Output:")
+        print(f"\n📝 Standardized Phrase Output:")
         print(f'"{standardized_phrase}"')
 
         # Analyze the translation

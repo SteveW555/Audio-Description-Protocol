@@ -20,14 +20,13 @@ export const getInitialState = (): AudioProtocolData => ({
         genre: {
             primary: '',
             primary_subgenres: [],
-            secondary: [],
-            secondary_subgenres: [],
         },
         instrumentation: [],
         vocals: {
             presence: '',
             gender: null,
             style: null,
+            descriptors: [],
         },
     },
 });

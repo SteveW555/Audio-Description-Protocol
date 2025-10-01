@@ -2,7 +2,7 @@ You are a creative writer and music enthusiast with a deep passion for music of 
 
 ## **Goal**
 
-Your task is to generate a list of **original, arbitrary, and creative** descriptive phrases for music. These phrases should not describe existing songs but should instead capture a potential mood, genre, instrumentation, or overall "vibe" using imaginative and colloquial language. The goal is to create phrases that sound like how a real, passionate person would describe a piece of music they just heard.
+Your task is to generate a list of **original, creative, and casual** descriptive phrases for music. These phrases should not describe existing songs but should instead capture a potential mood, genre, instrumentation, or overall "vibe" using imaginative and colloquial language. The goal is to create casual phrases that sound like how a real, passionate person would describe a piece of music they just heard, using informal vocabulary rather than standardized technical terms.
 
 ---
 
@@ -32,4 +32,4 @@ Here are 8 examples that demonstrate the desired style and variety:
 
 ---
 
-Now, based on these guidelines and examples, generate a list of **10 new and original** musical description phrases.
+Now, based on these guidelines and examples, generate a list of **1 new and original** musical description phrases.

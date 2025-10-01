@@ -6,6 +6,50 @@
  */
 
 import { VOCABULARY } from '../constants/vocabulary';
+import { TERMS_BY_FREQUENCY } from '../../../wizard/src/constants/taxonomy';
+
+/**
+ * Returns a weighted random count for MET categories
+ * 60% chance of 2, 30% chance of 1, 10% chance of 3
+ */
+function getWeightedMETCount(): number {
+  const rand = Math.random();
+  if (rand < 0.6) return 2;
+  if (rand < 0.9) return 1;
+  return 3;
+}
+
+/**
+ * Picks random terms weighted by popularity (ubiquitous > frequent > infrequent > rare)
+ * @param category The MET category ('mood', 'energy', or 'texture')
+ * @param count Number of terms to pick
+ * @returns Array of selected terms
+ */
+function pickWeightedTerms(
+  category: 'Mood' | 'Energy' | 'Texture',
+  count: number
+): string[] {
+  const termsByFreq = TERMS_BY_FREQUENCY[category];
+
+  // Create weighted pool: ubiquitous (weight 4), frequent (3), infrequent (2), rare (1)
+  const weightedPool: string[] = [
+    ...termsByFreq.ubiquitous.flatMap(t => Array(4).fill(t)),
+    ...termsByFreq.frequent.flatMap(t => Array(3).fill(t)),
+    ...termsByFreq.infrequent.flatMap(t => Array(2).fill(t)),
+    ...termsByFreq.rare,
+  ];
+
+  // Shuffle and pick unique terms
+  const shuffled = [...weightedPool].sort(() => Math.random() - 0.5);
+  const selected = new Set<string>();
+
+  for (const term of shuffled) {
+    selected.add(term);
+    if (selected.size === count) break;
+  }
+
+  return Array.from(selected);
+}
 
 /**
  * Picks random items from an array
@@ -30,6 +74,109 @@ function randomInt(min: number, max: number): number {
 }
 
 /**
+ * Generates random instrument configuration with role and descriptors
+ *
+ * @returns Object containing instrument, role, and descriptors
+ */
+export function generateRandomInstrument() {
+  // Pick 1 random instrument
+  const instrument = pickOne(VOCABULARY.instrument);
+
+  // Get instrument-specific roles and descriptors
+  const instrumentKey = instrument as keyof typeof VOCABULARY.instrument_roles;
+  const rolesList = VOCABULARY.instrument_roles[instrumentKey] || ['lead'];
+  const descriptorsList = VOCABULARY.instrument_descriptors[instrumentKey] || ['processed'];
+
+  const role = pickOne(rolesList);
+  const descriptor = pickOne(descriptorsList);
+
+  return {
+    instrument,
+    role,
+    descriptors: [descriptor],
+  };
+}
+
+/**
+ * Converts primary genre name to its lowercase secondary_genres key
+ * @param primaryGenre The capitalized primary genre name
+ * @returns The lowercase key for secondary_genres lookup
+ */
+function genreToKey(primaryGenre: string): string {
+  const mapping: Record<string, string> = {
+    'Electronic': 'electronic',
+    'Rock': 'rock',
+    'Pop': 'pop',
+    'Hip-Hop': 'hip_hop',
+    'R&B / Soul': 'rnb_soul',
+    'Jazz': 'jazz',
+    'Blues': 'blues',
+    'Country': 'country',
+    'Classical': 'classical',
+    'Folk': 'folk',
+    'Latin': 'latin',
+    'Reggae': 'reggae',
+    'World': 'world',
+    'Soundtrack': 'soundtrack',
+    'Ambient': 'ambient',
+    'Spoken Word': 'spoken_word',
+    'Sound Effect': 'sound_effect',
+  };
+  return mapping[primaryGenre] || primaryGenre.toLowerCase();
+}
+
+/**
+ * Generates random genre with primary and optional subgenres
+ *
+ * @returns Object containing primary genre and subgenres array
+ */
+export function generateRandomGenre() {
+  // Pick primary genre
+  const primaryGenre = pickOne(VOCABULARY.primary_genre);
+
+  // Convert primary genre to lowercase key for subgenre lookup
+  const genreKey = genreToKey(primaryGenre);
+
+  // Pick 1-3 applicable subgenres for the primary genre
+  const subgenreList = VOCABULARY.subgenres[genreKey as keyof typeof VOCABULARY.subgenres] || [];
+  const subgenres: string[] = [];
+
+  if (subgenreList.length > 0) {
+    const count = Math.min(randomInt(1, 3), subgenreList.length);
+    const shuffled = [...subgenreList].sort(() => Math.random() - 0.5);
+    subgenres.push(...shuffled.slice(0, count));
+  }
+
+  return {
+    primary: primaryGenre,
+    subgenres: subgenres.length > 0 ? subgenres : ['tbc'],
+  };
+}
+
+/**
+ * Generates random vocals configuration with presence, gender, style, and descriptors
+ * Returns undefined 50% of the time to simulate optional vocals
+ *
+ * @returns Vocals object or undefined
+ */
+export function generateRandomVocals() {
+  // 50% chance of including vocals
+  if (Math.random() <= 0.5) {
+    return undefined;
+  }
+
+  // Get vocals descriptors (or use general descriptors as fallback)
+  const vocalsDescriptors = VOCABULARY.instrument_descriptors['vocals' as keyof typeof VOCABULARY.instrument_descriptors] || ['processed'];
+
+  return {
+    presence: pickOne(VOCABULARY.vocals_presence),
+    gender: pickOne(VOCABULARY.vocals_gender),
+    style: pickOne(VOCABULARY.vocals_style),
+    descriptors: [pickOne(vocalsDescriptors)],
+  };
+}
+
+/**
  * Generates a random musical description for testing
  *
  * @returns Structured wizard data object with randomized values
@@ -42,36 +189,14 @@ export function generateRandomDescription() {
   const subgenreList = VOCABULARY.subgenres[primaryGenre as keyof typeof VOCABULARY.subgenres] || [];
   const subgenre = subgenreList.length > 0 ? pickOne(subgenreList) : undefined;
 
-  // Pick 1-3 terms for Mood, Energy, Texture
-  const moodCount = randomInt(1, 3);
-  const energyCount = randomInt(1, 3);
-  const textureCount = randomInt(1, 3);
+  // Generate random MET terms with weighted distribution
+  const { mood, energy, texture } = generateRandomMET();
 
-  const mood = pickRandom(VOCABULARY.mood, moodCount);
-  const energy = pickRandom(VOCABULARY.energy, energyCount);
-  const texture = pickRandom(VOCABULARY.texture, textureCount);
+  // Generate random instrument
+  const instrumentEntry = generateRandomInstrument();
 
-  // Pick 1 random instrument
-  const instrument = pickOne(VOCABULARY.instrument);
-
-  // Get instrument-specific roles and descriptors
-  const instrumentKey = instrument as keyof typeof VOCABULARY.instrument_roles;
-  const rolesList = VOCABULARY.instrument_roles[instrumentKey] || ['lead'];
-  const descriptorsList = VOCABULARY.instrument_descriptors[instrumentKey] || ['processed'];
-
-  const role = pickOne(rolesList);
-
-  // Pick 1 random descriptor for each instrument attribute
-  const descriptor = pickOne(descriptorsList);
-
-  // Randomly include vocals (50% chance)
-  const includeVocals = Math.random() > 0.5;
-  const vocals = includeVocals ? {
-    presence: pickOne(VOCABULARY.vocals_presence),
-    gender: pickOne(VOCABULARY.vocals_gender),
-    style: pickOne(VOCABULARY.vocals_style),
-    descriptors: [pickOne(descriptorsList)] // Reusing instrument descriptors for simplicity
-  } : undefined;
+  // Generate random vocals (50% chance of inclusion)
+  const vocals = generateRandomVocals();
 
   // Random BPM between 100 and 150
   const bpm = randomInt(100, 150);
@@ -85,15 +210,49 @@ export function generateRandomDescription() {
     mood,
     energy,
     texture,
-    instrumentation: [
-      {
-        instrument,
-        role,
-        descriptors: [descriptor]
-      }
-    ],
+    instrumentation: [instrumentEntry],
     ...(vocals && { vocals }),
     bpm
+  };
+}
+
+/**
+ * Generates random Mood, Energy, Texture (MET) terms with weighted distribution
+ *
+ * Uses weighted count selection (60% = 2, 30% = 1, 10% = 3) and enforces
+ * maximum 6 total terms across all categories. Terms are selected with
+ * popularity weighting (ubiquitous > frequent > infrequent > rare).
+ *
+ * @returns Object containing mood, energy, and texture term arrays
+ */
+export function generateRandomMET() {
+  // Pick weighted counts for Mood, Energy, Texture (60% = 2, 30% = 1, 10% = 3)
+  let moodCount = getWeightedMETCount();
+  let energyCount = getWeightedMETCount();
+  let textureCount = getWeightedMETCount();
+
+  // Enforce maximum 6 total terms across all MET categories
+  let totalCount = moodCount + energyCount + textureCount;
+  while (totalCount > 6) {
+    // Reduce the largest count first
+    if (moodCount >= energyCount && moodCount >= textureCount && moodCount > 1) {
+      moodCount--;
+    } else if (energyCount >= textureCount && energyCount > 1) {
+      energyCount--;
+    } else if (textureCount > 1) {
+      textureCount--;
+    } else {
+      // If all are at 1, reduce mood (arbitrary choice)
+      moodCount = Math.max(1, moodCount - 1);
+    }
+    totalCount = moodCount + energyCount + textureCount;
+  }
+
+  // Pick terms weighted by popularity (ubiquitous > frequent > infrequent > rare)
+  return {
+    mood: pickWeightedTerms('Mood', moodCount),
+    energy: pickWeightedTerms('Energy', energyCount),
+    texture: pickWeightedTerms('Texture', textureCount),
   };
 }
 

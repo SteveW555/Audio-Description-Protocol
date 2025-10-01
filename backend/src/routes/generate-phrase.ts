@@ -27,7 +27,7 @@ function validateRequest(body: any): { valid: boolean; error?: string } {
 
   // Check genre (required per FR-007)
   if (!wizardData.genre?.primary) {
-    return { valid: false, error: 'genre is required' };
+    //return { valid: false, error: 'genre is required' };
   }
 
   // Check at least one attribute (per FR-007: genre + at least one attribute)

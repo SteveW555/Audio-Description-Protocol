@@ -1,6 +1,10 @@
-"""Test phrases for AI translation testing."""
+"""Test phrases for AI translation testing.
 
-ARBITRARY_PHRASES = [
+CASUAL_PHRASES contains informal, colloquial music descriptions using arbitrary vocabulary.
+These are used for testing translation to standardized phrases (ADP vocabulary).
+"""
+
+CASUAL_PHRASES = [
     # Original 50 shorter phrases
     "A really chilled-out hip-hop track for studying.",
     "Aggressive, super-fast metal with cookie monster vocals.",

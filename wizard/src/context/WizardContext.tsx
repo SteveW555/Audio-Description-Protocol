@@ -11,13 +11,11 @@ export interface WizardState {
     step: number;
     instrumentStep: number;
     currentInstrumentIndex: number;
-    addSecondaryGenre: boolean;
     addTheory: boolean;
     nlPhrase: NLPhraseState;
     setStep: (step: number) => void;
     setInstrumentStep: (step: number) => void;
     setCurrentInstrumentIndex: (index: number) => void;
-    setAddSecondaryGenre: (value: boolean) => void;
     setAddTheory: (value: boolean) => void;
     updateData: (path: string, value: unknown) => void;
     replaceData: (data: AudioProtocolData) => void;
@@ -41,7 +39,6 @@ const createWizardStore = () => {
         step: 0,
         instrumentStep: 0,
         currentInstrumentIndex: 0,
-        addSecondaryGenre: false,
         addTheory: false,
         nlPhrase: {
             currentPhrase: null,
@@ -53,7 +50,6 @@ const createWizardStore = () => {
         setStep: (step: number) => set({ step }),
         setInstrumentStep: (instrumentStep: number) => set({ instrumentStep }),
         setCurrentInstrumentIndex: (currentInstrumentIndex: number) => set({ currentInstrumentIndex }),
-        setAddSecondaryGenre: (addSecondaryGenre: boolean) => set({ addSecondaryGenre }),
         setAddTheory: (addTheory: boolean) => set({ addTheory }),
         updateData: (path: string, value: unknown) =>
             set((state) => ({
@@ -94,7 +90,6 @@ const createWizardStore = () => {
                 step: 0,
                 instrumentStep: 0,
                 currentInstrumentIndex: 0,
-                addSecondaryGenre: false,
                 addTheory: false,
                 nlPhrase: {
                     currentPhrase: null,

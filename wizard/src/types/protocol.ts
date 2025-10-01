@@ -80,31 +80,23 @@ export type TextureTerm =
     | 'spacious' | 'reverberant' | 'wet' | 'dry' | 'intimate-space' | 'echoey' | 'atmospheric' | 'cinematic';
 
 export type PrimaryGenre =
-    | 'electronic'
-    | 'rock'
-    | 'pop'
-    | 'hip_hop'
-    | 'jazz'
-    | 'classical'
-    | 'folk'
-    | 'world'
-    | 'soundtrack'
-    | 'ambient'
-    | 'sound_effect';
-
-export type SecondaryGenre =
-    | 'dance'
-    | 'edm'
-    | 'house'
-    | 'techno'
-    | 'alternative_rock'
-    | 'metal'
-    | 'indie_pop'
-    | 'rnb'
-    | 'soul'
-    | 'blues'
-    | 'country'
-    | 'cinematic';
+    | 'Electronic'
+    | 'Rock'
+    | 'Pop'
+    | 'Hip-Hop'
+    | 'R&B / Soul'
+    | 'Jazz'
+    | 'Blues'
+    | 'Country'
+    | 'Classical'
+    | 'Folk'
+    | 'Latin'
+    | 'Reggae'
+    | 'World'
+    | 'Soundtrack'
+    | 'Ambient'
+    | 'Spoken Word'
+    | 'Sound Effect';
 
 export type InstrumentName =
     | 'electric_guitar'
@@ -308,13 +300,12 @@ export interface VocalsDetails {
     presence: VocalPresence;
     gender: VocalGender;
     style: VocalStyle;
+    descriptors: string[];
 }
 
 export interface GenreDetails {
     primary: PrimaryGenre | '' | 'tbc';
     primary_subgenres: string[];
-    secondary: SecondaryGenre[];
-    secondary_subgenres: string[];
 }
 
 export interface SemanticAttributes {

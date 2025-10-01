@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import generatePhraseRouter from './routes/generate-phrase.js';
+import generateCasualPhraseRouter from './routes/generate-casual-phrase.js';
 import { costTracker } from './services/cost-tracker.js';
 import { emailNotifier } from './services/email-notifier.js';
 
@@ -27,6 +28,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Routes
 app.use('/api', generatePhraseRouter);
+app.use('/api', generateCasualPhraseRouter);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
@@ -62,7 +64,8 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log(`Backend server running on http://localhost:${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/health`);
-      console.log(`Generate phrase: POST http://localhost:${PORT}/api/generate-phrase`);
+      console.log(`Generate standardized phrase: POST http://localhost:${PORT}/api/generate-phrase`);
+      console.log(`Generate casual phrase: POST http://localhost:${PORT}/api/generate-casual-phrase`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

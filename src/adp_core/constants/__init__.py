@@ -1,4 +1,7 @@
 """Constants module for ADP."""
-from .test_phrases import ARBITRARY_PHRASES
+from .test_phrases import CASUAL_PHRASES
 
-__all__ = ["ARBITRARY_PHRASES"]
+# Maintain backwards compatibility
+ARBITRARY_PHRASES = CASUAL_PHRASES
+
+__all__ = ["CASUAL_PHRASES", "ARBITRARY_PHRASES"]

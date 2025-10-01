@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { VOCABULARY } from '../constants/vocabulary';
 import { useWizardStore } from '../context/WizardContext';
 import { StepType, WizardStepConfig } from '../types/wizard';
-import { shouldShowVocalDetails } from '../utils/genreHelpers';
 
 export const useWizardSteps = (): WizardStepConfig[] => {
     const data = useWizardStore((state) => state.data);
@@ -60,23 +59,7 @@ export const useWizardSteps = (): WizardStepConfig[] => {
                 terms: [...VOCABULARY.scale],
                 condition: () => addTheory,
             },
-            {
-                title: 'Vocal Presence',
-                path: 'semantic_description.vocals.presence',
-                terms: [...VOCABULARY.vocals_presence],
-            },
-            {
-                title: 'Vocal Gender',
-                path: 'semantic_description.vocals.gender',
-                terms: [...VOCABULARY.vocals_gender],
-                condition: () => shouldShowVocalDetails(data),
-            },
-            {
-                title: 'Vocal Style',
-                path: 'semantic_description.vocals.style',
-                terms: [...VOCABULARY.vocals_style],
-                condition: () => shouldShowVocalDetails(data),
-            },
+            { title: 'Vocals', special: StepType.VOCALS },
             { title: 'Final Review', special: StepType.FINAL },
         ];
 

@@ -10,6 +10,7 @@ import { useGroupByFilter } from '../hooks/useGroupByFilter';
 import { convertToTermsWithFrequency } from '../utils/termFrequencies';
 import type { GroupByMethod } from '../types/grouping';
 import { useGroupByStore } from '../store/groupByStore';
+import { generateRandomMETCategory } from '../utils/randomMET';
 
 interface WizardStepProps {
     title: string;
@@ -39,6 +40,23 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
     const isTextureStep = path === 'semantic_description.attributes.texture';
     const storedGroupByRef = useRef<GroupByMethod | null>(null);
     const hasStoredGroupByRef = useRef(false);
+
+    // Determine if this is a MET step (Mood, Energy, or Texture)
+    const isMETStep = path === 'semantic_description.attributes.mood' ||
+                      path === 'semantic_description.attributes.energy' ||
+                      path === 'semantic_description.attributes.texture';
+
+    const metCategory = isMETStep
+        ? (title as 'Mood' | 'Energy' | 'Texture')
+        : null;
+
+    // Handler for random selection
+    const handleRandom = () => {
+        if (!metCategory) return;
+        const randomTerms = generateRandomMETCategory(metCategory);
+        updateData(path, randomTerms);
+        onNext();
+    };
 
     useEffect(() => {
         if (!isTextureStep) {
@@ -88,6 +106,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
                     updateData(path, multi ? ['tbc'] : 'tbc');
                     onNext();
                 }}
+                onRandom={isMETStep ? handleRandom : undefined}
                 groupByMethod={groupByMethod}
                 attributeType={title}
             />

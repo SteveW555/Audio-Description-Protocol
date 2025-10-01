@@ -50,7 +50,9 @@ export interface TermSelectorProps {
   multi?: boolean;
   onNext: () => void;
   onSkip: () => void;
+  onRandom?: () => void;
   groupByMethod?: GroupByMethod;
   attributeType?: string;
   controlsLayout?: 'default' | 'none';
+  compactMode?: boolean;
 }

@@ -1,16 +1,16 @@
 ---
-description: Run AI phrase translation test with random arbitrary phrases
+description: Run AI phrase translation test with random casual phrases
 ---
 
-Run the random phrase translation test to verify AI translation from casual language to standardized ADP vocabulary.
+Run the random phrase translation test to verify AI translation from casual phrases (colloquial/informal language) to standardized phrases (ADP vocabulary).
 
 **Command:** `/ArbitraryPhraseTranslation [count]`
 
 **Arguments:**
-- `count` (optional): Number of random phrases to test (default: 1, max: 100)
+- `count` (optional): Number of random casual phrases to test (default: 1, max: 100)
 
 **What this does:**
-1. Randomly selects phrases from the 100 curated arbitrary phrases
+1. Randomly selects casual phrases from the 100+ curated phrase list
 2. Sends them to OpenAI for translation using the phrase-translator prompt
 3. Analyzes translation quality and vocabulary usage
 4. Displays results with quality metrics
@@ -31,12 +31,12 @@ cd "/Users/steve/Desktop/Stuff/Code Projects/Audio Description Protocol" && PYTH
 ```
 
 Display the complete output including:
-- 🗣️ Casual Input phrases
-- 📝 Standardized Output
+- 🗣️ Casual Phrase Input (colloquial/informal language)
+- 📝 Standardized Phrase Output (ADP vocabulary)
 - 📊 Translation Analysis
 - Summary statistics
 
 **Example usage:**
-- `/ArbitraryPhraseTranslation` → tests 1 random phrase
-- `/ArbitraryPhraseTranslation 5` → tests 5 random phrases
-- `/ArbitraryPhraseTranslation 10` → tests 10 random phrases
+- `/ArbitraryPhraseTranslation` → tests 1 random casual phrase
+- `/ArbitraryPhraseTranslation 5` → tests 5 random casual phrases
+- `/ArbitraryPhraseTranslation 10` → tests 10 random casual phrases

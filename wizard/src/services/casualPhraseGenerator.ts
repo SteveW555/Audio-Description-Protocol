@@ -1,12 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { AIGenerationRequest, AIGenerationResponse } from '../types/wizard';
 import type { AudioProtocolData } from '../types/protocol';
 
 // Use relative URL for Vite proxy
 const API_BASE_URL = '';
 
+export interface CasualPhraseResponse {
+  casualPhrase: string;
+  confidence: number;
+  tokensUsed: number;
+  costUSD: number;
+  requestId: string;
+  timestamp: string;
+}
+
 /**
- * Filters wizard data to exclude key, scale, and chords per FR-002
+ * Filters wizard data to exclude key, scale, and chords
  */
 function filterWizardData(data: Partial<AudioProtocolData>): any {
   const filtered: any = {};
@@ -40,9 +48,6 @@ function filterWizardData(data: Partial<AudioProtocolData>): any {
     filtered.bpm = (data as any).bpm;
   }
 
-  // Explicitly exclude key, scale, chords per FR-002
-  // (not included in filtered object)
-
   return filtered;
 }
 
@@ -59,27 +64,27 @@ function getSessionId(): string {
 }
 
 /**
- * Generates standardized phrase (AI-generated natural language description) by calling backend API
- * Takes structured wizard data following ADP vocabulary and returns a human-readable phrase
+ * Generates casual phrase (informal/colloquial description) by calling backend API
+ * Takes structured wizard data following ADP vocabulary and returns a creative casual phrase
  *
  * @param wizardData - Partial wizard data following ADP vocabulary structure
- * @returns Standardized phrase with confidence, tokens, and cost metrics
+ * @returns Casual phrase with confidence, tokens, and cost metrics
  */
-export async function generatePhrase(
+export async function generateCasualPhrase(
   wizardData: Partial<AudioProtocolData>
-): Promise<AIGenerationResponse> {
+): Promise<CasualPhraseResponse> {
   const sessionId = getSessionId();
   const requestId = uuidv4();
 
   const filteredData = filterWizardData(wizardData);
 
-  const request: AIGenerationRequest = {
+  const request = {
     wizardData: filteredData,
     sessionId,
     requestId,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/generate-phrase`, {
+  const response = await fetch(`${API_BASE_URL}/api/generate-casual-phrase`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -94,6 +99,6 @@ export async function generatePhrase(
     );
   }
 
-  const data: AIGenerationResponse = await response.json();
+  const data: CasualPhraseResponse = await response.json();
   return data;
 }

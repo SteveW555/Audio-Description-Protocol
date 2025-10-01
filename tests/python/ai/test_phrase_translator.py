@@ -40,7 +40,7 @@ def test_phrase_translation():
         print(f"\n🗣️ Casual Input:")
         print(f'"{casual_phrase}"')
 
-        # Call OpenAI with translator prompt
+        # Call OpenAI with translator promptF
         response = client.client.chat.completions.create(
             model=client.model,
             messages=[

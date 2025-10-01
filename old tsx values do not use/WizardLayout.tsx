@@ -154,7 +154,7 @@ export const WizardLayout = () => {
                             placeholder="e.g., Cool_Synth_Loop_01.wav"
                             className="w-full p-3 mt-4 border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                         />
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-1">(In production this will be auto-filled from the audio sample)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-1">(Automatic AI tagging will be in the next phase of development once the description protocol is ratified. In production the title will be auto-filled from the audio sample)</p>
 
                         <hr className="my-6 border-gray-200 dark:border-gray-700" />
 

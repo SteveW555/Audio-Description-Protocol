@@ -20,9 +20,11 @@ export const TermSelector = ({
     multi,
     onNext,
     onSkip,
+    onRandom,
     groupByMethod,
     attributeType,
     controlsLayout = 'default',
+    compactMode = false,
 }: TermSelectorProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -111,7 +113,11 @@ export const TermSelector = ({
     return (
         <div ref={containerRef}>
             {/* Term Selection Area */}
-            <div className="flex flex-wrap gap-x-1 gap-y-1 px-4 pt-2 pb-4 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900/50 min-h-[6rem] max-h-80 overflow-y-auto items-center">
+            <div className={`flex flex-wrap gap-x-1 gap-y-1 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900/50 max-h-80 overflow-y-auto items-center ${
+                compactMode
+                    ? 'px-3 pt-0.5 pb-1 min-h-[3rem]'
+                    : 'px-4 pt-2 pb-4 min-h-[6rem]'
+            }`}>
                 {filteredTerms.length === 0 ? (
                     <div className="w-full text-center py-8 text-gray-500 dark:text-slate-400">
                         No terms available
@@ -160,25 +166,37 @@ export const TermSelector = ({
             </div>
 
             {controlsLayout === 'default' && (
-                <div className="flex items-start justify-center gap-4 mt-5">
+                <div className="flex items-start justify-center gap-4 mt-5 scale-[0.7] origin-center">
                     <button
                         type="button"
                         onClick={onSkip}
                         data-role="skip-button"
-                        className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800/60 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+                        className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-slate-700/40 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-300 dark:hover:bg-slate-600/50 transition-colors"
                     >
                         Skip
                     </button>
                     <div className="flex flex-col items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={onNext}
-                            disabled={isNextDisabled}
-                            data-role="next-button"
-                            className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Next &rarr;
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={onNext}
+                                disabled={isNextDisabled}
+                                data-role="next-button"
+                                className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next &rarr;
+                            </button>
+                            {onRandom && (
+                                <button
+                                    type="button"
+                                    onClick={onRandom}
+                                    data-role="random-button"
+                                    className="ml-5 px-6 py-1.5 font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                                >
+                                    Random
+                                </button>
+                            )}
+                        </div>
                         {isNextDisabled && attributeType && (
                             <p className="text-xs" style={{ color: '#D87710' }}>
                                 Choose at least 1 {attributeType}
