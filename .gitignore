@@ -148,6 +148,8 @@ dmypy.json
 *.json
 !package.json
 !*/package.json
+!tsconfig.json
+!*/tsconfig.json
 !package-lock.json
 !*/package-lock.json
 !railway.json
