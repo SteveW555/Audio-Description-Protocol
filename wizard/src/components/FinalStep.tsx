@@ -1,7 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useWizardStore } from '../context/WizardContext';
+import { usageTracker } from '../services/usageTracking';
 
 interface FinalStepProps {
     onRestart: () => void;
@@ -14,6 +15,16 @@ export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
     const [actionTaken, setActionTaken] = useState(false);
 
     const jsonString = JSON.stringify(data, null, 2);
+
+    // Track wizard completion when component mounts
+    useEffect(() => {
+        usageTracker.track({
+            buttonName: 'wizard-completed',
+            inputPhrase: null,
+            responsePhrase: null,
+            resultJson: data
+        });
+    }, []); // Empty dependency array = run once on mount
 
     const copyToClipboard = () => {
         const textArea = document.createElement('textarea');

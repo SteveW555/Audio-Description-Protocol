@@ -19,6 +19,15 @@ import { WizardStep } from './WizardStep';
 import { generateRandomMET, generateRandomGenre, generateRandomInstrument, generateRandomVocals } from '../utils/randomMET';
 import { generateCasualPhrase } from '../ai/casualPhraseGenerator';
 import { VOCABULARY } from '../constants/vocabulary';
+import { usageTracker } from '../services/usageTracking';
+import {
+    extractRandomizeAllData,
+    extractModelTestData,
+    extractCasualPhraseData,
+    extractTranslatePhraseData,
+    extractStandardizedPhraseData,
+    extractSaveJsonData
+} from '../services/usageDataExtractors';
 
 export const WizardLayout = () => {
     // Initialize AI phrase generation hook
@@ -98,42 +107,56 @@ export const WizardLayout = () => {
         updateData('theory.key', randomKey);
         updateData('theory.scale', randomScale);
         updateData('theory.chords', 'tbc');
+
+        // Track usage after completion
+        usageTracker.track(extractRandomizeAllData(data));
     };
 
     const handleSaveJSON = () => {
+        const filename = `${data.path || 'audio-description'}.json`;
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${data.path || 'audio-description'}.json`;
+        link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+
+        // Track usage after completion
+        usageTracker.track(extractSaveJsonData(data, filename));
     };
 
     const handleGenerateCasualPhrase = async () => {
         setCasualPhraseLoading(true);
         setCasualPhraseError(null);
+        let generatedPhrase = '';
 
         try {
             console.log('🎵 Generating casual phrase with data:', data, 'poeticLevel:', poeticLevel);
             const response = await generateCasualPhrase(data, poeticLevel);
             console.log('✅ Casual phrase response:', response);
             console.log('📝 Casual phrase text:', response.casualPhrase);
-            setCasualPhrase(response.casualPhrase);
+            generatedPhrase = response.casualPhrase;
+            setCasualPhrase(generatedPhrase);
         } catch (error: any) {
             console.error('❌ Error generating casual phrase:', error);
             setCasualPhraseError(error.message || 'Failed to generate casual phrase');
         } finally {
             setCasualPhraseLoading(false);
+            // Track usage after completion (success or error)
+            if (generatedPhrase) {
+                usageTracker.track(extractCasualPhraseData(generatedPhrase, poeticLevel));
+            }
         }
     };
 
     const handleRunModelTest = async () => {
         setModelTestRunning(true);
         setModelTestResults(null);
+        let results: any = null;
 
         try {
             console.log('🧪 Starting model timing test...');
@@ -153,10 +176,11 @@ export const WizardLayout = () => {
 
             const data = await response.json();
             console.log('✅ Model test complete:', data);
-            setModelTestResults(data.results);
+            results = data.results;
+            setModelTestResults(results);
 
             // Download results as JSON
-            const jsonString = JSON.stringify(data.results, null, 2);
+            const jsonString = JSON.stringify(results, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -173,6 +197,10 @@ export const WizardLayout = () => {
             alert(`Failed to run model test: ${error.message}`);
         } finally {
             setModelTestRunning(false);
+            // Track usage after completion (success or error)
+            if (results) {
+                usageTracker.track(extractModelTestData(results));
+            }
         }
     };
 
@@ -185,6 +213,7 @@ export const WizardLayout = () => {
         setTranslating(true);
         setTranslateError(null);
         setTranslatedPhrase('');
+        let standardized = '';
 
         try {
             // Call backend API to translate casual phrase to standardized vocabulary
@@ -202,16 +231,21 @@ export const WizardLayout = () => {
             }
 
             const result = await response.json();
-            setTranslatedPhrase(result.standardizedPhrase);
+            standardized = result.standardizedPhrase;
+            setTranslatedPhrase(standardized);
 
             // Parse and populate wizard with terms from standardized phrase
             // This will be implemented next
-            parseAndPopulateTerms(result.standardizedPhrase);
+            parseAndPopulateTerms(standardized);
         } catch (error: any) {
             console.error('❌ Error translating phrase:', error);
             setTranslateError(error.message || 'Failed to translate phrase');
         } finally {
             setTranslating(false);
+            // Track usage after completion (success or error)
+            if (standardized) {
+                usageTracker.track(extractTranslatePhraseData(inputPhrase, standardized, data));
+            }
         }
     };
 
@@ -348,6 +382,7 @@ export const WizardLayout = () => {
     const handleGenerateStandardizedPhrase = () => {
         setStandardizedPhraseLoading(true);
         setStandardizedPhraseError(null);
+        let generatedPhrase = '';
 
         try {
             // Generate standardized phrase from current data
@@ -414,13 +449,17 @@ export const WizardLayout = () => {
                 parts.push(`in ${theory.key} ${theory.scale}`);
             }
 
-            const phrase = parts.length > 0 ? parts.join(', ') : 'No data available to generate standardized phrase';
-            setStandardizedPhrase(phrase);
+            generatedPhrase = parts.length > 0 ? parts.join(', ') : 'No data available to generate standardized phrase';
+            setStandardizedPhrase(generatedPhrase);
         } catch (error: any) {
             console.error('❌ Error generating standardized phrase:', error);
             setStandardizedPhraseError(error.message || 'Failed to generate standardized phrase');
         } finally {
             setStandardizedPhraseLoading(false);
+            // Track usage after completion (success or error)
+            if (generatedPhrase) {
+                usageTracker.track(extractStandardizedPhraseData(generatedPhrase, data));
+            }
         }
     };
 
