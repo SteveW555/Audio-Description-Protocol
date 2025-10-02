@@ -55,6 +55,11 @@ export const WizardLayout = () => {
     const [translating, setTranslating] = useState(false);
     const [translateError, setTranslateError] = useState<string | null>(null);
 
+    // Phrase from structure states
+    const [structurePhrase, setStructurePhrase] = useState('');
+    const [structurePhraseLoading, setStructurePhraseLoading] = useState(false);
+    const [structurePhraseError, setStructurePhraseError] = useState<string | null>(null);
+
     const handleRandomizeAll = () => {
         setHasRandomized(true);
         // Randomize Genre
@@ -419,6 +424,41 @@ export const WizardLayout = () => {
         }
     };
 
+    const handleGeneratePhraseFromStructure = async () => {
+        setStructurePhraseLoading(true);
+        setStructurePhraseError(null);
+
+        try {
+            console.log('🎵 Generating phrase from structure with data:', data);
+            const response = await fetch('/api/generate-phrase-from-structure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    wizardData: data.semantic_description,
+                    sessionId: sessionStorage.getItem('audio-protocol-session-id') || 'default',
+                    requestId: crypto.randomUUID(),
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to generate phrase from structure');
+            }
+
+            const result = await response.json();
+            console.log('✅ Phrase from structure response:', result);
+            console.log('📝 Phrase from structure text:', result.phrase);
+            setStructurePhrase(result.phrase);
+        } catch (error: any) {
+            console.error('❌ Error generating phrase from structure:', error);
+            setStructurePhraseError(error.message || 'Failed to generate phrase from structure');
+        } finally {
+            setStructurePhraseLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (step === 0 && titleInputRef.current) {
             titleInputRef.current.select();
@@ -630,6 +670,14 @@ export const WizardLayout = () => {
                                         Randomize All Above
                                     </button>
                                     <button
+                                        onClick={handleGeneratePhraseFromStructure}
+                                        disabled={structurePhraseLoading}
+                                        title="Uses AI to transform the current structured wizard data into a concise, human-readable phrase using the phrase-prompt.md template"
+                                        className="px-4 py-1.5 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-sm hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {structurePhraseLoading ? 'Generating...' : 'Generate Phrase From Structure'}
+                                    </button>
+                                    <button
                                         onClick={handleRunModelTest}
                                         disabled={modelTestRunning}
                                         title="Runs performance test on all Groq models (10 requests each) and downloads results as JSON. This will take several minutes."
@@ -670,6 +718,31 @@ export const WizardLayout = () => {
                                         </button>
                                     )}
                                 </div>
+
+                                {/* Structure Phrase Display */}
+                                {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
+                                    <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
+                                        <label
+                                            htmlFor="structure-phrase-output"
+                                            className="block text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                        >
+                                            Phrase From Structure:
+                                        </label>
+                                        <textarea
+                                            id="structure-phrase-output"
+                                            value={structurePhrase}
+                                            readOnly
+                                            placeholder={structurePhraseLoading ? 'Generating phrase from structure...' : 'Generated phrase will appear here'}
+                                            className="w-full px-3 py-2 text-xs border border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                                            rows={3}
+                                        />
+                                        {structurePhraseError && (
+                                            <p className="text-xs text-red-600 dark:text-red-400">
+                                                Error: {structurePhraseError}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Generate Random Casual Phrase Section */}
                                 <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">

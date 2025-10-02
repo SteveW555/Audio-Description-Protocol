@@ -1,5 +1,5 @@
 import { VOCABULARY_MET, TERMS_BY_FREQUENCY } from './taxonomy';
-// Frequency-based term groups for UI organization
+// Frequency-based term groups for UI organization..
 export const TERM_FREQUENCY_GROUPS = {
     ubiquitous: ['ubiquitous'], // Very common terms
     frequent: ['frequent'], // Common terms
@@ -7,7 +7,7 @@ export const TERM_FREQUENCY_GROUPS = {
     rare: ['rare'] // Very rare terms
 };
 // MET vocabulary imported from single source of truth (taxonomy.ts)
-// This replaces the previous hard-coded arrays
+// This replaces the previous  hard-coded arrays
 export const VOCABULARY = {
     mood: VOCABULARY_MET.mood,
     energy: VOCABULARY_MET.energy,

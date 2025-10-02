@@ -208,6 +208,15 @@ function loadCasualPromptFile(poeticLevel: number = 50): string {
 }
 
 /**
+ * Loads the phrase-from-structure prompt from markdown file
+ * This prompt transforms structured tags into a concise, human-readable phrase
+ */
+function loadPhrasePromptFile(): string {
+  const promptPath = join(process.cwd(), '..', 'prompts', 'phrase-prompt.md');
+  return readFileSync(promptPath, 'utf-8');
+}
+
+/**
  * Builds a music data string from wizard data to append to the prompt
  */
 function buildMusicDataString(wizardData: WizardData): string {
@@ -344,4 +353,142 @@ export async function generateCasualPhraseGroq(
 
   // Both attempts failed
   throw new Error(`Casual phrase generation failed after retry: ${lastError?.message}`);
+}
+
+/**
+ * Builds a structured JSON string from wizard data for the phrase-prompt
+ */
+function buildStructuredJSON(wizardData: WizardData): string {
+  const structured: any = {};
+
+  if (wizardData.genre?.primary) {
+    structured['Genre'] = wizardData.genre.primary;
+  }
+
+  if (wizardData.genre?.secondary && wizardData.genre.secondary.length > 0) {
+    structured['Sub-genre'] = wizardData.genre.secondary[0];
+  }
+
+  if (wizardData.mood && wizardData.mood.length > 0) {
+    structured['Mood'] = wizardData.mood;
+  }
+
+  if (wizardData.energy && wizardData.energy.length > 0) {
+    structured['Energy'] = wizardData.energy;
+  }
+
+  if (wizardData.texture && wizardData.texture.length > 0) {
+    structured['Texture'] = wizardData.texture;
+  }
+
+  if (wizardData.instrumentation && wizardData.instrumentation.length > 0) {
+    wizardData.instrumentation.forEach((inst, idx) => {
+      const key = `Featured Instrument ${idx + 1}`;
+      structured[key] = {
+        Instrument: inst.instrument,
+        Role: inst.role,
+        Descriptors: inst.descriptors || []
+      };
+    });
+  }
+
+  if (wizardData.vocals?.presence && wizardData.vocals.presence !== 'none') {
+    structured['Vocals'] = {
+      Presence: wizardData.vocals.presence,
+      Gender: wizardData.vocals.gender || null,
+      Style: wizardData.vocals.style || null,
+      Descriptors: wizardData.vocals.descriptors || []
+    };
+  }
+
+  return JSON.stringify(structured, null, 2);
+}
+
+/**
+ * Generates a concise, human-readable phrase from structured wizard data
+ * Uses the phrase-prompt.md to transform structured tags into a professional description
+ *
+ * @param wizardData - Structured wizard data following ADP vocabulary
+ * @param model - Groq model to use (defaults to random selection from TEXT_GENERATION_MODELS)
+ * @returns Generated phrase with token usage and cost metrics
+ */
+export async function generatePhraseFromStructure(
+  wizardData: WizardData,
+  model?: GroqModel
+): Promise<{ phrase: string; tokensUsed: number; costUSD: number; provider: string; model: string }> {
+  // Select random model if not specified
+  const selectedModel = model ?? getRandomModel();
+  const systemPrompt = loadPhrasePromptFile();
+  const structuredData = buildStructuredJSON(wizardData);
+  const prompt = `${systemPrompt}\n\nPlease generate a phrase for the following structured data:\n\n${structuredData}`;
+  const promptTokens = countTokens(prompt);
+
+  // Enforce 2000 token limit
+  if (promptTokens > 2000) {
+    throw new Error(`Token limit exceeded: ${promptTokens} > 2000`);
+  }
+
+  let lastError: any = null;
+
+  // Attempt with single retry (2s delay)
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const client = getGroqClient();
+      console.log('🔧 Sending phrase-from-structure prompt to Groq (length:', prompt.length, 'chars)');
+      console.log('📋 Prompt preview:', prompt.substring(0, 200) + '...');
+      console.log('🎲 Randomly selected model:', selectedModel);
+
+      const completion = await client.chat.completions.create({
+        model: selectedModel,
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        max_tokens: 5000,
+        temperature: 0.7,
+      });
+
+      console.log('🤖 Groq raw completion:', JSON.stringify(completion, null, 2));
+      let phrase = completion.choices[0]?.message?.content?.trim() || '';
+      // Remove quotes if the AI wrapped the phrase in quotes
+      phrase = phrase.replace(/^["']|["']$/g, '');
+      console.log('✂️ Extracted phrase after trim:', phrase);
+      const completionTokens = completion.usage?.completion_tokens || 0;
+      const totalTokens = completion.usage?.total_tokens || 0;
+
+      // Get pricing for the selected model
+      const pricePerMillion = GROQ_PRICING[selectedModel];
+      const costUSD = parseFloat(((totalTokens / 1_000_000) * pricePerMillion).toPrecision(7));
+
+      return {
+        phrase,
+        tokensUsed: totalTokens,
+        costUSD,
+        provider: 'groq',
+        model: selectedModel,
+      };
+    } catch (error: any) {
+      lastError = error;
+      console.error('❌ Error generating phrase from structure:', error);
+
+      // Check if error is retryable
+      const statusCode = error.status || error.response?.status || 0;
+      const retryableCodes = [429, 500, 502, 503];
+      const isRetryable = retryableCodes.includes(statusCode);
+
+      if (!isRetryable) {
+        throw new Error(`Terminal error: ${error.message}`);
+      }
+
+      // Retry logic: wait 2s before second attempt
+      if (attempt === 0) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+  }
+
+  // Both attempts failed
+  throw new Error(`Phrase from structure generation failed after retry: ${lastError?.message}`);
 }

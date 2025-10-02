@@ -28,6 +28,7 @@ export interface WizardData {
     gender?: string;
     style?: string;
     language?: string;
+    descriptors?: string[];
   };
   bpm?: number;
   // Explicitly exclude music theory fields per FR-002

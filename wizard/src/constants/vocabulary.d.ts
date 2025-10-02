@@ -7,7 +7,6 @@ export interface TermMetadata {
     category: 'Mood' | 'Energy' | 'Texture';
     cluster?: string;
 }
-// Terms grouped by frequency for easier access...
 export declare const TERM_FREQUENCY_GROUPS: {
     readonly ubiquitous: readonly ["ubiquitous"];
     readonly frequent: readonly ["frequent"];
