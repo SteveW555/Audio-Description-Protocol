@@ -35,15 +35,16 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "serve": "^14.2.5",
     "@heroicons/react": "^2.2.0",
     "@types/lodash": "^4.17.20",
     "@types/react": "^19.1.15",
     "@types/react-dom": "^19.1.9",
     "axios": "^1.5.0",
     "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "serve": "^14.2.5",
     "uuid": "^13.0.0",
     "zustand": "^5.0.8"
   }
