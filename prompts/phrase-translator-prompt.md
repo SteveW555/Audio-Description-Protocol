@@ -84,12 +84,14 @@ The `Sub-genre` must be a logical child of the chosen `Genre`, based on this lis
 
 ---
 
-## **Task Requirements**
+## **Instrument Assertion**
+- If no instruemnt is specified add an appropriate one, along with its attributes, based on what is most often seen in the  Genre, then Texture, Mood and Energy. Ensure you include instrument name, role, and 1 or 2 descriptors
 
 1.  **Strictly Constrained Output:** The final phrase you generate must **only** contain words from the provided vocabulary lists when describing musical attributes, in addition to common connecting words (a, an, the, with, and, featuring, etc.).
 2.  **Preserve Intent:** The new phrase must be the best possible representation of the original phrase's meaning.
 3.  **Single Sentence Output:** Your entire output should be the single, translated sentence.
 
+## **Task Requirements**
 ---
 
 ## **Examples**

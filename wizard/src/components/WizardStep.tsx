@@ -107,6 +107,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
                     onNext();
                 }}
                 onRandom={isMETStep ? handleRandom : undefined}
+                randomButtonLabel={isMETStep ? `Random ${title}` : undefined}
                 groupByMethod={groupByMethod}
                 attributeType={title}
             />

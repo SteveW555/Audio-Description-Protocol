@@ -19,6 +19,8 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
 
     const currentValue = useMemo(() => getValueAtPath(data, path), [data, path]);
 
+    const isBPMStep = path === 'theory.bpm';
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         if (numericOnly) {
@@ -29,6 +31,12 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
         } else {
             updateData(path, value);
         }
+    };
+
+    const handleRandomBPM = () => {
+        const randomBPM = Math.floor(Math.random() * (160 - 80 + 1)) + 80;
+        updateData(path, randomBPM.toString());
+        onNext();
     };
 
     return (
@@ -44,7 +52,7 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
                 placeholder={placeholder ?? 'e.g., 120.5'}
                 className="w-full p-3 mt-4 border border-gray-300 rounded-lg dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
-            <div className="flex items-center justify-center gap-4 mt-6">
+            <div className="relative flex items-center justify-center gap-4 mt-6 scale-[0.7]">
                 <button
                     type="button"
                     onClick={() => {
@@ -57,6 +65,15 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
                 >
                     Next &rarr;
                 </button>
+                {isBPMStep && (
+                    <button
+                        type="button"
+                        onClick={handleRandomBPM}
+                        className="absolute left-[90%] h-10 px-10 font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-800"
+                    >
+                        Random BPM
+                    </button>
+                )}
             </div>
         </div>
     );

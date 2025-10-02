@@ -32,4 +32,5 @@ Here are 8 examples that demonstrate the desired style and variety:
 
 ---
 
-Now, based on these guidelines and examples, generate a list of **1 new and original** musical description phrases.
+Now, based on these guidelines and examples, generate a list of **1 new and original** musical description phrases. **DO NOT** add any introduction such as 'Here's a new, original phrase that captures a potential mood and vibe', just go straight to the descriptive phrase
+

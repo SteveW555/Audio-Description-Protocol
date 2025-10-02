@@ -21,6 +21,7 @@ export const TermSelector = ({
     onNext,
     onSkip,
     onRandom,
+    randomButtonLabel,
     groupByMethod,
     attributeType,
     controlsLayout = 'default',
@@ -166,7 +167,7 @@ export const TermSelector = ({
             </div>
 
             {controlsLayout === 'default' && (
-                <div className="flex items-start justify-center gap-4 mt-5 scale-[0.7] origin-center">
+                <div className="relative flex items-start justify-center gap-4 mt-5 scale-[0.7] origin-center">
                     <button
                         type="button"
                         onClick={onSkip}
@@ -176,33 +177,31 @@ export const TermSelector = ({
                         Skip
                     </button>
                     <div className="flex flex-col items-center gap-2">
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={onNext}
-                                disabled={isNextDisabled}
-                                data-role="next-button"
-                                className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Next &rarr;
-                            </button>
-                            {onRandom && (
-                                <button
-                                    type="button"
-                                    onClick={onRandom}
-                                    data-role="random-button"
-                                    className="ml-5 px-6 py-1.5 font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
-                                >
-                                    Random
-                                </button>
-                            )}
-                        </div>
+                        <button
+                            type="button"
+                            onClick={onNext}
+                            disabled={isNextDisabled}
+                            data-role="next-button"
+                            className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next &rarr;
+                        </button>
                         {isNextDisabled && attributeType && (
                             <p className="text-xs" style={{ color: '#D87710' }}>
                                 Choose at least 1 {attributeType}
                             </p>
                         )}
                     </div>
+                    {onRandom && (
+                        <button
+                            type="button"
+                            onClick={onRandom}
+                            data-role="random-button"
+                            className="absolute left-[90%] px-10 py-1.5 font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                        >
+                            {randomButtonLabel || 'Random'}
+                        </button>
+                    )}
                 </div>
             )}
         </div>

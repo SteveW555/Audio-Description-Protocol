@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { generatePhrase } from '../services/openai-client.js';
+import { generatePhrase } from '../ai/openai-client.js';
 import { rateLimiter } from '../services/rate-limiter.js';
 import { costTracker } from '../services/cost-tracker.js';
 import { emailNotifier } from '../services/email-notifier.js';

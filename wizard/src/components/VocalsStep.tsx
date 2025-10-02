@@ -216,7 +216,7 @@ export const VocalsStep = ({ stepNumber, title, onNext }: VocalsStepProps) => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col-reverse items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
+            <div className="relative flex flex-col-reverse items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
                 <button
                     type="button"
                     onClick={() => {
@@ -230,23 +230,21 @@ export const VocalsStep = ({ stepNumber, title, onNext }: VocalsStepProps) => {
                 >
                     Skip
                 </button>
-                <div className="flex items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={handleContinue}
-                        disabled={isContinueDisabled}
-                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        Save &amp; Continue
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleRandomize}
-                        className="ml-5 px-5 py-1.5 text-sm font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
-                    >
-                        Random
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={handleContinue}
+                    disabled={isContinueDisabled}
+                    className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Save &amp; Continue
+                </button>
+                <button
+                    type="button"
+                    onClick={handleRandomize}
+                    className="absolute left-[90%] px-8 py-1.5 text-sm font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                >
+                    Random Vocals
+                </button>
             </div>
         </div>
     );

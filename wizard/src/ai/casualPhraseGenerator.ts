@@ -68,10 +68,12 @@ function getSessionId(): string {
  * Takes structured wizard data following ADP vocabulary and returns a creative casual phrase
  *
  * @param wizardData - Partial wizard data following ADP vocabulary structure
+ * @param poeticLevel - Style level from 1 (very poetic) to 100 (very factual), defaults to 50
  * @returns Casual phrase with confidence, tokens, and cost metrics
  */
 export async function generateCasualPhrase(
-  wizardData: Partial<AudioProtocolData>
+  wizardData: Partial<AudioProtocolData>,
+  poeticLevel: number = 50
 ): Promise<CasualPhraseResponse> {
   const sessionId = getSessionId();
   const requestId = uuidv4();
@@ -82,6 +84,7 @@ export async function generateCasualPhrase(
     wizardData: filteredData,
     sessionId,
     requestId,
+    poeticLevel,
   };
 
   const response = await fetch(`${API_BASE_URL}/api/generate-casual-phrase`, {

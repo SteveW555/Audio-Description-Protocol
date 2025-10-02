@@ -153,29 +153,27 @@ export const InstrumentationWizard = ({
                         controlsLayout="none"
                     />
                 </section>
-                <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
+                <div className="relative flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
                     {!isNameSelected && (
                         <p className="text-xs text-amber-600 dark:text-amber-400">
                             Choose an instrument name to enable saving.
                         </p>
                     )}
-                    <div className="flex items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={handleSaveInstrument}
-                            disabled={disableSave}
-                            className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
-                        >
-                            Save Instrument
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleRandomize}
-                            className="ml-5 px-5 py-1.5 text-sm font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
-                        >
-                            Random
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={handleSaveInstrument}
+                        disabled={disableSave}
+                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+                    >
+                        Save Instrument
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleRandomize}
+                        className="absolute left-[90%] px-8 py-1.5 text-sm font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                    >
+                        Random Instrument
+                    </button>
                 </div>
             </div>
         );

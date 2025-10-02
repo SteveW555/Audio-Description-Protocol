@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { generateCasualPhrase } from '../services/casual-phrase-generator.js';
+import { generateCasualPhraseGroq } from '../ai/groq-client.js';
 import type { WizardData } from '../types/index.js';
 
 const router = Router();
@@ -8,6 +8,7 @@ interface GenerateCasualPhraseRequest {
   wizardData: WizardData;
   sessionId: string;
   requestId: string;
+  poeticLevel?: number;
 }
 
 /**
@@ -16,7 +17,7 @@ interface GenerateCasualPhraseRequest {
  */
 router.post('/generate-casual-phrase', async (req: Request, res: Response) => {
   try {
-    const { wizardData, sessionId, requestId } = req.body as GenerateCasualPhraseRequest;
+    const { wizardData, sessionId, requestId, poeticLevel = 50 } = req.body as GenerateCasualPhraseRequest;
 
     // Validate required fields
     if (!wizardData) {
@@ -33,8 +34,11 @@ router.post('/generate-casual-phrase', async (req: Request, res: Response) => {
 
     // No validation required - allow any combination of attributes
 
-    // Generate casual phrase
-    const result = await generateCasualPhrase(wizardData);
+    // Generate casual phrase - time just the model execution
+    const startTime = performance.now();
+    const result = await generateCasualPhraseGroq(wizardData, undefined, poeticLevel);
+    const executionTimeMs = parseFloat((performance.now() - startTime).toFixed(2));
+
     console.log('🎵 Generated casual phrase:', result.phrase);
 
     // Return response
@@ -43,6 +47,9 @@ router.post('/generate-casual-phrase', async (req: Request, res: Response) => {
       confidence: 0.85, // Casual phrases are more creative, slightly lower confidence
       tokensUsed: result.tokensUsed,
       costUSD: result.costUSD,
+      provider: result.provider,
+      model: result.model,
+      executionTimeMs,
       requestId,
       timestamp: new Date().toISOString(),
     };

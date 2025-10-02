@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { debounce } from 'lodash';
 import { useWizardStore } from '../context/WizardContext';
-import { generatePhrase } from '../services/aiPhraseGenerator';
+import { generatePhrase } from '../ai/aiPhraseGenerator';
 import { canMakeRequest, trackRequest } from '../services/apiRateLimiter';
 import { validatePhrase } from '../services/phraseValidator';
 

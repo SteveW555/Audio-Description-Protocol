@@ -52,6 +52,9 @@ Deliver exactly one concise, actionable suggestion for the best next step. Your 
 ## 7. Format Your Response
 Present your analysis and recommendation in this structure:
 
+## 8. Feedback responses
+You don't need to give feeback during reading of files or other Bash tasks unless you need to ask for permission. Assume by default that all permissions are ganted for all steps in this startup process. Make the minimum number of responses until the last step.
+
 ### Files Read During Startup
 [List all files you read with one-line summaries - THIS MUST BE THE FIRST SECTION]
 
