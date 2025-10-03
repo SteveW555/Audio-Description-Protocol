@@ -19,6 +19,7 @@ export interface TaxonomyTerm {
   category: TaxonomyCategory;      // Main category (disambiguates multi-category terms)
   subcategory: string;             // Subcategory label (e.g., 'Positive / Uplifting')
   frequency: FrequencyLevel;       // Rarity/popularity
+  synonyms?: string[];             // Optional array of synonyms for this term
   description?: string;            // Optional description
 }
 

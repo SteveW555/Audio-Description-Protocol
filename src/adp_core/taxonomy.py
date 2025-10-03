@@ -134,7 +134,7 @@ TAXONOMY_TERMS: Dict[str, TermDefinition] = {
 TAXONOMY_HIERARCHY: Dict[QualityCategory, Dict[str, List[str]]] = {
     QualityCategory.MOOD: {
         'Positive / Uplifting': [
-            'upbeat', 'energetic-mood', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive-mood',
+            'upbeat', 'energetic', 'joyful', 'happy', 'cheerful', 'uplifting', 'positive',
             'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic',
             'euphoric', 'exuberant', 'ecstatic', 'elated', 'celebratory', 'festive', 'inspiring', 'sparkly-mood'
         ],
