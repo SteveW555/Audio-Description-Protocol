@@ -41,5 +41,72 @@ Python 3.11+ (constitutional requirement: Python + PyTorch first): Follow standa
 
 # **Ultra Important**
 - Take care not to break the UI, always ask before modifying wizard\src\components\TermSelector.tsx
+
+## Supabase MCP Server Instructions
+
+### Connection Details
+- **MCP Config**: `.mcp` file in project root
+- **Project ID**: `pauypyjqosrenuxveskn`
+- **Project Name**: "n8n tables"
+- **Region**: eu-north-1
+- **Access Token**: Stored in `.mcp` file
+
+### How to List Tables via MCP
+
+Use this Node.js snippet to query tables:
+
+```javascript
+const { spawn } = require('child_process');
+
+const mcp = spawn('npx', [
+  '-y',
+  '@supabase/mcp-server-supabase@latest',
+  '--access-token',
+  'sbp_60c470ad00315302a3dd02e3eaf3b71f0d6e18c7'
+], {stdio: ['pipe', 'pipe', 'pipe']});
+
+let id = 0;
+const send = (method, params) => {
+  mcp.stdin.write(JSON.stringify({
+    jsonrpc: '2.0',
+    id: ++id,
+    method,
+    params
+  }) + '\n');
+};
+
+mcp.stdout.on('data', d => console.log('Response:', d.toString()));
+
+setTimeout(() => {
+  // 1. Initialize
+  send('initialize', {
+    protocolVersion: '2024-11-05',
+    capabilities: {},
+    clientInfo: {name: 'test', version: '1.0'}
+  });
+
+  // 2. List tables (wait 1s after init)
+  setTimeout(() => {
+    send('tools/call', {
+      name: 'list_tables',
+      arguments: {
+        project_id: 'pauypyjqosrenuxveskn'
+      }
+    });
+  }, 1000);
+}, 500);
+```
+
+### Key Tables
+- **`adp_usage`**: Usage tracking for Dev Tools button clicks (20 rows as of 2025-10-03)
+  - Columns: id, created_at, button_clicked_name, button_clicked_time, input_phrase, response_phrase, result_json
+
+### Available MCP Tools
+- `list_tables` - List all tables in schema(s)
+- `execute_sql` - Run SQL queries (use `query` parameter, not `sql`)
+- `list_projects` - List all Supabase projects
+- `get_project` - Get project details
+- Full list: 27 tools available (see MCP test output)
+
 <!-- MANUAL ADDITIONS END -->
 - never edit the terms styling in TermSelector.tsx without asking
