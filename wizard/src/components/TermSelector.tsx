@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { TermSelectorProps } from '../types/filter';
+import { RANDOM_BUTTON_COLORS } from '../constants/uiConstants';
 import { groupTermsByCategory, groupTermsByPopularity } from '../utils/termGrouping';
 
 const isMultiSelected = (selected: string | string[] | undefined, term: string, multi?: boolean) => {
@@ -112,12 +113,12 @@ export const TermSelector = ({
     );
 
     return (
-        <div ref={containerRef}>
+        <div ref={containerRef} className="flex flex-col h-full">
             {/* Term Selection Area */}
-            <div className={`flex flex-wrap gap-x-1 gap-y-1 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900/50 max-h-80 overflow-y-auto items-center ${
+            <div className={`flex flex-wrap gap-x-1 gap-y-1 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900/50 flex-1 overflow-y-auto items-center ${
                 compactMode
-                    ? 'px-3 pt-0.5 pb-1 min-h-[3rem]'
-                    : 'px-4 pt-2 pb-4 min-h-[6rem]'
+                    ? 'px-3 pt-0.5 pb-0 min-h-[3rem]'
+                    : 'px-4 pt-2 pb-0 min-h-[6rem]'
             }`}>
                 {filteredTerms.length === 0 ? (
                     <div className="w-full text-center py-8 text-gray-500 dark:text-slate-400">
@@ -167,7 +168,7 @@ export const TermSelector = ({
             </div>
 
             {controlsLayout === 'default' && (
-                <div className="relative flex items-start justify-center gap-4 mt-5 scale-[0.7] origin-center">
+                <div className="relative flex items-start justify-center gap-4 mt-auto pt-5 flex-shrink-0 scale-[0.7] origin-center">
                     <button
                         type="button"
                         onClick={onSkip}
@@ -197,7 +198,10 @@ export const TermSelector = ({
                             type="button"
                             onClick={onRandom}
                             data-role="random-button"
-                            className="absolute left-[90%] px-3 py-0.5 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-900"
+                            className="absolute left-[90%] px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
+                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                         >
                             {randomButtonLabel || 'Random'}
                         </button>

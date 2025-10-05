@@ -6,6 +6,7 @@ import {
     useInstrumentationFlow,
 } from '../hooks/useInstrumentationFlow';
 import { InstrumentationEntry } from '../types/protocol';
+import { RANDOM_BUTTON_COLORS } from '../constants/uiConstants';
 import { generateRandomInstrument } from '../utils/randomMET';
 interface InstrumentationWizardProps {
     stepNumber: number;
@@ -170,7 +171,10 @@ export const InstrumentationWizard = ({
                     <button
                         type="button"
                         onClick={handleRandomize}
-                        className="absolute left-[90%] px-3 py-0.5 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-900"
+                        className="absolute left-[90%] px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
+                        style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                     >
                         Random Instrument
                     </button>

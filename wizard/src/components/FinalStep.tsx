@@ -66,7 +66,7 @@ export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
                 <button
                     type="button"
                     onClick={onBack}
-                    className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    className="mb-2 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                 >
                     &larr; Back
                 </button>

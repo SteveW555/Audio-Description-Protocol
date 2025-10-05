@@ -19,6 +19,7 @@ import { WizardStep } from './WizardStep';
 import { generateRandomMET, generateRandomGenre, generateRandomInstrument, generateRandomVocals } from '../utils/randomMET';
 import { generateCasualPhrase } from '../ai/casualPhraseGenerator';
 import { VOCABULARY } from '../constants/vocabulary';
+import { RANDOM_BUTTON_COLORS, LAYOUT_HEIGHTS } from '../constants/uiConstants';
 import { usageTracker } from '../services/usageTracking';
 import {
     extractRandomizeAllData,
@@ -690,12 +691,17 @@ export const WizardLayout = () => {
                         </div>
 
                         {/* Step Panel Container */}
-                        <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg border border-gray-300 dark:border-slate-700 px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-4">
+                        <div
+                            className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg border border-gray-300 dark:border-slate-700 px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-4 flex-shrink-0 overflow-y-auto"
+                            style={{
+                                height: LAYOUT_HEIGHTS.STEP_PANEL_HEIGHT,
+                            }}
+                        >
                             {step > 0 && !isFinalStep && (
                                 <button
                                     type="button"
                                     onClick={goToPreviousStep}
-                                    className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                    className="mb-2 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                                 >
                                     &larr; Back
                                 </button>
@@ -711,7 +717,6 @@ export const WizardLayout = () => {
                             </div>
                         </div>
                         <div className="h-[22.81rem] md:h-[28.51rem] flex flex-col border-t border-gray-200 dark:border-slate-700 pt-3">
-                            <h3 className="text-[12px] font-semibold text-gray-500 dark:text-white mb-2">Human-Readable Summary:</h3>
                             <div className="flex-1 min-h-0">
                                 <HumanReadablePreview />
                             </div>
@@ -725,7 +730,7 @@ export const WizardLayout = () => {
                     <hr className="border-t border-gray-400/50 mb-4" />
 
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg p-4">
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Dev Tools</h2>
+                        <h2 className="text-sm font-bold text-gray-800 dark:text-white mb-2">Dev Tools</h2>
 
                         <div className="p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-700 space-y-4">
                             {/* Randomize All and Save JSON */}
@@ -733,7 +738,10 @@ export const WizardLayout = () => {
                                 <button
                                     onClick={handleRandomizeAll}
                                     title="Automatically fills all wizard fields with random values from the vocabulary, including genre, mood, energy, texture, instruments, vocals, and music theory (BPM, key, scale)"
-                                    className="px-2 py-0.5 text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500"
+                                    className="px-3 py-1.5 text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                    style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                                 >
                                     Randomize All Above
                                 </button>
@@ -884,7 +892,10 @@ export const WizardLayout = () => {
                                             }}
                                             disabled={!casualPhrase || casualPhraseLoading}
                                             title="Copies the casual phrase from above and uses it as input for the phrase translation tool below, then translates it to standardized vocabulary"
-                                            className="mt-7 px-2 py-0.5 text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap scale-[0.7] origin-top"
+                                            className="mt-7 px-3 py-1.5 text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap scale-[0.7] origin-top"
+                                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                                            onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover)}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                                         >
                                             Translate Below
                                         </button>
@@ -957,7 +968,10 @@ export const WizardLayout = () => {
                                             onClick={handleTranslatePhrase}
                                             disabled={translating || !inputPhrase.trim()}
                                             title="Converts casual musical descriptions into standardized vocabulary using AI, then automatically populates the wizard fields with the extracted terms"
-                                            className="px-2 py-0.5 h-fit text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-top"
+                                            className="px-3 py-1.5 h-fit text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-top"
+                                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                                            onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover)}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                                         >
                                             {translating ? 'Translating...' : 'Translate'}
                                         </button>

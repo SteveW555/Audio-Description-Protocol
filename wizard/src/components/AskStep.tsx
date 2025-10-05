@@ -1,4 +1,6 @@
 import React from 'react';
+import { RANDOM_BUTTON_COLORS } from '../constants/uiConstants';
+
 interface AskStepProps {
     title: string;
     prompt?: string;
@@ -32,7 +34,10 @@ export const AskStep = ({ title, prompt, onYes, onNo, onRandom }: AskStepProps) 
                         <button
                             type="button"
                             onClick={onRandom}
-                            className="absolute left-[90%] h-8 px-3 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors"
+                            className="absolute left-[90%] h-10 px-3 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                         >
                             Random Theory
                         </button>

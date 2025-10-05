@@ -33,6 +33,7 @@ export const FrequencyFilter = memo<FrequencyFilterProps>(({ terms, className })
             aria-pressed={isSelected}
             className={`
               px-[4px] py-[2px] text-[10px] font-medium rounded transition-all duration-200
+              ${category === 'all' ? 'min-w-[56px]' : ''}
               ${isDisabled
                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
                 : isSelected

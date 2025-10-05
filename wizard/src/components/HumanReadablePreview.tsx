@@ -24,8 +24,12 @@ export const HumanReadablePreview = memo(() => {
     );
 
     return (
-        <div className="h-full bg-gray-900 rounded-lg p-4 overflow-auto">
-            <div className="text-[11px] text-gray-300 space-y-[5px] font-mono">
+        <div className="h-full rounded-lg overflow-hidden border bg-gray-900 border-gray-800">
+            <div className="flex items-center justify-between px-4 py-1 text-xs font-semibold text-gray-300 bg-gray-800 border-b border-gray-700">
+                <span>Preview | Summary</span>
+            </div>
+            <div className="p-4 overflow-auto h-full">
+                <div className="text-[11px] text-gray-300 space-y-[5px] font-mono">
                 {/* Genre Information */}
                 <div>
                     <span className="text-blue-400">Genre:</span> <ValueSpan formatted={formatValue(data.semantic_description?.genre?.primary)} />
@@ -96,6 +100,7 @@ export const HumanReadablePreview = memo(() => {
                     </div>
                 )}
 
+                </div>
             </div>
         </div>
     );

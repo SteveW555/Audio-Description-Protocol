@@ -29,7 +29,7 @@ export const useFilterStore = create<FilterStore>()(
           } else {
             // If it's not selected, add it and remove 'all'
             let newSelection = [...current.filter(f => f !== 'all'), frequency];
-            
+
             // Enforce rule: ubiquitous and rare cannot be selected together
             if (newSelection.includes('ubiquitous') && newSelection.includes('rare')) {
               // Remove the one that was already selected, keep the newly clicked one
@@ -39,7 +39,7 @@ export const useFilterStore = create<FilterStore>()(
                 newSelection = newSelection.filter(f => f !== 'ubiquitous');
               }
             }
-            
+
             set({ selectedFrequencies: newSelection });
           }
         }

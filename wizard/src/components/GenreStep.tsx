@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { TermSelector } from './TermSelector';
 import { VOCABULARY } from '../constants/vocabulary';
+import { RANDOM_BUTTON_COLORS } from '../constants/uiConstants';
 import { useWizardStore } from '../context/WizardContext';
 import { getSecondaryGenresFor } from '../utils/genreHelpers';
 import { generateRandomGenre } from '../utils/randomMET';
@@ -165,7 +166,10 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                 <button
                     type="button"
                     onClick={handleRandomize}
-                    className="absolute left-[90%] px-3 py-0.5 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-900"
+                    className="absolute left-[90%] px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
+                    style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
                 >
                     Random Genre
                 </button>

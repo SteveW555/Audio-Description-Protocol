@@ -85,32 +85,36 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
     }, [isTextureStep, setGroupByMethod]);
 
     return (
-        <div className="p-1">
-            <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Step {stepNumber}: {title}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
-            </p>
-            {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
-                <div className="mb-2 flex flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
-                    <FrequencyFilter terms={termsWithFrequency} className="mb-0 bg-transparent dark:bg-transparent" />
-                    <GroupByFilter className="mb-0 bg-transparent dark:bg-transparent" />
-                </div>
-            )}
-            <TermSelector
-                terms={filteredTermValues}
-                selected={currentValue}
-                multi={multi}
-                onSelect={(value: string | string[]) => updateData(path, value)}
-                onNext={onNext}
-                onSkip={() => {
-                    updateData(path, multi ? ['tbc'] : 'tbc');
-                    onNext();
-                }}
-                onRandom={isMETStep ? handleRandom : undefined}
-                randomButtonLabel={isMETStep ? `Random ${title}` : undefined}
-                groupByMethod={groupByMethod}
-                attributeType={title}
-            />
+        <div className="p-1 flex flex-col h-full">
+            <div className="flex-shrink-0">
+                <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Step {stepNumber}: {title}</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
+                </p>
+                {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
+                    <div className="mb-2 flex flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
+                        <FrequencyFilter terms={termsWithFrequency} className="mb-0 bg-transparent dark:bg-transparent" />
+                        <GroupByFilter className="mb-0 bg-transparent dark:bg-transparent" />
+                    </div>
+                )}
+            </div>
+            <div className="flex-1 min-h-0">
+                <TermSelector
+                    terms={filteredTermValues}
+                    selected={currentValue}
+                    multi={multi}
+                    onSelect={(value: string | string[]) => updateData(path, value)}
+                    onNext={onNext}
+                    onSkip={() => {
+                        updateData(path, multi ? ['tbc'] : 'tbc');
+                        onNext();
+                    }}
+                    onRandom={isMETStep ? handleRandom : undefined}
+                    randomButtonLabel={isMETStep ? `Random ${title}` : undefined}
+                    groupByMethod={groupByMethod}
+                    attributeType={title}
+                />
+            </div>
         </div>
     );
 };
