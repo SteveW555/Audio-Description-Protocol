@@ -32,7 +32,7 @@ export const AskStep = ({ title, prompt, onYes, onNo, onRandom }: AskStepProps) 
                         <button
                             type="button"
                             onClick={onRandom}
-                            className="absolute left-[90%] h-10 px-10 font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors"
+                            className="absolute left-[90%] h-8 px-3 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors"
                         >
                             Random Theory
                         </button>

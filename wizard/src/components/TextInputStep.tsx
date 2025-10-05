@@ -69,7 +69,7 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
                     <button
                         type="button"
                         onClick={handleRandomBPM}
-                        className="absolute left-[90%] h-10 px-10 font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-800"
+                        className="absolute left-[90%] h-8 px-3 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-800"
                     >
                         Random BPM
                     </button>

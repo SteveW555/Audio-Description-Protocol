@@ -83,22 +83,27 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                 </p>
             </div>
             <section className="space-y-2">
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                    Primary Genre
-                </h3>
+                <div className="flex items-baseline gap-x-3">
+                    <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                        Choose Primary Genre:
+                    </h3>
+                    {isContinueDisabled && (
+                        <p
+                            className="text-xs italic"
+                            style={{ color: '#D87710' }}
+                        >
+                            [Choose at least 1 genre...]
+                        </p>
+                    )}
+                </div>
                 <TermSelector
                     terms={primaryOptions}
                     selected={primary}
                     onSelect={handlePrimarySelect}
-                    onNext={() => {}}
+                    onNext={() => { }}
                     onSkip={markPrimaryUnknown}
                     controlsLayout="none"
                 />
-                {isContinueDisabled && (
-                    <p className="text-xs mt-1" style={{ color: '#D87710' }}>
-                        Choose at least 1 genre
-                    </p>
-                )}
             </section>
             <section
                 className={
@@ -125,7 +130,7 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                             selected={primarySubgenres}
                             multi
                             onSelect={handleSecondaryGenreSelect}
-                            onNext={() => {}}
+                            onNext={() => { }}
                             onSkip={markSecondaryGenresUnknown}
                             controlsLayout="none"
                         />
@@ -159,7 +164,7 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                 <button
                     type="button"
                     onClick={handleRandomize}
-                    className="absolute left-[90%] px-8 py-1.5 text-sm font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                    className="absolute left-[90%] px-3 py-0.5 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-900"
                 >
                     Random Genre
                 </button>

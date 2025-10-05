@@ -632,10 +632,10 @@ export const WizardLayout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans px-4 sm:px-6 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-4 sm:pb-6 lg:pb-8">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
+                    <div className="pt-0">
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
                         <p className="mt-1.5 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
                     </div>
@@ -646,21 +646,50 @@ export const WizardLayout = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-6">
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg px-4 pb-4 pt-2 md:px-5 md:pb-5 md:pt-3">
-                        <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <h2 className="text-base font-bold text-gray-800 dark:text-white">Sample Title</h2>
-                            <p className="text-xs text-gray-500 dark:text-slate-400 sm:ml-auto">(Automatic AI tagging will be in the next phase of development once the description protocol is ratified. In production the title will be auto-filled from the audio sample)</p>
-                        </div>
-                        <input
-                            ref={titleInputRef}
-                            autoFocus
-                            type="text"
-                            value={data.path === 'tbc' ? '' : data.path}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => updateData('path', event.target.value)}
-                            placeholder="e.g., Cool_Synth_Loop_01.wav"
-                            className="w-full px-2 py-1 mt-2 text-sm border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
-                        />
+                        <div className="flex flex-col sm:flex-row items-stretch gap-4">
+                            {/* Drop Zone */}
+                            <div className="flex-shrink-0 sm:w-32 h-32 sm:h-auto flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-800/50">
+                                <div className="text-center">
+                                    <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        Drag & Drop
+                                    </p>
+                                    <p className="text-xs text-gray-400 dark:text-slate-500">
+                                        audio file
+                                    </p>
+                                </div>
+                            </div>
 
-                        <hr className="my-6 border-gray-200 dark:border-slate-700" />
+                            {/* Original Content */}
+                            <div className="flex-1">
+                                <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                                    <h2
+                                        className="text-base font-bold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md px-1"
+                                        contentEditable="true"
+                                        suppressContentEditableWarning={true}
+                                        onBlur={(e) =>
+                                            updateData(
+                                                'path',
+                                                e.currentTarget.textContent ||
+                                                'audio.wav',
+                                            )
+                                        }
+                                    >
+                                        {data.path && data.path !== 'tbc'
+                                            ? data.path
+                                            : 'audio.wav'}
+                                    </h2>
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 sm:ml-auto">
+                                        (Automatic AI tagging will be in the
+                                        next phase of development once the
+                                        description protocol is ratified. In
+                                        production the title will be
+                                        auto-filled from the audio sample)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr className="my-5 border-gray-200 dark:border-slate-700" />
 
                         {step > 0 && !isFinalStep && (
                             <button
@@ -699,34 +728,109 @@ export const WizardLayout = () => {
                         <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Dev Tools</h2>
 
                         <div className="p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-700 space-y-4">
-                                {/* Randomize All and Save JSON */}
-                                <div className="flex items-center gap-3 scale-[0.7] origin-left">
-                                    <button
-                                        onClick={handleRandomizeAll}
-                                        title="Automatically fills all wizard fields with random values from the vocabulary, including genre, mood, energy, texture, instruments, vocals, and music theory (BPM, key, scale)"
-                                        className="px-4 py-1.5 text-sm font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                    >
-                                        Randomize All Above
-                                    </button>
-                                    <button
-                                        onClick={handleGeneratePhraseFromStructure}
-                                        disabled={structurePhraseLoading}
-                                        title="Uses AI to transform the current structured wizard data into a concise, human-readable phrase using the phrase-prompt.md template"
-                                        className="px-4 py-1.5 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-sm hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {structurePhraseLoading ? 'Generating...' : 'Generate Phrase From Structure'}
-                                    </button>
-                                    <button
-                                        onClick={handleRunModelTest}
-                                        disabled={modelTestRunning}
-                                        title="Runs performance test on all Groq models (10 requests each) and downloads results as JSON. This will take several minutes."
-                                        className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {modelTestRunning ? 'Testing Models...' : 'Test All Models'}
-                                    </button>
+                            {/* Randomize All and Save JSON */}
+                            <div className="flex items-center gap-3 scale-[0.7] origin-left">
+                                <button
+                                    onClick={handleRandomizeAll}
+                                    title="Automatically fills all wizard fields with random values from the vocabulary, including genre, mood, energy, texture, instruments, vocals, and music theory (BPM, key, scale)"
+                                    className="px-2 py-0.5 text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500"
+                                >
+                                    Randomize All Above
+                                </button>
+                                <button
+                                    onClick={handleGeneratePhraseFromStructure}
+                                    disabled={structurePhraseLoading}
+                                    title="Uses AI to transform the current structured wizard data into a concise, human-readable phrase using the phrase-prompt.md template"
+                                    className="px-4 py-1.5 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-sm hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {structurePhraseLoading ? 'Generating...' : 'Generate Phrase From Structure'}
+                                </button>
+                                <button
+                                    onClick={handleRunModelTest}
+                                    disabled={modelTestRunning}
+                                    title="Runs performance test on all Groq models (10 requests each) and downloads results as JSON. This will take several minutes."
+                                    className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {modelTestRunning ? 'Testing Models...' : 'Test All Models'}
+                                </button>
 
-                                    {/* Poetic-Factual Slider */}
-                                    <div className="flex items-center gap-2 ml-4">
+                                {/* Poetic-Factual Slider */}
+                                <div className="flex items-center gap-2 ml-4">
+                                    <label className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                        Poetic
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max="100"
+                                        value={poeticLevel}
+                                        onChange={(e) => setPoeticLevel(Number(e.target.value))}
+                                        className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                                        title={`Style level: ${poeticLevel} (1=Very Poetic, 100=Very Factual)`}
+                                    />
+                                    <label className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                        Factual
+                                    </label>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-1 w-8">
+                                        {poeticLevel}
+                                    </span>
+                                </div>
+
+                                {hasRandomized && (
+                                    <button
+                                        onClick={handleSaveJSON}
+                                        title="Downloads the current wizard data as a JSON file that can be saved locally or shared with others"
+                                        className="ml-5 px-4 py-1.5 text-sm font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    >
+                                        Save JSON
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Structure Phrase Display */}
+                            {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
+                                <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
+                                    <label
+                                        htmlFor="structure-phrase-output"
+                                        className="block text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                    >
+                                        Phrase From Structure:
+                                    </label>
+                                    <textarea
+                                        id="structure-phrase-output"
+                                        value={structurePhrase}
+                                        readOnly
+                                        placeholder={structurePhraseLoading ? 'Generating phrase from structure...' : 'Generated phrase will appear here'}
+                                        className="w-full px-3 py-2 text-xs border border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                                        rows={3}
+                                    />
+                                    {structurePhraseError && (
+                                        <p className="text-xs text-red-600 dark:text-red-400">
+                                            Error: {structurePhraseError}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Generate Random Casual Phrase Section */}
+                            <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
+                                <div className="flex items-center gap-3">
+                                    <div>
+                                        <button
+                                            onClick={handleGenerateCasualPhrase}
+                                            disabled={casualPhraseLoading}
+                                            title="Uses AI to generate a random, non-standardized, human-like musical description for testing the phrase translation feature"
+                                            className="px-4 py-1.5 text-sm font-semibold text-white bg-orange-600 rounded-lg shadow-sm hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
+                                        >
+                                            {casualPhraseLoading ? 'Generating...' : 'Generate Random Casual Phrase '}
+                                        </button>
+                                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-[0.75px]">
+                                            Creates a random, non-standardized, human-like phrase, to use for testing (may take a few seconds)
+                                        </p>
+                                    </div>
+
+                                    {/* Poetic-Factual Slider (duplicate for casual phrase) */}
+                                    <div className="flex items-center gap-2 scale-[0.7] origin-left">
                                         <label className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
                                             Poetic
                                         </label>
@@ -746,210 +850,135 @@ export const WizardLayout = () => {
                                             {poeticLevel}
                                         </span>
                                     </div>
-
-                                    {hasRandomized && (
-                                        <button
-                                            onClick={handleSaveJSON}
-                                            title="Downloads the current wizard data as a JSON file that can be saved locally or shared with others"
-                                            className="ml-5 px-4 py-1.5 text-sm font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                        >
-                                            Save JSON
-                                        </button>
-                                    )}
                                 </div>
 
-                                {/* Structure Phrase Display */}
-                                {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
-                                    <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
-                                        <label
-                                            htmlFor="structure-phrase-output"
-                                            className="block text-xs font-semibold text-gray-700 dark:text-gray-300"
-                                        >
-                                            Phrase From Structure:
-                                        </label>
-                                        <textarea
-                                            id="structure-phrase-output"
-                                            value={structurePhrase}
-                                            readOnly
-                                            placeholder={structurePhraseLoading ? 'Generating phrase from structure...' : 'Generated phrase will appear here'}
-                                            className="w-full px-3 py-2 text-xs border border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
-                                            rows={3}
-                                        />
-                                        {structurePhraseError && (
-                                            <p className="text-xs text-red-600 dark:text-red-400">
-                                                Error: {structurePhraseError}
-                                            </p>
-                                        )}
-                                    </div>
+                                {casualPhraseError && (
+                                    <p className="text-xs text-red-600 dark:text-red-400">
+                                        Error: {casualPhraseError}
+                                    </p>
                                 )}
 
-                                {/* Generate Random Casual Phrase Section */}
-                                <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
-                                    <div className="flex items-center gap-3">
-                                        <div>
-                                            <button
-                                                onClick={handleGenerateCasualPhrase}
-                                                disabled={casualPhraseLoading}
-                                                title="Uses AI to generate a random, non-standardized, human-like musical description for testing the phrase translation feature"
-                                                className="px-4 py-1.5 text-sm font-semibold text-white bg-orange-600 rounded-lg shadow-sm hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
-                                            >
-                                                {casualPhraseLoading ? 'Generating...' : 'Generate Random Casual Phrase '}
-                                            </button>
-                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-[0.75px]">
-                                                Creates a random, non-standardized, human-like phrase, to use for testing (may take a few seconds)
-                                            </p>
-                                        </div>
-
-                                        {/* Poetic-Factual Slider (duplicate for casual phrase) */}
-                                        <div className="flex items-center gap-2 scale-[0.7] origin-left">
-                                            <label className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                                                Poetic
-                                            </label>
-                                            <input
-                                                type="range"
-                                                min="1"
-                                                max="100"
-                                                value={poeticLevel}
-                                                onChange={(e) => setPoeticLevel(Number(e.target.value))}
-                                                className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                                                title={`Style level: ${poeticLevel} (1=Very Poetic, 100=Very Factual)`}
-                                            />
-                                            <label className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                                                Factual
-                                            </label>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-1 w-8">
-                                                {poeticLevel}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {casualPhraseError && (
-                                        <p className="text-xs text-red-600 dark:text-red-400">
-                                            Error: {casualPhraseError}
-                                        </p>
-                                    )}
-
-                                    {(casualPhrase || casualPhraseLoading) && (
-                                        <div className="flex gap-2 items-start">
-                                            <div className="flex-[0.9]">
-                                                <label
-                                                    htmlFor="casual-phrase-input"
-                                                    className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-                                                >
-                                                    Casual Response:
-                                                </label>
-                                                <textarea
-                                                    id="casual-phrase-input"
-                                                    value={casualPhrase}
-                                                    onChange={(e) => setCasualPhrase(e.target.value)}
-                                                    disabled={casualPhraseLoading}
-                                                    placeholder={casualPhraseLoading ? 'Generating casual phrase...' : 'Casual phrase will appear here'}
-                                                    className="w-full px-3 py-2 text-[11px] border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
-                                                    rows={2}
-                                                />
-                                            </div>
-                                            <button
-                                                onClick={() => {
-                                                    setInputPhrase(casualPhrase);
-                                                    handleTranslatePhrase();
-                                                }}
-                                                disabled={!casualPhrase || casualPhraseLoading}
-                                                title="Copies the casual phrase from above and uses it as input for the phrase translation tool below, then translates it to standardized vocabulary"
-                                                className="mt-7 px-4 py-1.5 text-sm font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap scale-[0.7] origin-top"
-                                            >
-                                                Translate Below
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Generate Random Standardized Phrase Section */}
-                                <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
-                                    <div>
-                                        <button
-                                            onClick={handleGenerateStandardizedPhrase}
-                                            disabled={standardizedPhraseLoading}
-                                            title="Generates a phrase using the protocol's standardized vocabulary based on the current wizard data selections"
-                                            className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
-                                        >
-                                            {standardizedPhraseLoading ? 'Generating...' : 'Generate Random Standardized Phrase'}
-                                        </button>
-                                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-[0.75px]">
-                                            Generates a random phrase using the standardized structure of this protocol
-                                        </p>
-                                    </div>
-
-                                    {standardizedPhraseError && (
-                                        <p className="text-xs text-red-600 dark:text-red-400">
-                                            Error: {standardizedPhraseError}
-                                        </p>
-                                    )}
-
-                                    {(standardizedPhrase || standardizedPhraseLoading) && (
-                                        <div>
+                                {(casualPhrase || casualPhraseLoading) && (
+                                    <div className="flex gap-2 items-start">
+                                        <div className="flex-[0.9]">
                                             <label
-                                                htmlFor="standardized-phrase-input"
+                                                htmlFor="casual-phrase-input"
                                                 className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
                                             >
-                                                Standardized Response:
+                                                Casual Response:
                                             </label>
                                             <textarea
-                                                id="standardized-phrase-input"
-                                                value={standardizedPhrase}
-                                                onChange={(e) => setStandardizedPhrase(e.target.value)}
-                                                disabled={standardizedPhraseLoading}
-                                                placeholder={standardizedPhraseLoading ? 'Generating standardized phrase...' : 'Standardized phrase will appear here'}
-                                                className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
-                                                rows={3}
+                                                id="casual-phrase-input"
+                                                value={casualPhrase}
+                                                onChange={(e) => setCasualPhrase(e.target.value)}
+                                                disabled={casualPhraseLoading}
+                                                placeholder={casualPhraseLoading ? 'Generating casual phrase...' : 'Casual phrase will appear here'}
+                                                className="w-full px-3 py-2 text-[11px] border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                                                rows={2}
                                             />
                                         </div>
-                                    )}
+                                        <button
+                                            onClick={() => {
+                                                setInputPhrase(casualPhrase);
+                                                handleTranslatePhrase();
+                                            }}
+                                            disabled={!casualPhrase || casualPhraseLoading}
+                                            title="Copies the casual phrase from above and uses it as input for the phrase translation tool below, then translates it to standardized vocabulary"
+                                            className="mt-7 px-2 py-0.5 text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap scale-[0.7] origin-top"
+                                        >
+                                            Translate Below
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Generate Random Standardized Phrase Section */}
+                            <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
+                                <div>
+                                    <button
+                                        onClick={handleGenerateStandardizedPhrase}
+                                        disabled={standardizedPhraseLoading}
+                                        title="Generates a phrase using the protocol's standardized vocabulary based on the current wizard data selections"
+                                        className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
+                                    >
+                                        {standardizedPhraseLoading ? 'Generating...' : 'Generate Random Standardized Phrase'}
+                                    </button>
+                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-[0.75px]">
+                                        Generates a random phrase using the standardized structure of this protocol
+                                    </p>
                                 </div>
 
-                                {/* Phrase Translation Section */}
-                                <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
-                                    <div className="space-y-2">
+                                {standardizedPhraseError && (
+                                    <p className="text-xs text-red-600 dark:text-red-400">
+                                        Error: {standardizedPhraseError}
+                                    </p>
+                                )}
+
+                                {(standardizedPhrase || standardizedPhraseLoading) && (
+                                    <div>
                                         <label
-                                            htmlFor="input-phrase"
-                                            className="block text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                            htmlFor="standardized-phrase-input"
+                                            className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
                                         >
-                                            Phrase Translation:
+                                            Standardized Response:
                                         </label>
-                                        <div className="flex gap-2">
-                                            <textarea
-                                                id="input-phrase"
-                                                value={inputPhrase}
-                                                onChange={(e) => setInputPhrase(e.target.value)}
-                                                placeholder="Enter any musical description"
-                                                className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 resize-none"
-                                                rows={3}
-                                            />
-                                            <button
-                                                onClick={handleTranslatePhrase}
-                                                disabled={translating || !inputPhrase.trim()}
-                                                title="Converts casual musical descriptions into standardized vocabulary using AI, then automatically populates the wizard fields with the extracted terms"
-                                                className="px-4 py-1.5 h-fit text-sm font-semibold text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-top"
-                                            >
-                                                {translating ? 'Translating...' : 'Translate'}
-                                            </button>
-                                            <textarea
-                                                value={translatedPhrase}
-                                                readOnly
-                                                placeholder="Standardized phrase will appear here"
-                                                className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
-                                                rows={3}
-                                            />
-                                        </div>
-                                        <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                                            Converts casual musical descriptions into standardized vocabulary and populates the wizard
-                                        </p>
-                                        {translateError && (
-                                            <p className="text-xs text-red-600 dark:text-red-400">
-                                                Error: {translateError}
-                                            </p>
-                                        )}
+                                        <textarea
+                                            id="standardized-phrase-input"
+                                            value={standardizedPhrase}
+                                            onChange={(e) => setStandardizedPhrase(e.target.value)}
+                                            disabled={standardizedPhraseLoading}
+                                            placeholder={standardizedPhraseLoading ? 'Generating standardized phrase...' : 'Standardized phrase will appear here'}
+                                            className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                                            rows={3}
+                                        />
                                     </div>
+                                )}
+                            </div>
+
+                            {/* Phrase Translation Section */}
+                            <div className="space-y-2 pt-4 border-t border-gray-400/80 dark:border-slate-600/80">
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="input-phrase"
+                                        className="block text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                    >
+                                        Phrase Translation:
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <textarea
+                                            id="input-phrase"
+                                            value={inputPhrase}
+                                            onChange={(e) => setInputPhrase(e.target.value)}
+                                            placeholder="Enter any musical description"
+                                            className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 resize-none"
+                                            rows={3}
+                                        />
+                                        <button
+                                            onClick={handleTranslatePhrase}
+                                            disabled={translating || !inputPhrase.trim()}
+                                            title="Converts casual musical descriptions into standardized vocabulary using AI, then automatically populates the wizard fields with the extracted terms"
+                                            className="px-2 py-0.5 h-fit text-xs font-semibold text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-top"
+                                        >
+                                            {translating ? 'Translating...' : 'Translate'}
+                                        </button>
+                                        <textarea
+                                            value={translatedPhrase}
+                                            readOnly
+                                            placeholder="Standardized phrase will appear here"
+                                            className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                                            rows={3}
+                                        />
+                                    </div>
+                                    <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                                        Converts casual musical descriptions into standardized vocabulary and populates the wizard
+                                    </p>
+                                    {translateError && (
+                                        <p className="text-xs text-red-600 dark:text-red-400">
+                                            Error: {translateError}
+                                        </p>
+                                    )}
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>

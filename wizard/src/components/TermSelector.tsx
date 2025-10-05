@@ -197,7 +197,7 @@ export const TermSelector = ({
                             type="button"
                             onClick={onRandom}
                             data-role="random-button"
-                            className="absolute left-[90%] px-10 py-1.5 font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                            className="absolute left-[90%] px-3 py-0.5 text-xs font-semibold whitespace-nowrap text-white bg-cyan-600/70 rounded shadow-sm hover:bg-cyan-600 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-cyan-500 dark:focus:ring-offset-slate-900"
                         >
                             {randomButtonLabel || 'Random'}
                         </button>
