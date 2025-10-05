@@ -43,8 +43,8 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
 
     // Determine if this is a MET step (Mood, Energy, or Texture)
     const isMETStep = path === 'semantic_description.attributes.mood' ||
-                      path === 'semantic_description.attributes.energy' ||
-                      path === 'semantic_description.attributes.texture';
+        path === 'semantic_description.attributes.energy' ||
+        path === 'semantic_description.attributes.texture';
 
     const metCategory = isMETStep
         ? (title as 'Mood' | 'Energy' | 'Texture')
@@ -91,7 +91,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
                 {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
             </p>
             {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
-                <div className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
+                <div className="mb-2 flex flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
                     <FrequencyFilter terms={termsWithFrequency} className="mb-0 bg-transparent dark:bg-transparent" />
                     <GroupByFilter className="mb-0 bg-transparent dark:bg-transparent" />
                 </div>

@@ -645,64 +645,67 @@ export const WizardLayout = () => {
                 <hr className="border-t-2 border-gray-300 dark:border-slate-700 mb-4" />
 
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,_0.7fr)_minmax(0,_0.3fr)] gap-6">
-                    <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg px-4 pb-4 pt-2 md:px-5 md:pb-5 md:pt-3">
-                        <div className="flex flex-col sm:flex-row items-stretch gap-4">
-                            {/* Drop Zone */}
-                            <div className="flex-shrink-0 sm:w-32 h-32 sm:h-auto flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-800/50">
-                                <div className="text-center">
-                                    <p className="text-sm text-gray-500 dark:text-slate-400">
-                                        Drag & Drop
-                                    </p>
-                                    <p className="text-xs text-gray-400 dark:text-slate-500">
-                                        audio file
-                                    </p>
+                    <div className="space-y-4">
+                        {/* Drag & Drop Container */}
+                        <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 px-4 py-4 md:px-5 md:py-4">
+                            <div className="flex flex-col sm:flex-row items-stretch gap-4">
+                                {/* Drop Zone */}
+                                <div className="flex-shrink-0 sm:w-32 h-32 sm:h-auto flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-800/50">
+                                    <div className="text-center">
+                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            Drag & Drop
+                                        </p>
+                                        <p className="text-xs text-gray-400 dark:text-slate-500">
+                                            audio file
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Original Content */}
-                            <div className="flex-1">
-                                <div className="mb-1 flex flex-wrap items-center">
-                                    <h2
-                                        className="text-base font-bold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md px-1"
-                                        contentEditable="true"
-                                        suppressContentEditableWarning={true}
-                                        onBlur={(e) =>
-                                            updateData(
-                                                'path',
-                                                e.currentTarget.textContent ||
-                                                'audio.wav',
-                                            )
-                                        }
-                                    >
-                                        {data.path && data.path !== 'tbc'
-                                            ? data.path
-                                            : 'audio.wav'}
-                                    </h2>
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 ml-2">
-                                        (Auto AI tagging will be added once trained and this
-                                        description protocol is finished)
-                                    </p>
+                                {/* Original Content */}
+                                <div className="flex-1">
+                                    <div className="mb-1 flex flex-wrap items-center">
+                                        <h2
+                                            className="text-base font-bold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md px-1"
+                                            contentEditable="true"
+                                            suppressContentEditableWarning={true}
+                                            onBlur={(e) =>
+                                                updateData(
+                                                    'path',
+                                                    e.currentTarget.textContent ||
+                                                    'audio.wav',
+                                                )
+                                            }
+                                        >
+                                            {data.path && data.path !== 'tbc'
+                                                ? data.path
+                                                : 'audio.wav'}
+                                        </h2>
+                                        <p className="text-xs text-gray-500 dark:text-slate-400 ml-2">
+                                            (Auto AI tagging will be added once trained and this
+                                            description protocol is finished)
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <hr className="my-5 border-gray-200 dark:border-slate-700" />
-
-                        {step > 0 && !isFinalStep && (
-                            <button
-                                type="button"
-                                onClick={goToPreviousStep}
-                                className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                            >
-                                &larr; Back
-                            </button>
-                        )}
-                        {renderStep()}
+                        {/* Step Panel Container */}
+                        <div className="bg-white dark:bg-slate-800/50 backdrop-blur rounded-xl shadow-lg border border-gray-300 dark:border-slate-700 px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-4">
+                            {step > 0 && !isFinalStep && (
+                                <button
+                                    type="button"
+                                    onClick={goToPreviousStep}
+                                    className="mb-4 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                >
+                                    &larr; Back
+                                </button>
+                            )}
+                            {renderStep()}
+                        </div>
                     </div>
 
                     <div className="mt-4 md:mt-0 flex flex-col gap-3">
                         <div className="h-[14.26rem] md:h-[17.82rem] flex flex-col">
-                            <h3 className="text-xs font-semibold text-gray-500 dark:text-white mb-2">Live JSON Preview:</h3>
                             <div className="flex-1 min-h-0">
                                 <JsonPreview />
                             </div>

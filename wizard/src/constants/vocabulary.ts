@@ -1,4 +1,4 @@
-import { InstrumentationEntry } from '../types/protocol';
+Fimport { InstrumentationEntry } from '../types/protocol';
 import { VOCABULARY_MET, TERMS_BY_FREQUENCY } from './taxonomy';
 
 // Taxonomy metadata for terms (kept for backward compatibility)
