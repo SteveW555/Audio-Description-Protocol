@@ -2,7 +2,7 @@ import { AudioProtocolData } from '../types/protocol';
 
 export const getInitialState = (): AudioProtocolData => ({
     protocol_version: '1.0',
-    path: 'New Sample 2',
+    path: '',
     theory: {
         bpm: '',
         key: '',

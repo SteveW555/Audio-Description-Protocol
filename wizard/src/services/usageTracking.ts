@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '../lib/supabaseClient';
+import { getSupabaseClient } from './supabaseClient';
 import type { UsageData, UsageTrackingService } from '../types/usage';
 
 /**
