@@ -74,17 +74,18 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
     return (
         <div className="p-1 space-y-6">
             <div>
-                <h2 className="text-base font-bold text-gray-800 dark:text-white">
+                <h2 className="text-base font-bold text-gray-600 dark:text-white">
                     Step {stepNumber}: {title}
                 </h2>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {/* Instruction: guide user to select a primary genre first, then optionally refine with secondary genres */}
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     Select the primary genre first, then add one or more
                     secondary genres that refine the description.
                 </p>
             </div>
             <section className="space-y-2">
                 <div className="flex items-baseline gap-x-3">
-                    <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                    <h3 className="text-base font-semibold text-blue-600 dark:text-blue-400">
                         Choose Primary Genre:
                     </h3>
                     {isContinueDisabled && (

@@ -661,7 +661,7 @@ export const WizardLayout = () => {
 
                             {/* Original Content */}
                             <div className="flex-1">
-                                <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                                <div className="mb-1 flex flex-wrap items-center">
                                     <h2
                                         className="text-base font-bold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md px-1"
                                         contentEditable="true"
@@ -678,12 +678,9 @@ export const WizardLayout = () => {
                                             ? data.path
                                             : 'audio.wav'}
                                     </h2>
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 sm:ml-auto">
-                                        (Automatic AI tagging will be in the
-                                        next phase of development once the
-                                        description protocol is ratified. In
-                                        production the title will be
-                                        auto-filled from the audio sample)
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 ml-2">
+                                        (Auto AI tagging will be added once trained and this
+                                        description protocol is finished)
                                     </p>
                                 </div>
                             </div>
