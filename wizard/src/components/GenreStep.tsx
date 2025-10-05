@@ -83,9 +83,16 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                 </p>
             </div>
             <section className="space-y-2">
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                    Primary Genre
-                </h3>
+                <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                        Choose Primary Genre:
+                    </h3>
+                    {isContinueDisabled && (
+                        <p className="text-xs italic" style={{ color: '#D87710' }}>
+                            [Choose at least 1 genre...]
+                        </p>
+                    )}
+                </div>
                 <TermSelector
                     terms={primaryOptions}
                     selected={primary}
@@ -94,11 +101,6 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                     onSkip={markPrimaryUnknown}
                     controlsLayout="none"
                 />
-                {isContinueDisabled && (
-                    <p className="text-xs mt-1" style={{ color: '#D87710' }}>
-                        Choose at least 1 genre
-                    </p>
-                )}
             </section>
             <section
                 className={
@@ -159,7 +161,7 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                 <button
                     type="button"
                     onClick={handleRandomize}
-                    className="absolute left-[90%] px-8 py-1.5 text-sm font-semibold whitespace-nowrap text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-slate-900"
+                    className="absolute left-[90%] px-8 py-1.5 text-sm font-semibold whitespace-nowrap text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900"
                 >
                     Random Genre
                 </button>

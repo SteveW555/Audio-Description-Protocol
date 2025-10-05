@@ -632,9 +632,9 @@ export const WizardLayout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white font-sans px-4 sm:px-6 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-4 sm:pb-6 lg:pb-8">
             <div className="max-w-7xl mx-auto">
-                <header className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <header className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
                         <p className="mt-1.5 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
@@ -654,13 +654,13 @@ export const WizardLayout = () => {
                             ref={titleInputRef}
                             autoFocus
                             type="text"
-                            value={data.path === 'tbc' ? '' : data.path}
+                            value={data.path === 'tbc' || data.path === '' ? '' : data.path}
                             onChange={(event: ChangeEvent<HTMLInputElement>) => updateData('path', event.target.value)}
-                            placeholder="e.g., Cool_Synth_Loop_01.wav"
+                            placeholder="audio.wav"
                             className="w-full px-2 py-1 mt-2 text-sm border border-gray-300 rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-500"
                         />
 
-                        <hr className="my-6 border-gray-200 dark:border-slate-700" />
+                        <hr className="my-5 border-gray-200 dark:border-slate-700" />
 
                         {step > 0 && !isFinalStep && (
                             <button
