@@ -52,6 +52,7 @@ export interface TermSelectorProps {
   onSkip: () => void;
   onRandom?: () => void;
   randomButtonLabel?: string;
+  onRandomizeAll?: () => void;
   groupByMethod?: GroupByMethod;
   attributeType?: string;
   controlsLayout?: 'default' | 'none';

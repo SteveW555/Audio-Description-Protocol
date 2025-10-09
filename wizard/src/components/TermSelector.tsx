@@ -23,6 +23,7 @@ export const TermSelector = ({
     onSkip,
     onRandom,
     randomButtonLabel,
+    onRandomizeAll,
     groupByMethod,
     attributeType,
     controlsLayout = 'default',
@@ -168,44 +169,63 @@ export const TermSelector = ({
             </div>
 
             {controlsLayout === 'default' && (
-                <div className="relative flex items-start justify-center gap-4 mt-auto pt-5 flex-shrink-0 scale-[0.7] origin-center">
-                    <button
-                        type="button"
-                        onClick={onSkip}
-                        data-role="skip-button"
-                        className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-slate-700/40 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-300 dark:hover:bg-slate-600/50 transition-colors"
-                    >
-                        Skip
-                    </button>
-                    <div className="flex flex-col items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={onNext}
-                            disabled={isNextDisabled}
-                            data-role="next-button"
-                            className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Next &rarr;
-                        </button>
-                        {isNextDisabled && attributeType && (
-                            <p className="text-xs" style={{ color: '#D87710' }}>
-                                Choose at least 1 {attributeType}
-                            </p>
+                <div className="flex items-start justify-between gap-4 mt-auto pt-5 flex-shrink-0 scale-[0.7] origin-left">
+                    <div className="-ml-4">
+                        {onRandomizeAll && (
+                            <button
+                                type="button"
+                                onClick={onRandomizeAll}
+                                title="Automatically fills all wizard fields with random values from the vocabulary and skips to the end"
+                                className="px-3 py-1.5 text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
+                            >
+                                Randomize All &amp; Finish
+                            </button>
                         )}
                     </div>
-                    {onRandom && (
+                    <div className="flex items-start justify-center gap-4">
                         <button
                             type="button"
-                            onClick={onRandom}
-                            data-role="random-button"
-                            className="absolute left-[90%] px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
-                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
+                            onClick={onSkip}
+                            data-role="skip-button"
+                            className="px-6 py-1.5 font-semibold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-slate-700/40 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-300 dark:hover:bg-slate-600/50 transition-colors"
                         >
-                            {randomButtonLabel || 'Random'}
+                            Skip
                         </button>
-                    )}
+                        <div className="flex flex-col items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={onNext}
+                                disabled={isNextDisabled}
+                                data-role="next-button"
+                                className="px-6 py-1.5 font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next &rarr;
+                            </button>
+                            {isNextDisabled && attributeType && (
+                                <p className="text-xs" style={{ color: '#D87710' }}>
+                                    Choose at least 1 {attributeType}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                    <div>
+                        {onRandom && (
+                            <button
+                                type="button"
+                                onClick={onRandom}
+                                data-role="random-button"
+                                className="px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
+                                style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
+                            >
+                                {randomButtonLabel || 'Random'}
+                            </button>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

@@ -311,7 +311,7 @@ export async function generateCasualPhraseGroq(
             content: prompt,
           },
         ],
-        max_tokens: 5000,
+        max_tokens: 3500,
         temperature: 1.0,
       });
 
@@ -446,7 +446,7 @@ export async function generatePhraseFromStructure(
             content: prompt,
           },
         ],
-        max_tokens: 5000,
+        max_tokens: 3500,
         temperature: 0.7,
       });
 

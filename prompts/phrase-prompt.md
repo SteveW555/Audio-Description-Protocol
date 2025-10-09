@@ -189,6 +189,6 @@ Here are 5 diverse examples of the expected input-to-output transformation.
 
 -----
 
-Please confirm you understand these instructions. From now on, when I provide you with a structured JSON object like the ones above, you will respond only with the generated natural language phrase.
+From now on, when I provide you with a structured JSON object like the ones above, you will respond only with the generated natural language phrase, do not include introductory text or boilerplate, just start with the generated pfrase and *nothing else*
 
 ### **LLM Prompt End**

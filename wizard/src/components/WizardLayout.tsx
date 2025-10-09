@@ -111,6 +111,10 @@ export const WizardLayout = () => {
 
         // Track usage after completion
         usageTracker.track(extractRandomizeAllData(data));
+
+        // Navigate to final step
+        const finalStepIndex = steps.length; // Final step is after all configured steps
+        setStep(finalStepIndex);
     };
 
     const handleSaveJSON = () => {
@@ -505,6 +509,18 @@ export const WizardLayout = () => {
         }
     }, [step]);
 
+    // Auto-generate phrases when reaching the final step
+    useEffect(() => {
+        if (isFinalStep) {
+            if (!structurePhraseLoading && !structurePhrase) {
+                handleGeneratePhraseFromStructure();
+            }
+            if (!casualPhraseLoading && !casualPhrase) {
+                handleGenerateCasualPhrase();
+            }
+        }
+    }, [isFinalStep]);
+
     const instrumentationIndex = useMemo(
         () => steps.findIndex((entry) => 'special' in entry && entry.special === StepType.INSTRUMENTATION),
         [steps]
@@ -524,7 +540,19 @@ export const WizardLayout = () => {
 
     const renderStep = () => {
         if (!currentStepConfig) {
-            return <FinalStep onRestart={handleRestart} onBack={goToPreviousStep} />;
+            return (
+                <FinalStep
+                    onRestart={handleRestart}
+                    onBack={goToPreviousStep}
+                    structurePhrase={structurePhrase}
+                    structurePhraseLoading={structurePhraseLoading}
+                    structurePhraseError={structurePhraseError}
+                    casualPhrase={casualPhrase}
+                    casualPhraseLoading={casualPhraseLoading}
+                    casualPhraseError={casualPhraseError}
+                    onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                />
+            );
         }
 
         if ('special' in currentStepConfig) {
@@ -574,6 +602,7 @@ export const WizardLayout = () => {
                             stepNumber={stepNumber}
                             title={currentStepConfig.title}
                             onNext={goToNextStep}
+                            onRandomizeAll={handleRandomizeAll}
                         />
                     );
                 case StepType.VOCALS:
@@ -582,6 +611,7 @@ export const WizardLayout = () => {
                             stepNumber={stepNumber}
                             title={currentStepConfig.title}
                             onNext={goToNextStep}
+                            onRandomizeAll={handleRandomizeAll}
                         />
                     );
                 case StepType.INSTRUMENTATION:
@@ -596,7 +626,19 @@ export const WizardLayout = () => {
                         />
                     );
                 case StepType.FINAL:
-                    return <FinalStep onRestart={handleRestart} onBack={goToPreviousStep} />;
+                    return (
+                        <FinalStep
+                            onRestart={handleRestart}
+                            onBack={goToPreviousStep}
+                            structurePhrase={structurePhrase}
+                            structurePhraseLoading={structurePhraseLoading}
+                            structurePhraseError={structurePhraseError}
+                            casualPhrase={casualPhrase}
+                            casualPhraseLoading={casualPhraseLoading}
+                            casualPhraseError={casualPhraseError}
+                            onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                        />
+                    );
                 case StepType.TEXT_INPUT:
                     return (
                         <TextInputStep
@@ -628,6 +670,7 @@ export const WizardLayout = () => {
                 stepNumber={stepNumber}
                 onNext={goToNextStep}
                 isMusicTheoryStep={isMusicTheoryStep}
+                onRandomizeAll={handleRandomizeAll}
             />
         );
     };
@@ -733,18 +776,8 @@ export const WizardLayout = () => {
                         <h2 className="text-sm font-bold text-gray-800 dark:text-white mb-2">Dev Tools</h2>
 
                         <div className="p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-700 space-y-4">
-                            {/* Randomize All and Save JSON */}
+                            {/* Generate Phrase and AI Tools */}
                             <div className="flex items-center gap-3 scale-[0.7] origin-left">
-                                <button
-                                    onClick={handleRandomizeAll}
-                                    title="Automatically fills all wizard fields with random values from the vocabulary, including genre, mood, energy, texture, instruments, vocals, and music theory (BPM, key, scale)"
-                                    className="px-3 py-1.5 text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                                    style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
-                                >
-                                    Randomize All Above
-                                </button>
                                 <button
                                     onClick={handleGeneratePhraseFromStructure}
                                     disabled={structurePhraseLoading}
@@ -753,14 +786,14 @@ export const WizardLayout = () => {
                                 >
                                     {structurePhraseLoading ? 'Generating...' : 'Generate Phrase From Structure'}
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={handleRunModelTest}
                                     disabled={modelTestRunning}
                                     title="Runs performance test on all Groq models (10 requests each) and downloads results as JSON. This will take several minutes."
                                     className="px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {modelTestRunning ? 'Testing Models...' : 'Test All Models'}
-                                </button>
+                                </button> */}
 
                                 {/* Poetic-Factual Slider */}
                                 <div className="flex items-center gap-2 ml-4">

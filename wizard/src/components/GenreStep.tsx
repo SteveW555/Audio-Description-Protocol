@@ -9,8 +9,9 @@ interface GenreStepProps {
     stepNumber: number;
     title: string;
     onNext: () => void;
+    onRandomizeAll?: () => void;
 }
-export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
+export const GenreStep = ({ stepNumber, title, onNext, onRandomizeAll }: GenreStepProps) => {
     const primary = useWizardStore(
         (state) => state.data.semantic_description.genre.primary,
     );
@@ -45,10 +46,6 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
     };
     const markSecondaryGenresUnknown = () => {
         updateData('semantic_description.genre.primary_subgenres', ['tbc']);
-    };
-    const handleSkip = () => {
-        markPrimaryUnknown();
-        onNext();
     };
     const handleContinue = () => {
         const resolvedPrimary = primary || 'tbc';
@@ -147,32 +144,44 @@ export const GenreStep = ({ stepNumber, title, onNext }: GenreStepProps) => {
                     </div>
                 )}
             </section>
-            <div className="relative flex flex-col-reverse items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
-                <button
-                    type="button"
-                    onClick={handleSkip}
-                    className="px-4 py-1.5 text-sm font-semibold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-slate-700/40 rounded-lg hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-300 dark:hover:bg-slate-600/50 transition-colors"
-                >
-                    Skip
-                </button>
-                <button
-                    type="button"
-                    onClick={handleContinue}
-                    disabled={isContinueDisabled}
-                    className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Save &amp; Continue
-                </button>
-                <button
-                    type="button"
-                    onClick={handleRandomize}
-                    className="absolute left-[90%] px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
-                    style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
-                >
-                    Random Genre
-                </button>
+            <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-between sm:items-center scale-[0.7] origin-left">
+                <div className="-ml-4">
+                    {onRandomizeAll && (
+                        <button
+                            type="button"
+                            onClick={onRandomizeAll}
+                            title="Automatically fills all wizard fields with random values from the vocabulary and skips to the end"
+                            className="px-3 py-1.5 text-sm font-semibold text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                            style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
+                        >
+                            Randomize All &amp; Finish
+                        </button>
+                    )}
+                </div>
+                <div className="flex gap-3 items-center justify-center">
+                    <button
+                        type="button"
+                        onClick={handleContinue}
+                        disabled={isContinueDisabled}
+                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Save &amp; Continue
+                    </button>
+                </div>
+                <div className="relative">
+                    <button
+                        type="button"
+                        onClick={handleRandomize}
+                        className="px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-900"
+                        style={{ backgroundColor: RANDOM_BUTTON_COLORS.background }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.hover}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = RANDOM_BUTTON_COLORS.background}
+                    >
+                        Random Genre
+                    </button>
+                </div>
             </div>
         </div>
     );

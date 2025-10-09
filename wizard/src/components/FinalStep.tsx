@@ -7,9 +7,26 @@ import { usageTracker } from '../services/usageTracking';
 interface FinalStepProps {
     onRestart: () => void;
     onBack?: () => void;
+    structurePhrase?: string;
+    structurePhraseLoading?: boolean;
+    structurePhraseError?: string | null;
+    casualPhrase?: string;
+    casualPhraseLoading?: boolean;
+    casualPhraseError?: string | null;
+    onRegenerateCasualPhrase?: () => void;
 }
 
-export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
+export const FinalStep = ({
+    onRestart,
+    onBack,
+    structurePhrase,
+    structurePhraseLoading,
+    structurePhraseError,
+    casualPhrase,
+    casualPhraseLoading,
+    casualPhraseError,
+    onRegenerateCasualPhrase
+}: FinalStepProps) => {
     const data = useWizardStore((state) => state.data);
     const [notification, setNotification] = useState('');
     const [actionTaken, setActionTaken] = useState(false);
@@ -80,6 +97,7 @@ export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
                     {notification}
                 </div>
             )}
+
             <div className="flex flex-col gap-4 mt-6">
                 <div className="flex gap-4">
                     <button
@@ -97,6 +115,9 @@ export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
                         Download .json
                     </button>
                 </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4 mb-4">
+                    *Note: In production the result will be injected directly into the database or training set
+                </p>
                 <button
                     type="button"
                     onClick={onRestart}
@@ -105,10 +126,73 @@ export const FinalStep = ({ onRestart, onBack }: FinalStepProps) => {
                 >
                     Create New Record
                 </button>
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
-                    *Note: In production the result will be injected directly into the database or training set
-                </p>
             </div>
+
+            {/* Generated Phrase Display */}
+            {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
+                <div className="mt-6">
+                    <label
+                        htmlFor="generated-phrase"
+                        className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                        Standardized phrase from structured descriptions:
+                    </label>
+                    <div className="p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20">
+                        {structurePhraseLoading ? (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                Generating phrase from structure...
+                            </p>
+                        ) : structurePhraseError ? (
+                            <p className="text-sm text-red-600 dark:text-red-400">
+                                Error: {structurePhraseError}
+                            </p>
+                        ) : (
+                            <p className="text-base text-gray-900 dark:text-gray-100">
+                                {structurePhrase}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Casual Phrase Display */}
+            {(casualPhrase || casualPhraseLoading || casualPhraseError) && (
+                <div className="mt-6">
+                    <label
+                        htmlFor="casual-phrase"
+                        className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                        Casual phrase from wizard structure:
+                    </label>
+                    <div className="flex gap-2">
+                        <div className="flex-1 p-4 border-2 border-purple-300 dark:border-purple-600 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                            {casualPhraseLoading ? (
+                                <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                    Generating casual phrase...
+                                </p>
+                            ) : casualPhraseError ? (
+                                <p className="text-sm text-red-600 dark:text-red-400">
+                                    Error: {casualPhraseError}
+                                </p>
+                            ) : (
+                                <p className="text-base text-gray-900 dark:text-gray-100">
+                                    {casualPhrase}
+                                </p>
+                            )}
+                        </div>
+                        {onRegenerateCasualPhrase && (
+                            <button
+                                type="button"
+                                onClick={onRegenerateCasualPhrase}
+                                disabled={casualPhraseLoading}
+                                className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                            >
+                                Re-Roll
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

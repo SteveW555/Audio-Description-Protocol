@@ -14,38 +14,43 @@ export interface CasualPhraseResponse {
 }
 
 /**
- * Filters wizard data to exclude key, scale, and chords
+ * Filters wizard data to extract semantic description fields
+ * Maps from AudioProtocolData structure to backend WizardData structure
  */
 function filterWizardData(data: Partial<AudioProtocolData>): any {
   const filtered: any = {};
 
-  // Include allowed fields
-  if ((data as any).genre) {
-    filtered.genre = (data as any).genre;
+  // Extract from semantic_description
+  const semantic = data.semantic_description;
+  if (semantic) {
+    if (semantic.genre) {
+      filtered.genre = semantic.genre;
+    }
+
+    if (semantic.attributes?.mood) {
+      filtered.mood = semantic.attributes.mood;
+    }
+
+    if (semantic.attributes?.energy) {
+      filtered.energy = semantic.attributes.energy;
+    }
+
+    if (semantic.attributes?.texture) {
+      filtered.texture = semantic.attributes.texture;
+    }
+
+    if (semantic.instrumentation) {
+      filtered.instrumentation = semantic.instrumentation;
+    }
+
+    if (semantic.vocals) {
+      filtered.vocals = semantic.vocals;
+    }
   }
 
-  if ((data as any).mood) {
-    filtered.mood = (data as any).mood;
-  }
-
-  if ((data as any).energy) {
-    filtered.energy = (data as any).energy;
-  }
-
-  if ((data as any).texture) {
-    filtered.texture = (data as any).texture;
-  }
-
-  if ((data as any).instrumentation) {
-    filtered.instrumentation = (data as any).instrumentation;
-  }
-
-  if ((data as any).vocals) {
-    filtered.vocals = (data as any).vocals;
-  }
-
-  if ((data as any).bpm) {
-    filtered.bpm = (data as any).bpm;
+  // Extract BPM from theory
+  if (data.theory?.bpm) {
+    filtered.bpm = data.theory.bpm;
   }
 
   return filtered;

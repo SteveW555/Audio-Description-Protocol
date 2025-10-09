@@ -20,9 +20,10 @@ interface WizardStepProps {
     stepNumber: number;
     onNext: () => void;
     isMusicTheoryStep?: boolean;
+    onRandomizeAll?: () => void;
 }
 
-export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, isMusicTheoryStep }: WizardStepProps) => {
+export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, isMusicTheoryStep, onRandomizeAll }: WizardStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const { filterTerms } = useFrequencyFilter();
@@ -111,6 +112,7 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
                     }}
                     onRandom={isMETStep ? handleRandom : undefined}
                     randomButtonLabel={isMETStep ? `Random ${title}` : undefined}
+                    onRandomizeAll={onRandomizeAll}
                     groupByMethod={groupByMethod}
                     attributeType={title}
                 />
