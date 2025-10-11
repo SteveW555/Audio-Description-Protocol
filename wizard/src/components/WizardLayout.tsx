@@ -508,14 +508,16 @@ export const WizardLayout = () => {
         // First randomize all wizard terms (this updates the data and refreshes previews)
         handleRandomizeAll();
 
-        // Then regenerate both AI phrases based on the new data
-        // Wait a moment for state to update
-        setTimeout(async () => {
-            await Promise.all([
-                handleGeneratePhraseFromStructure(),
-                handleGenerateCasualPhrase()
-            ]);
-        }, 100);
+        // Wait for Zustand state to propagate and DOM to update
+        // This ensures the new randomized data is available for the AI functions
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        // Then regenerate both AI phrases sequentially
+        // Generate structure phrase first (standardized AI phrase)
+        await handleGeneratePhraseFromStructure();
+
+        // Then generate casual phrase
+        await handleGenerateCasualPhrase();
     };
 
     useEffect(() => {
