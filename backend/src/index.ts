@@ -42,6 +42,17 @@ app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Test POST endpoint
+app.post('/api/test-echo', (req: Request, res: Response) => {
+  console.log('🧪 TEST ECHO endpoint hit!');
+  console.log('🧪 Request body:', JSON.stringify(req.body, null, 2));
+  res.status(200).json({
+    message: 'Echo successful',
+    received: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Error:', err);
