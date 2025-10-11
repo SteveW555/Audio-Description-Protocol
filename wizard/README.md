@@ -4,59 +4,72 @@ Interactive wizard for creating musical annotations using the Audio Description 
 
 ## Features
 
-- **Real-time validation** against Python backend
+- **AI-Powered Phrase Generation** with Groq AI integration
 - **Live preview** in JSON, Python, YAML, and TypeScript formats
 - **Taxonomy search** with 479-term vocabulary
 - **Syntax highlighting** and error indicators
 - **Dark/light mode** support
+
+## Production Deployment (Railway)
+
+The application is deployed as a unified service on [Railway.app](https://railway.app) with both frontend and backend running together.
+
+### Environment Variables Required
+
+Add these to your Railway service:
+- `GROQ_API_KEY` - Your Groq API key for AI phrase generation
+- `NODE_ENV=production`
+- `VITE_SUPABASE_URL` - Your Supabase project URL (optional)
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anon key (optional)
+
+### Deployment Process
+
+Railway automatically deploys when you push to the configured branch. The deployment:
+1. Installs dependencies (root, wizard, and backend)
+2. Builds the wizard frontend (Vite)
+3. Builds the backend TypeScript (tsc)
+4. Starts both services with `concurrently`
+
+The frontend runs on Railway's assigned PORT and proxies `/api/*` requests to the backend on port 3001.
 
 ## Development Setup
 
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Python 3.11+ (for backend API)
+- Groq API key (for AI phrase generation)
 
-### Frontend Setup
+### Quick Start (Unified Development)
 
-1. Install dependencies:
+From the project root:
+
 ```bash
-cd wizard
+# Install all dependencies
 npm install
+
+# Start both frontend and backend together
+npm start
 ```
 
-2. Start development server:
-```bash
-npm run dev
-```
+This will start:
+- Backend on http://localhost:3001
+- Frontend on http://localhost:8080 (with API proxy)
 
-The wizard will be available at http://localhost:3000
+### Individual Development
 
-### Backend Setup
-
-1. Start the Python API server:
-```bash
-cd ../src/adp_core
-python api_server.py
-```
-
-The API will be available at http://localhost:8000
-
-### Full Development Workflow
-
-1. **Terminal 1** - Start Python backend:
-```bash
-cd src/adp_core
-python api_server.py
-```
-
-2. **Terminal 2** - Start React frontend:
+**Frontend only:**
 ```bash
 cd wizard
 npm run dev
 ```
+The wizard will be available at http://localhost:5173
 
-3. Open http://localhost:3000 in your browser
+**Backend only:**
+```bash
+cd backend
+npm run dev
+```
+The API will be available at http://localhost:3001
 
 ## Project Structure
 
@@ -80,12 +93,18 @@ wizard/
 
 ## API Integration
 
-The wizard communicates with the Python backend via REST API:
+The wizard communicates with the TypeScript backend via REST API:
 
-- `POST /api/validate/semantic-attributes` - Validate taxonomy terms
-- `POST /api/validate/musical-analysis` - Validate musical parameters
-- `GET /api/taxonomy/search` - Search taxonomy terms
-- `POST /api/generate-code` - Generate code in various formats
+- `POST /api/generate-phrase-from-structure` - Generate structured AI phrases
+- `POST /api/generate-casual-phrase` - Generate casual AI descriptions
+- `POST /api/translate-phrase` - Translate between phrase styles
+- `POST /api/test-models` - Test available AI models
+
+Backend uses Groq AI with multiple models including:
+- `llama-3.3-70b-versatile`
+- `meta-llama/llama-4-scout-17b-16e-instruct`
+- `openai/gpt-oss-20b`
+- And more...
 
 ## Build for Production
 
