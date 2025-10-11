@@ -159,8 +159,14 @@ let encoder: ReturnType<typeof encoding_for_model> | null = null;
 
 function getGroqClient(): Groq {
   if (!groq) {
+    const apiKey = process.env.GROQ_API_KEY;
+    console.log('🔑 GROQ_API_KEY present:', !!apiKey);
+    console.log('🔑 GROQ_API_KEY length:', apiKey?.length || 0);
+    if (!apiKey) {
+      throw new Error('GROQ_API_KEY environment variable is not set');
+    }
     groq = new Groq({
-      apiKey: process.env.GROQ_API_KEY,
+      apiKey: apiKey,
     });
   }
   return groq;
