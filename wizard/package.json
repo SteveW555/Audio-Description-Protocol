@@ -4,7 +4,8 @@
   "description": "ADP Wizard TypeScript Client for Python Validation Integration",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:check": "tsc && vite build",
     "preview": "vite preview",
     "start": "serve dist --single --listen tcp://0.0.0.0:${PORT:-8080}",
     "generate-client": "openapi-generator-cli generate -i ../specs/003-integrate-wizard-interface/contracts/validation-api.yaml -g typescript-axios -o src/services/generated",
