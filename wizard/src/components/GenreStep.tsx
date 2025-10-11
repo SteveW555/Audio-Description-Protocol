@@ -5,7 +5,6 @@ import { RANDOM_BUTTON_COLORS } from '../constants/uiConstants';
 import { useWizardStore } from '../context/WizardContext';
 import { getSecondaryGenresFor } from '../utils/genreHelpers';
 import { generateRandomGenre } from '../utils/randomMET';
-
 interface GenreStepProps {
     stepNumber: number;
     title: string;
