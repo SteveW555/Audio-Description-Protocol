@@ -14,7 +14,7 @@ import { costTracker } from './services/cost-tracker.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // Middleware
 app.use(cors());
@@ -68,7 +68,7 @@ async function startServer() {
     // console.log('Email notifier initialized');
 
     // Start server
-    app.listen(PORT, '::', () => {
+    app.listen(PORT, () => {
       console.log(`Backend server running on http://localhost:${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/health`);
       console.log(`Generate standardized phrase: POST http://localhost:${PORT}/api/generate-phrase`);
