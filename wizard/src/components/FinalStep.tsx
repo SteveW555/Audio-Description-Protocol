@@ -133,37 +133,37 @@ export const FinalStep = ({
             {/* Generated Phrase Display */}
             {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
                 <div className="mt-6">
-                    <div className="flex justify-between items-center mb-2">
-                        <label
-                            htmlFor="generated-phrase"
-                            className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
-                        >
-                            Standardized phrase from structured descriptions:
-                        </label>
+                    <label
+                        htmlFor="generated-phrase"
+                        className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                        Standardized phrase from structured descriptions:
+                    </label>
+                    <div className="flex gap-2">
+                        <div className="flex-1 p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20">
+                            {structurePhraseLoading ? (
+                                <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                                    Generating phrase from structure...
+                                </p>
+                            ) : structurePhraseError ? (
+                                <p className="text-sm text-red-600 dark:text-red-400">
+                                    Error: {structurePhraseError}
+                                </p>
+                            ) : (
+                                <p className="text-base text-gray-900 dark:text-gray-100">
+                                    {structurePhrase}
+                                </p>
+                            )}
+                        </div>
                         {onReRandomizeAll && (
                             <button
                                 type="button"
                                 onClick={onReRandomizeAll}
                                 disabled={structurePhraseLoading || casualPhraseLoading}
-                                className="px-4 py-2 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="px-4 py-2 font-semibold text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             >
                                 Re-Randomize All
                             </button>
-                        )}
-                    </div>
-                    <div className="p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20">
-                        {structurePhraseLoading ? (
-                            <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-                                Generating phrase from structure...
-                            </p>
-                        ) : structurePhraseError ? (
-                            <p className="text-sm text-red-600 dark:text-red-400">
-                                Error: {structurePhraseError}
-                            </p>
-                        ) : (
-                            <p className="text-base text-gray-900 dark:text-gray-100">
-                                {structurePhrase}
-                            </p>
                         )}
                     </div>
                 </div>
