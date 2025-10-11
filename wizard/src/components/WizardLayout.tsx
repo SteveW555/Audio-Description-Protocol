@@ -692,7 +692,7 @@ export const WizardLayout = () => {
                 <header className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="pt-0">
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Audio Protocol Wizard</h1>
-                        <p className="mt-1.5 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step.</p>
+                        <p className="mt-1.5 text-lg text-gray-500 dark:text-gray-400">Create structured, machine-readable audio descriptions step-by-step, or automatically from an audio file</p>
                     </div>
                     <ThemeToggleButton />
                 </header>
