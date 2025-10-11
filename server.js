@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import cors from "cors";
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import http from "http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,30 +35,68 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy API requests to backend (running on different port)
-app.use('/api', createProxyMiddleware({
-  target: backendUrl,
-  changeOrigin: true,
-  logLevel: 'debug',
-  timeout: 300000, // 5 minutes
-  proxyTimeout: 300000, // 5 minutes
-  onProxyReq: (proxyReq, req, res) => {
-    console.log(`🔄 Proxying ${req.method} ${req.url} to ${backendUrl}${req.url}`);
-  },
-  onProxyRes: (proxyRes, req, res) => {
+// Simple manual proxy to backend
+app.use('/api', (req, res) => {
+  console.log(`🔄 Proxying ${req.method} ${req.url} to ${backendUrl}${req.url}`);
+
+  const options = {
+    hostname: 'localhost',
+    port: backendPort,
+    path: req.url,
+    method: req.method,
+    headers: {
+      ...req.headers,
+      host: `localhost:${backendPort}`
+    },
+    timeout: 300000 // 5 minutes
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
     console.log(`✅ Proxy response ${proxyRes.statusCode} for ${req.method} ${req.url}`);
-  },
-  onError: (err, req, res) => {
+
+    // Forward status code
+    res.status(proxyRes.statusCode);
+
+    // Forward headers
+    Object.keys(proxyRes.headers).forEach(key => {
+      res.setHeader(key, proxyRes.headers[key]);
+    });
+
+    // Forward response body
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (err) => {
     console.error('❌ Proxy error:', err.message);
     console.error('❌ Error code:', err.code);
     console.error('❌ Request:', req.method, req.url);
-    res.status(500).json({
-      error: 'Backend service unavailable',
-      details: err.message,
-      code: err.code
-    });
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Backend service unavailable',
+        details: err.message,
+        code: err.code
+      });
+    }
+  });
+
+  proxyReq.on('timeout', () => {
+    console.error('❌ Proxy timeout for:', req.method, req.url);
+    proxyReq.destroy();
+    if (!res.headersSent) {
+      res.status(504).json({ error: 'Gateway timeout' });
+    }
+  });
+
+  // Forward request body for POST/PUT/PATCH
+  if (req.body && Object.keys(req.body).length > 0) {
+    const bodyData = JSON.stringify(req.body);
+    proxyReq.setHeader('Content-Type', 'application/json');
+    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+    proxyReq.write(bodyData);
   }
-}));
+
+  proxyReq.end();
+});
 
 // Serve static files from wizard/dist
 app.use(express.static(distDir));
