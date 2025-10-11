@@ -508,16 +508,61 @@ export const WizardLayout = () => {
         // First randomize all wizard terms (this updates the data and refreshes previews)
         handleRandomizeAll();
 
-        // Wait for Zustand state to propagate and DOM to update
-        // This ensures the new randomized data is available for the AI functions
-        await new Promise(resolve => setTimeout(resolve, 200));
+        // Wait a tick for Zustand to process all updates
+        await new Promise(resolve => setTimeout(resolve, 50));
 
-        // Then regenerate both AI phrases sequentially
-        // Generate structure phrase first (standardized AI phrase)
-        await handleGeneratePhraseFromStructure();
+        // Get fresh data directly from the store (not from the stale component variable)
+        const freshData = useWizardStore.getState().data;
 
-        // Then generate casual phrase
-        await handleGenerateCasualPhrase();
+        // Generate structure phrase with fresh data
+        setStructurePhraseLoading(true);
+        setStructurePhraseError(null);
+
+        try {
+            console.log('🎵 Generating phrase from structure with FRESH data:', freshData);
+            const response = await fetch(buildApiUrl('/api/generate-phrase-from-structure'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    wizardData: freshData.semantic_description,
+                    sessionId: sessionStorage.getItem('audio-protocol-session-id') || 'default',
+                    requestId: crypto.randomUUID(),
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to generate phrase from structure');
+            }
+
+            const result = await response.json();
+            console.log('✅ Phrase from structure response:', result);
+            setStructurePhrase(result.phrase);
+        } catch (error: any) {
+            console.error('❌ Error generating phrase from structure:', error);
+            setStructurePhraseError(error.message || 'Failed to generate phrase from structure');
+        } finally {
+            setStructurePhraseLoading(false);
+        }
+
+        // Then generate casual phrase with fresh data
+        setCasualPhraseLoading(true);
+        setCasualPhraseError(null);
+
+        try {
+            console.log('🎵 Generating casual phrase with FRESH data:', freshData, 'poeticLevel:', poeticLevel);
+            const response = await generateCasualPhrase(freshData, poeticLevel);
+            console.log('✅ Casual phrase response:', response);
+            setCasualPhrase(response.casualPhrase);
+            usageTracker.track(extractCasualPhraseData(response.casualPhrase, poeticLevel));
+        } catch (error: any) {
+            console.error('❌ Error generating casual phrase:', error);
+            setCasualPhraseError(error.message || 'Failed to generate casual phrase');
+        } finally {
+            setCasualPhraseLoading(false);
+        }
     };
 
     useEffect(() => {
