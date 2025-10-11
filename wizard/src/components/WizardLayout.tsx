@@ -18,6 +18,7 @@ import { ThemeToggleButton } from './ThemeToggleButton';
 import { WizardStep } from './WizardStep';
 import { generateRandomMET, generateRandomGenre, generateRandomInstrument, generateRandomVocals } from '../utils/randomMET';
 import { generateCasualPhrase } from '../ai/casualPhraseGenerator';
+import { buildApiUrl } from '../config/api';
 import { VOCABULARY } from '../constants/vocabulary';
 import { RANDOM_BUTTON_COLORS, LAYOUT_HEIGHTS } from '../constants/uiConstants';
 import { usageTracker } from '../services/usageTracking';
@@ -165,7 +166,7 @@ export const WizardLayout = () => {
 
         try {
             console.log('🧪 Starting model timing test...');
-            const response = await fetch('/api/test-models', {
+            const response = await fetch(buildApiUrl('/api/test-models'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,7 +223,7 @@ export const WizardLayout = () => {
 
         try {
             // Call backend API to translate casual phrase to standardized vocabulary
-            const response = await fetch('/api/translate-phrase', {
+            const response = await fetch(buildApiUrl('/api/translate-phrase'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -474,7 +475,7 @@ export const WizardLayout = () => {
 
         try {
             console.log('🎵 Generating phrase from structure with data:', data);
-            const response = await fetch('/api/generate-phrase-from-structure', {
+            const response = await fetch(buildApiUrl('/api/generate-phrase-from-structure'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

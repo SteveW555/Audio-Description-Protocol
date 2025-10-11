@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { AIGenerationRequest, AIGenerationResponse } from '../types/wizard';
 import type { AudioProtocolData } from '../types/protocol';
-
-// Use relative URL for Vite proxy
-const API_BASE_URL = '';
+import { buildApiUrl } from '../config/api';
 
 /**
  * Filters wizard data to exclude key, scale, and chords per FR-002
@@ -79,7 +77,7 @@ export async function generatePhrase(
     requestId,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/generate-phrase`, {
+  const response = await fetch(buildApiUrl('/api/generate-phrase'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { AudioProtocolData } from '../types/protocol';
-
-// Use relative URL for Vite proxy
-const API_BASE_URL = '';
+import { buildApiUrl } from '../config/api';
 
 export interface CasualPhraseResponse {
   casualPhrase: string;
@@ -92,7 +90,7 @@ export async function generateCasualPhrase(
     poeticLevel,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/generate-casual-phrase`, {
+  const response = await fetch(buildApiUrl('/api/generate-casual-phrase'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
