@@ -505,11 +505,17 @@ export const WizardLayout = () => {
     };
 
     const handleReRandomizeAll = async () => {
-        // Regenerate both phrases
-        await Promise.all([
-            handleGeneratePhraseFromStructure(),
-            handleGenerateCasualPhrase()
-        ]);
+        // First randomize all wizard terms (this updates the data and refreshes previews)
+        handleRandomizeAll();
+
+        // Then regenerate both AI phrases based on the new data
+        // Wait a moment for state to update
+        setTimeout(async () => {
+            await Promise.all([
+                handleGeneratePhraseFromStructure(),
+                handleGenerateCasualPhrase()
+            ]);
+        }, 100);
     };
 
     useEffect(() => {

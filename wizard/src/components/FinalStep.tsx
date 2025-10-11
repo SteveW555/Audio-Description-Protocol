@@ -136,11 +136,15 @@ export const FinalStep = ({
                     <label
                         htmlFor="generated-phrase"
                         className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                        title="A fixed, Structured Phrase representing the description terms"
                     >
                         Standardized phrase from structured descriptions:
                     </label>
                     <div className="flex gap-2">
-                        <div className="flex-1 p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20">
+                        <div
+                            className="flex-1 p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20"
+                            title="A fixed, Structured Phrase representing the description terms"
+                        >
                             {structurePhraseLoading ? (
                                 <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                                     Generating phrase from structure...
@@ -175,11 +179,15 @@ export const FinalStep = ({
                     <label
                         htmlFor="casual-phrase"
                         className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                        title="A novel creative phrase, a human version of the Structured Phrase. Internally the system will first translate the human phrase to the Structured Phrase, and then derive the Keyword descriptive terms"
                     >
                         Casual phrase from wizard structure:
                     </label>
                     <div className="flex gap-2">
-                        <div className="flex-1 p-4 border-2 border-purple-300 dark:border-purple-600 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                        <div
+                            className="flex-1 p-4 border-2 border-purple-300 dark:border-purple-600 rounded-lg bg-purple-50 dark:bg-purple-900/20"
+                            title="A novel creative phrase, a human version of the Structured Phrase. Internally the system will first translate the human phrase to the Structured Phrase, and then derive the Keyword descriptive terms"
+                        >
                             {casualPhraseLoading ? (
                                 <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                                     Generating casual phrase...
@@ -201,7 +209,7 @@ export const FinalStep = ({
                                 disabled={casualPhraseLoading}
                                 className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             >
-                                Re-Roll Casual Phrase
+                                Re-Roll Casual Phrase (from Structured)
                             </button>
                         )}
                     </div>
