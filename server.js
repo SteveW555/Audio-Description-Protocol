@@ -37,12 +37,13 @@ app.use((req, res, next) => {
 
 // Simple manual proxy to backend
 app.use('/api', (req, res) => {
-  console.log(`🔄 Proxying ${req.method} ${req.url} to ${backendUrl}${req.url}`);
+  const targetPath = `/api${req.url}`;
+  console.log(`🔄 Proxying ${req.method} ${targetPath} to ${backendUrl}${targetPath}`);
 
   const options = {
     hostname: 'localhost',
     port: backendPort,
-    path: req.url,
+    path: targetPath,
     method: req.method,
     headers: {
       ...req.headers,
@@ -52,7 +53,7 @@ app.use('/api', (req, res) => {
   };
 
   const proxyReq = http.request(options, (proxyRes) => {
-    console.log(`✅ Proxy response ${proxyRes.statusCode} for ${req.method} ${req.url}`);
+    console.log(`✅ Proxy response ${proxyRes.statusCode} for ${req.method} ${targetPath}`);
 
     // Forward status code
     res.status(proxyRes.statusCode);
@@ -69,7 +70,7 @@ app.use('/api', (req, res) => {
   proxyReq.on('error', (err) => {
     console.error('❌ Proxy error:', err.message);
     console.error('❌ Error code:', err.code);
-    console.error('❌ Request:', req.method, req.url);
+    console.error('❌ Request:', req.method, targetPath);
     if (!res.headersSent) {
       res.status(500).json({
         error: 'Backend service unavailable',
@@ -80,7 +81,7 @@ app.use('/api', (req, res) => {
   });
 
   proxyReq.on('timeout', () => {
-    console.error('❌ Proxy timeout for:', req.method, req.url);
+    console.error('⏱️ Proxy timeout for:', req.method, targetPath);
     proxyReq.destroy();
     if (!res.headersSent) {
       res.status(504).json({ error: 'Gateway timeout' });
@@ -108,5 +109,5 @@ app.get('*', (req, res) => {
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Unified server listening on port ${port}`);
-  console.log(`Proxying /api requests to ${backendUrl}`);
+  console.log(`Proxying /api requests to ${backendUrl}/api`);
 });
