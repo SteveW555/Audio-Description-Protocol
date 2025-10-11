@@ -7,7 +7,8 @@ import translatePhraseRouter from './routes/translate-phrase.js';
 import testModelsRouter from './routes/test-models.js';
 import generatePhraseFromStructureRouter from './routes/generate-phrase-from-structure.js';
 import { costTracker } from './services/cost-tracker.js';
-import { emailNotifier } from './services/email-notifier.js';
+// Email temporarily disabled for simplicity
+// import { emailNotifier } from './services/email-notifier.js';
 
 // Load environment variables
 dotenv.config();
@@ -62,9 +63,9 @@ async function startServer() {
     await costTracker.initialize();
     console.log('Cost tracker initialized');
 
-    // Initialize email notifier
-    await emailNotifier.initialize();
-    console.log('Email notifier initialized');
+    // Email temporarily disabled for simplicity
+    // await emailNotifier.initialize();
+    // console.log('Email notifier initialized');
 
     // Start server
     app.listen(PORT, () => {

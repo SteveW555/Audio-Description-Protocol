@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { generatePhrase } from '../ai/openai-client.js';
 import { rateLimiter } from '../services/rate-limiter.js';
 import { costTracker } from '../services/cost-tracker.js';
-import { emailNotifier } from '../services/email-notifier.js';
+// Email temporarily disabled for simplicity
+// import { emailNotifier } from '../services/email-notifier.js';
 import type { AIGenerationRequest, AIGenerationResponse, WizardData } from '../types/index.js';
 
 const router = Router();
@@ -67,13 +68,13 @@ router.post('/generate-phrase', async (req: Request, res: Response) => {
     // Check rate limits (FR-015, FR-016)
     const rateLimitCheck = rateLimiter.canMakeRequest();
     if (!rateLimitCheck.allowed) {
-      // Send email notification per FR-019
-      await emailNotifier.notifyRateLimit(
-        rateLimitCheck.limitType!,
-        rateLimitCheck.current!,
-        rateLimitCheck.limit!,
-        sessionId
-      );
+      // Email temporarily disabled for simplicity
+      // await emailNotifier.notifyRateLimit(
+      //   rateLimitCheck.limitType!,
+      //   rateLimitCheck.current!,
+      //   rateLimitCheck.limit!,
+      //   sessionId
+      // );
 
       return res.status(429).json({
         error: `Rate limit exceeded: ${rateLimitCheck.limitType}`,
@@ -93,13 +94,13 @@ router.post('/generate-phrase', async (req: Request, res: Response) => {
       // Check cost limits before committing (FR-017)
       const costCheck = costTracker.canAddCost(sessionId, result.costUSD);
       if (!costCheck.allowed) {
-        // Send email notification per FR-019
-        await emailNotifier.notifyCostLimit(
-          costCheck.limitType!,
-          costCheck.current!,
-          costCheck.limit!,
-          sessionId
-        );
+        // Email temporarily disabled for simplicity
+        // await emailNotifier.notifyCostLimit(
+        //   costCheck.limitType!,
+        //   costCheck.current!,
+        //   costCheck.limit!,
+        //   sessionId
+        // );
 
         return res.status(429).json({
           error: `Cost limit exceeded: ${costCheck.limitType}`,
