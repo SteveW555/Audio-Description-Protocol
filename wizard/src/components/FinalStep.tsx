@@ -165,6 +165,7 @@ export const FinalStep = ({
                                 onClick={onReRandomizeAll}
                                 disabled={structurePhraseLoading || casualPhraseLoading}
                                 className="w-32 px-3 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-center leading-tight"
+                                title="Re-randomize all structured keyword terms, then build the structured phrase"
                             >
                                 Re-Randomize Wizard
                             </button>
