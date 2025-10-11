@@ -10,7 +10,7 @@
     "build:backend": "cd backend && npm ci && npm run build",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && cross-env PORT=3001 node dist/index.js",
-    "start:frontend": "cross-env BACKEND_PORT=3001 node server.js",
+    "start:frontend": "node server.js",
     "preview": "cd wizard && npm run preview",
     "lint": "cd wizard && npm run lint",
     "type-check": "cd wizard && npm run type-check",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.0.1",
     "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
     "cross-env": "^10.1.0",
     "express": "^4.18.2",
     "groq": "^4.10.2",
