@@ -13,9 +13,10 @@ const rawPort = process.env.PORT;
 const port = Number(rawPort) || 8080;
 const distDir = path.join(__dirname, "wizard", "dist");
 const backendPort = process.env.BACKEND_PORT || 3001;
+const backendUrl = process.env.BACKEND_URL || `http://localhost:${backendPort}`;
 
 console.log(`Environment PORT=${rawPort}`);
-console.log(`Backend PORT=${backendPort}`);
+console.log(`Backend URL=${backendUrl}`);
 console.log(`Serving static files from ${distDir}`);
 console.log(`Dist exists: ${fs.existsSync(distDir)}`);
 if (fs.existsSync(distDir)) {
@@ -36,7 +37,7 @@ app.use((req, res, next) => {
 
 // Proxy API requests to backend (running on different port)
 app.use('/api', createProxyMiddleware({
-  target: `http://localhost:${backendPort}`,
+  target: backendUrl,
   changeOrigin: true,
   logLevel: 'debug',
   onError: (err, req, res) => {
@@ -58,5 +59,5 @@ app.get('*', (req, res) => {
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Unified server listening on port ${port}`);
-  console.log(`Proxying /api requests to http://localhost:${backendPort}`);
+  console.log(`Proxying /api requests to ${backendUrl}`);
 });
