@@ -166,7 +166,7 @@ export const FinalStep = ({
                                 disabled={structurePhraseLoading || casualPhraseLoading}
                                 className="px-4 py-2 font-semibold text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             >
-                                Re-Randomize All
+                                Re-Randomize Wizard
                             </button>
                         )}
                     </div>
