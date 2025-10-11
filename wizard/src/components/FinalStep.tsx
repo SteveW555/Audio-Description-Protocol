@@ -154,7 +154,7 @@ export const FinalStep = ({
                                     Error: {structurePhraseError}
                                 </p>
                             ) : (
-                                <p className="text-base text-gray-900 dark:text-gray-100">
+                                <p className="text-sm text-gray-900 dark:text-gray-100">
                                     {structurePhrase}
                                 </p>
                             )}
@@ -164,7 +164,7 @@ export const FinalStep = ({
                                 type="button"
                                 onClick={onReRandomizeAll}
                                 disabled={structurePhraseLoading || casualPhraseLoading}
-                                className="px-4 py-2 font-semibold text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="w-32 px-3 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-center leading-tight"
                             >
                                 Re-Randomize Wizard
                             </button>
@@ -197,7 +197,7 @@ export const FinalStep = ({
                                     Error: {casualPhraseError}
                                 </p>
                             ) : (
-                                <p className="text-base text-gray-900 dark:text-gray-100">
+                                <p className="text-sm text-gray-900 dark:text-gray-100">
                                     {casualPhrase}
                                 </p>
                             )}
@@ -207,9 +207,9 @@ export const FinalStep = ({
                                 type="button"
                                 onClick={onRegenerateCasualPhrase}
                                 disabled={casualPhraseLoading}
-                                className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="w-32 px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-center leading-tight"
                             >
-                                Re-Roll Casual Phrase (from Structured)
+                                Re-Roll Casual Phrase
                             </button>
                         )}
                     </div>
