@@ -35,6 +35,7 @@ export const WizardLayout = () => {
     // Initialize AI phrase generation hook
     useAIPhraseGeneration();
     const titleInputRef = useRef<HTMLInputElement>(null);
+    const isManuallyGeneratingRef = useRef(false);
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const setAddTheory = useWizardStore((state) => state.setAddTheory);
@@ -505,6 +506,9 @@ export const WizardLayout = () => {
     };
 
     const handleReRandomizeAll = async () => {
+        // Set flag to prevent useEffect auto-generation from interfering
+        isManuallyGeneratingRef.current = true;
+
         // Randomize all wizard terms WITHOUT navigating (inline version of handleRandomizeAll)
         setHasRandomized(true);
 
@@ -602,6 +606,8 @@ export const WizardLayout = () => {
             setCasualPhraseError(error.message || 'Failed to generate casual phrase');
         } finally {
             setCasualPhraseLoading(false);
+            // Clear flag now that manual generation is complete
+            isManuallyGeneratingRef.current = false;
         }
     };
 
@@ -613,6 +619,11 @@ export const WizardLayout = () => {
 
     // Auto-generate phrases when reaching the final step
     useEffect(() => {
+        // Skip auto-generation if we're manually generating (e.g., from Re-Randomize button)
+        if (isManuallyGeneratingRef.current) {
+            return;
+        }
+
         if (isFinalStep) {
             if (!structurePhraseLoading && !structurePhrase) {
                 handleGeneratePhraseFromStructure();
@@ -621,7 +632,7 @@ export const WizardLayout = () => {
                 handleGenerateCasualPhrase();
             }
         }
-    }, [isFinalStep]);
+    }, [isFinalStep, structurePhraseLoading, casualPhraseLoading, structurePhrase, casualPhrase]);
 
     const instrumentationIndex = useMemo(
         () => steps.findIndex((entry) => 'special' in entry && entry.special === StepType.INSTRUMENTATION),
