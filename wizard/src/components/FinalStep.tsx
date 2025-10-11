@@ -100,7 +100,7 @@ export const FinalStep = ({
                 </div>
             )}
 
-            <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-2 mt-6">
                 <div className="flex gap-4">
                     <button
                         type="button"
@@ -117,7 +117,7 @@ export const FinalStep = ({
                         Download .json
                     </button>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4 mb-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center my-2">
                     *Note: In production the result will be injected directly into the database or training set
                 </p>
                 <button
