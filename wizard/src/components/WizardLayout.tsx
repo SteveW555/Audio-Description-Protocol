@@ -505,14 +505,54 @@ export const WizardLayout = () => {
     };
 
     const handleReRandomizeAll = async () => {
-        // First randomize all wizard terms (this updates the data and refreshes previews)
-        handleRandomizeAll();
+        // Randomize all wizard terms WITHOUT navigating (inline version of handleRandomizeAll)
+        setHasRandomized(true);
 
-        // Wait a tick for Zustand to process all updates
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // Randomize Genre
+        const randomGenre = generateRandomGenre();
+        updateData('semantic_description.genre.primary', randomGenre.primary);
+        updateData('semantic_description.genre.primary_subgenres', randomGenre.subgenres);
 
-        // Get fresh data directly from the store (not from the stale component variable)
+        // Randomize MET
+        const { mood, energy, texture } = generateRandomMET();
+        updateData('semantic_description.attributes.mood', mood);
+        updateData('semantic_description.attributes.energy', energy);
+        updateData('semantic_description.attributes.texture', texture);
+
+        // Randomize Instrumentation (add 1-2 random instruments)
+        const instrumentCount = Math.random() > 0.5 ? 2 : 1;
+        const instruments = Array.from({ length: instrumentCount }, () => generateRandomInstrument());
+        updateData('semantic_description.instrumentation', instruments);
+
+        // Randomize Vocals (50% chance)
+        const vocals = generateRandomVocals();
+        if (vocals) {
+            updateData('semantic_description.vocals.presence', vocals.presence);
+            updateData('semantic_description.vocals.gender', vocals.gender);
+            updateData('semantic_description.vocals.style', vocals.style);
+            updateData('semantic_description.vocals.descriptors', vocals.descriptors);
+        } else {
+            // Clear vocals if not generated
+            updateData('semantic_description.vocals', undefined);
+        }
+
+        // Randomize Music Theory
+        const randomBPM = Math.floor(Math.random() * (150 - 100 + 1)) + 100;
+        const randomKey = VOCABULARY.key[Math.floor(Math.random() * VOCABULARY.key.length)];
+        const randomScale = VOCABULARY.scale[Math.floor(Math.random() * VOCABULARY.scale.length)];
+        updateData('theory.bpm', randomBPM.toString());
+        updateData('theory.key', randomKey);
+        updateData('theory.scale', randomScale);
+        updateData('theory.chords', 'tbc');
+
+        // Wait for Zustand to process all updates
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Get fresh data directly from the store
         const freshData = useWizardStore.getState().data;
+
+        // Track usage
+        usageTracker.track(extractRandomizeAllData(freshData));
 
         // Generate structure phrase with fresh data
         setStructurePhraseLoading(true);
