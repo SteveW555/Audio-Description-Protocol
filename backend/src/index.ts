@@ -78,10 +78,12 @@ async function startServer() {
     // await emailNotifier.initialize();
     // console.log('Email notifier initialized');
 
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`Backend server running on http://localhost:${PORT}`);
+    // Start server - bind to 0.0.0.0 to allow connections from proxy
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Backend server running on http://0.0.0.0:${PORT}`);
+      console.log(`Accessible on localhost:${PORT} and 127.0.0.1:${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/health`);
+      console.log(`Test echo: POST http://localhost:${PORT}/api/test-echo`);
       console.log(`Generate standardized phrase: POST http://localhost:${PORT}/api/generate-phrase`);
       console.log(`Generate casual phrase: POST http://localhost:${PORT}/api/generate-casual-phrase`);
       console.log(`Translate phrase: POST http://localhost:${PORT}/api/translate-phrase`);
