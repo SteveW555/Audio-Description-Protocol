@@ -504,6 +504,14 @@ export const WizardLayout = () => {
         }
     };
 
+    const handleReRandomizeAll = async () => {
+        // Regenerate both phrases
+        await Promise.all([
+            handleGeneratePhraseFromStructure(),
+            handleGenerateCasualPhrase()
+        ]);
+    };
+
     useEffect(() => {
         if (step === 0 && titleInputRef.current) {
             titleInputRef.current.select();
@@ -552,6 +560,7 @@ export const WizardLayout = () => {
                     casualPhraseLoading={casualPhraseLoading}
                     casualPhraseError={casualPhraseError}
                     onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                    onReRandomizeAll={handleReRandomizeAll}
                 />
             );
         }
@@ -638,6 +647,7 @@ export const WizardLayout = () => {
                             casualPhraseLoading={casualPhraseLoading}
                             casualPhraseError={casualPhraseError}
                             onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                            onReRandomizeAll={handleReRandomizeAll}
                         />
                     );
                 case StepType.TEXT_INPUT:

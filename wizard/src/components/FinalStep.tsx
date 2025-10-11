@@ -14,6 +14,7 @@ interface FinalStepProps {
     casualPhraseLoading?: boolean;
     casualPhraseError?: string | null;
     onRegenerateCasualPhrase?: () => void;
+    onReRandomizeAll?: () => void;
 }
 
 export const FinalStep = ({
@@ -25,7 +26,8 @@ export const FinalStep = ({
     casualPhrase,
     casualPhraseLoading,
     casualPhraseError,
-    onRegenerateCasualPhrase
+    onRegenerateCasualPhrase,
+    onReRandomizeAll
 }: FinalStepProps) => {
     const data = useWizardStore((state) => state.data);
     const [notification, setNotification] = useState('');
@@ -131,12 +133,24 @@ export const FinalStep = ({
             {/* Generated Phrase Display */}
             {(structurePhrase || structurePhraseLoading || structurePhraseError) && (
                 <div className="mt-6">
-                    <label
-                        htmlFor="generated-phrase"
-                        className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                        Standardized phrase from structured descriptions:
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                        <label
+                            htmlFor="generated-phrase"
+                            className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
+                        >
+                            Standardized phrase from structured descriptions:
+                        </label>
+                        {onReRandomizeAll && (
+                            <button
+                                type="button"
+                                onClick={onReRandomizeAll}
+                                disabled={structurePhraseLoading || casualPhraseLoading}
+                                className="px-4 py-2 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                            >
+                                Re-Randomize All
+                            </button>
+                        )}
+                    </div>
                     <div className="p-4 border-2 border-teal-300 dark:border-teal-600 rounded-lg bg-teal-50 dark:bg-teal-900/20">
                         {structurePhraseLoading ? (
                             <p className="text-sm text-gray-600 dark:text-gray-400 italic">
@@ -187,7 +201,7 @@ export const FinalStep = ({
                                 disabled={casualPhraseLoading}
                                 className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             >
-                                Re-Roll
+                                Re-Roll Casual Phrase
                             </button>
                         )}
                     </div>
