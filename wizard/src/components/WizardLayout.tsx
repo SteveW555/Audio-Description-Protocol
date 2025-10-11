@@ -564,15 +564,32 @@ export const WizardLayout = () => {
         updateData('theory.chords', 'tbc');
         console.log('🔵 [RE-RANDOMIZE] Music Theory randomized:', { bpm: randomBPM, key: randomKey, scale: randomScale });
 
-        // Wait for Zustand to process all updates
-        console.log('🔵 [RE-RANDOMIZE] Waiting 100ms for Zustand state updates...');
-        await new Promise(resolve => setTimeout(resolve, 100));
-        console.log('🔵 [RE-RANDOMIZE] Wait complete');
-
-        // Get fresh data directly from the store
-        console.log('🔵 [RE-RANDOMIZE] Fetching fresh data from Zustand store...');
-        const freshData = useWizardStore.getState().data;
-        console.log('🔵 [RE-RANDOMIZE] Fresh data fetched:', JSON.stringify(freshData.semantic_description, null, 2));
+        // Build fresh data object from the randomized values we just created
+        console.log('🔵 [RE-RANDOMIZE] Building fresh data object from randomized values...');
+        const freshData = {
+            ...data,
+            semantic_description: {
+                ...data.semantic_description,
+                genre: {
+                    primary: randomGenre.primary,
+                    primary_subgenres: randomGenre.subgenres
+                },
+                attributes: {
+                    mood,
+                    energy,
+                    texture
+                },
+                instrumentation: instruments,
+                vocals: vocals || undefined
+            },
+            theory: {
+                bpm: randomBPM.toString(),
+                key: randomKey,
+                scale: randomScale,
+                chords: 'tbc'
+            }
+        };
+        console.log('🔵 [RE-RANDOMIZE] Fresh data built:', JSON.stringify(freshData.semantic_description, null, 2));
 
         // Track usage
         console.log('🔵 [RE-RANDOMIZE] Tracking usage...');
