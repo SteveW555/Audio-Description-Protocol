@@ -318,7 +318,7 @@ export async function generateCasualPhraseGroq(
           },
         ],
         max_tokens: 3500,
-        temperature: 1.0,
+        temperature: 0.1,
       });
 
       console.log('🤖 Groq raw completion:', JSON.stringify(completion, null, 2));
