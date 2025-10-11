@@ -506,41 +506,55 @@ export const WizardLayout = () => {
     };
 
     const handleReRandomizeAll = async () => {
+        console.log('🔵 [RE-RANDOMIZE] Button clicked - Starting handleReRandomizeAll');
+
         // Set flag to prevent useEffect auto-generation from interfering
         isManuallyGeneratingRef.current = true;
+        console.log('🔵 [RE-RANDOMIZE] Set isManuallyGeneratingRef.current = true');
 
         // Randomize all wizard terms WITHOUT navigating (inline version of handleRandomizeAll)
         setHasRandomized(true);
+        console.log('🔵 [RE-RANDOMIZE] Set hasRandomized = true');
 
         // Randomize Genre
+        console.log('🔵 [RE-RANDOMIZE] Randomizing Genre...');
         const randomGenre = generateRandomGenre();
         updateData('semantic_description.genre.primary', randomGenre.primary);
         updateData('semantic_description.genre.primary_subgenres', randomGenre.subgenres);
+        console.log('🔵 [RE-RANDOMIZE] Genre randomized:', randomGenre);
 
         // Randomize MET
+        console.log('🔵 [RE-RANDOMIZE] Randomizing MET...');
         const { mood, energy, texture } = generateRandomMET();
         updateData('semantic_description.attributes.mood', mood);
         updateData('semantic_description.attributes.energy', energy);
         updateData('semantic_description.attributes.texture', texture);
+        console.log('🔵 [RE-RANDOMIZE] MET randomized:', { mood, energy, texture });
 
         // Randomize Instrumentation (add 1-2 random instruments)
+        console.log('🔵 [RE-RANDOMIZE] Randomizing Instrumentation...');
         const instrumentCount = Math.random() > 0.5 ? 2 : 1;
         const instruments = Array.from({ length: instrumentCount }, () => generateRandomInstrument());
         updateData('semantic_description.instrumentation', instruments);
+        console.log('🔵 [RE-RANDOMIZE] Instrumentation randomized:', instruments);
 
         // Randomize Vocals (50% chance)
+        console.log('🔵 [RE-RANDOMIZE] Randomizing Vocals...');
         const vocals = generateRandomVocals();
         if (vocals) {
             updateData('semantic_description.vocals.presence', vocals.presence);
             updateData('semantic_description.vocals.gender', vocals.gender);
             updateData('semantic_description.vocals.style', vocals.style);
             updateData('semantic_description.vocals.descriptors', vocals.descriptors);
+            console.log('🔵 [RE-RANDOMIZE] Vocals randomized:', vocals);
         } else {
             // Clear vocals if not generated
             updateData('semantic_description.vocals', undefined);
+            console.log('🔵 [RE-RANDOMIZE] Vocals cleared (50% chance)');
         }
 
         // Randomize Music Theory
+        console.log('🔵 [RE-RANDOMIZE] Randomizing Music Theory...');
         const randomBPM = Math.floor(Math.random() * (150 - 100 + 1)) + 100;
         const randomKey = VOCABULARY.key[Math.floor(Math.random() * VOCABULARY.key.length)];
         const randomScale = VOCABULARY.scale[Math.floor(Math.random() * VOCABULARY.scale.length)];
@@ -548,22 +562,32 @@ export const WizardLayout = () => {
         updateData('theory.key', randomKey);
         updateData('theory.scale', randomScale);
         updateData('theory.chords', 'tbc');
+        console.log('🔵 [RE-RANDOMIZE] Music Theory randomized:', { bpm: randomBPM, key: randomKey, scale: randomScale });
 
         // Wait for Zustand to process all updates
+        console.log('🔵 [RE-RANDOMIZE] Waiting 100ms for Zustand state updates...');
         await new Promise(resolve => setTimeout(resolve, 100));
+        console.log('🔵 [RE-RANDOMIZE] Wait complete');
 
         // Get fresh data directly from the store
+        console.log('🔵 [RE-RANDOMIZE] Fetching fresh data from Zustand store...');
         const freshData = useWizardStore.getState().data;
+        console.log('🔵 [RE-RANDOMIZE] Fresh data fetched:', JSON.stringify(freshData.semantic_description, null, 2));
 
         // Track usage
+        console.log('🔵 [RE-RANDOMIZE] Tracking usage...');
         usageTracker.track(extractRandomizeAllData(freshData));
+        console.log('🔵 [RE-RANDOMIZE] Usage tracked');
 
         // Generate structure phrase with fresh data
+        console.log('🔵 [RE-RANDOMIZE] Setting structurePhraseLoading = true');
         setStructurePhraseLoading(true);
         setStructurePhraseError(null);
+        console.log('🔵 [RE-RANDOMIZE] About to generate structure phrase with fresh data');
 
         try {
-            console.log('🎵 Generating phrase from structure with FRESH data:', freshData);
+            console.log('🔵 [RE-RANDOMIZE] 🎵 Generating phrase from structure with FRESH data:', freshData);
+            console.log('🔵 [RE-RANDOMIZE] Calling fetch to /api/generate-phrase-from-structure...');
             const response = await fetch(buildApiUrl('/api/generate-phrase-from-structure'), {
                 method: 'POST',
                 headers: {
@@ -575,39 +599,51 @@ export const WizardLayout = () => {
                     requestId: crypto.randomUUID(),
                 }),
             });
+            console.log('🔵 [RE-RANDOMIZE] Fetch completed, response status:', response.status);
 
             if (!response.ok) {
+                console.log('🔵 [RE-RANDOMIZE] Response NOT OK, parsing error...');
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to generate phrase from structure');
             }
 
+            console.log('🔵 [RE-RANDOMIZE] Response OK, parsing result...');
             const result = await response.json();
-            console.log('✅ Phrase from structure response:', result);
+            console.log('🔵 [RE-RANDOMIZE] ✅ Phrase from structure response:', result);
+            console.log('🔵 [RE-RANDOMIZE] About to call setStructurePhrase with:', result.phrase);
             setStructurePhrase(result.phrase);
+            console.log('🔵 [RE-RANDOMIZE] setStructurePhrase called successfully');
         } catch (error: any) {
-            console.error('❌ Error generating phrase from structure:', error);
+            console.error('🔵 [RE-RANDOMIZE] ❌ Error generating phrase from structure:', error);
             setStructurePhraseError(error.message || 'Failed to generate phrase from structure');
         } finally {
+            console.log('🔵 [RE-RANDOMIZE] Setting structurePhraseLoading = false');
             setStructurePhraseLoading(false);
+            console.log('🔵 [RE-RANDOMIZE] structurePhraseLoading set to false');
         }
 
         // Then generate casual phrase with fresh data
+        console.log('🔵 [RE-RANDOMIZE] Now generating casual phrase...');
         setCasualPhraseLoading(true);
         setCasualPhraseError(null);
 
         try {
-            console.log('🎵 Generating casual phrase with FRESH data:', freshData, 'poeticLevel:', poeticLevel);
+            console.log('🔵 [RE-RANDOMIZE] 🎵 Generating casual phrase with FRESH data:', freshData, 'poeticLevel:', poeticLevel);
             const response = await generateCasualPhrase(freshData, poeticLevel);
-            console.log('✅ Casual phrase response:', response);
+            console.log('🔵 [RE-RANDOMIZE] ✅ Casual phrase response:', response);
             setCasualPhrase(response.casualPhrase);
+            console.log('🔵 [RE-RANDOMIZE] setCasualPhrase called successfully');
             usageTracker.track(extractCasualPhraseData(response.casualPhrase, poeticLevel));
         } catch (error: any) {
-            console.error('❌ Error generating casual phrase:', error);
+            console.error('🔵 [RE-RANDOMIZE] ❌ Error generating casual phrase:', error);
             setCasualPhraseError(error.message || 'Failed to generate casual phrase');
         } finally {
+            console.log('🔵 [RE-RANDOMIZE] Setting casualPhraseLoading = false');
             setCasualPhraseLoading(false);
             // Clear flag now that manual generation is complete
+            console.log('🔵 [RE-RANDOMIZE] Clearing isManuallyGeneratingRef flag');
             isManuallyGeneratingRef.current = false;
+            console.log('🔵 [RE-RANDOMIZE] ✅ handleReRandomizeAll COMPLETE');
         }
     };
 
@@ -619,18 +655,36 @@ export const WizardLayout = () => {
 
     // Auto-generate phrases when reaching the final step
     useEffect(() => {
+        console.log('🟡 [USEEFFECT] Auto-generate useEffect fired');
+        console.log('🟡 [USEEFFECT] isManuallyGeneratingRef.current:', isManuallyGeneratingRef.current);
+        console.log('🟡 [USEEFFECT] isFinalStep:', isFinalStep);
+        console.log('🟡 [USEEFFECT] structurePhraseLoading:', structurePhraseLoading);
+        console.log('🟡 [USEEFFECT] structurePhrase:', structurePhrase);
+        console.log('🟡 [USEEFFECT] casualPhraseLoading:', casualPhraseLoading);
+        console.log('🟡 [USEEFFECT] casualPhrase:', casualPhrase);
+
         // Skip auto-generation if we're manually generating (e.g., from Re-Randomize button)
         if (isManuallyGeneratingRef.current) {
+            console.log('🟡 [USEEFFECT] SKIPPING - isManuallyGeneratingRef.current is true');
             return;
         }
 
         if (isFinalStep) {
+            console.log('🟡 [USEEFFECT] isFinalStep is true, checking conditions...');
             if (!structurePhraseLoading && !structurePhrase) {
+                console.log('🟡 [USEEFFECT] ⚠️  Calling handleGeneratePhraseFromStructure() with STALE data');
                 handleGeneratePhraseFromStructure();
+            } else {
+                console.log('🟡 [USEEFFECT] NOT calling handleGeneratePhraseFromStructure (loading or phrase exists)');
             }
             if (!casualPhraseLoading && !casualPhrase) {
+                console.log('🟡 [USEEFFECT] ⚠️  Calling handleGenerateCasualPhrase() with STALE data');
                 handleGenerateCasualPhrase();
+            } else {
+                console.log('🟡 [USEEFFECT] NOT calling handleGenerateCasualPhrase (loading or phrase exists)');
             }
+        } else {
+            console.log('🟡 [USEEFFECT] NOT on final step, doing nothing');
         }
     }, [isFinalStep, structurePhraseLoading, casualPhraseLoading, structurePhrase, casualPhrase]);
 
