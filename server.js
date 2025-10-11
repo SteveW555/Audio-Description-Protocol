@@ -40,11 +40,22 @@ app.use('/api', createProxyMiddleware({
   target: backendUrl,
   changeOrigin: true,
   logLevel: 'debug',
+  timeout: 300000, // 5 minutes
+  proxyTimeout: 300000, // 5 minutes
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`🔄 Proxying ${req.method} ${req.url} to ${backendUrl}${req.url}`);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log(`✅ Proxy response ${proxyRes.statusCode} for ${req.method} ${req.url}`);
+  },
   onError: (err, req, res) => {
-    console.error('Proxy error:', err.message);
+    console.error('❌ Proxy error:', err.message);
+    console.error('❌ Error code:', err.code);
+    console.error('❌ Request:', req.method, req.url);
     res.status(500).json({
       error: 'Backend service unavailable',
-      details: err.message
+      details: err.message,
+      code: err.code
     });
   }
 }));
