@@ -17,6 +17,7 @@ export interface TaxonomyTerm {
     category: TaxonomyCategory;
     subcategory: string;
     frequency: FrequencyLevel;
+    synonyms?: string[];
     description?: string;
 }
 export declare const TAXONOMY: readonly TaxonomyTerm[];

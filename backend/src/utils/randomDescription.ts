@@ -6,7 +6,29 @@
  */
 
 import { VOCABULARY } from '../constants/vocabulary';
-import { TERMS_BY_FREQUENCY } from '../../../wizard/src/constants/taxonomy';
+
+// Taxonomy data copied from wizard/src/constants/taxonomy.ts (TERMS_BY_FREQUENCY export)
+// This avoids cross-folder imports that break Railway deployment
+const TERMS_BY_FREQUENCY = {
+  Mood: {
+    ubiquitous: ['upbeat', 'energetic', 'joyful', 'positive', 'peaceful', 'calm', 'negative'],
+    frequent: ['happy', 'cheerful', 'uplifting', 'hopeful', 'playful', 'romantic', 'sentimental', 'triumphant', 'heroic', 'optimistic', 'celebratory', 'festive', 'inspiring', 'proud', 'thrilling', 'relaxed', 'serene', 'dreamy', 'tranquil', 'meditative', 'soothing', 'gentle', 'contemplative', 'atmospheric', 'smooth', 'dark', 'melancholic', 'sad', 'somber', 'brooding', 'chilling', 'fearful', 'gloomy', 'haunting', 'moody', 'lonely', 'ominous', 'intense', 'aggressive', 'driving', 'powerful', 'forceful', 'raw', 'edgy', 'angry', 'tense', 'defiant', 'mysterious', 'enigmatic', 'ethereal-ambience', 'mystical', 'entrancing', 'majestic', 'epic', 'strange', 'tender', 'affectionate', 'intimate', 'loving', 'sensual', 'passionate', 'nostalgic', 'reflective', 'bittersweet'],
+    infrequent: ['euphoric', 'exuberant', 'ecstatic', 'elated', 'restful', 'ethereal', 'flowing', 'mournful', 'desolate', 'wistful', 'tragic', 'painful', 'disturbing', 'shadowy', 'fierce', 'explosive', 'menacing', 'violent', 'furious', 'harsh', 'thunderous', 'annoying', 'agitated', 'unsettling', 'restless', 'chaotic', 'otherworldly', 'cryptic', 'veiled', 'obscure', 'awe-inspiring', 'puzzling', 'spine-tingling', 'transcendent', 'cosmic', 'panoramic', 'compassionate', 'warm-hearted', 'sultry', 'yearning', 'longing', 'reminiscent', 'pensive', 'poignant', 'retrospective'],
+    rare: ['sparkly', 'gossamer', 'forlorn', 'nauseating', 'plaintive', 'blistering', 'snarling', 'anxious', 'elusive', 'twilight', 'liminal', 'memory-laden']
+  },
+  Energy: {
+    ubiquitous: ['high-energy', 'energetic', 'exciting', 'chill', 'mellow', 'relaxed', 'soft'],
+    frequent: ['driving', 'vigorous', 'pumping', 'dynamic', 'punchy', 'vibrant', 'bouncy', 'strong', 'flowing', 'steady', 'moderate', 'balanced', 'measured', 'rolling', 'rhythmic', 'groovy', 'swinging', 'mid-tempo', 'laid-back', 'low-energy', 'ambient', 'gentle', 'subdued', 'serene', 'delicate', 'tense', 'anxious', 'chaotic', 'dissonant', 'expansive', 'soaring', 'sweeping', 'majestic', 'gradual', 'swelling'],
+    infrequent: ['propulsive', 'explosive', 'kinetic', 'pulsating', 'frenetic', 'relentless', 'urgent', 'brisk', 'electrifying', 'thumping', 'medium-energy', 'cascading', 'undulating', 'pulsing', 'unhurried', 'paced', 'boring', 'downtempo', 'languid', 'hushed', 'sedate', 'hypnotic', 'agitated', 'erratic', 'unstable', 'jarring', 'turbulent', 'unsettling', 'fragmented', 'restless', 'hectic', 'lifting', 'transcendent', 'panoramic', 'vast', 'cosmic', 'breathless', 'crescendoing', 'decaying'],
+    rare: ['high-octane', 'turbocharged', 'cruising', 'jittery', 'disjointed', 'static', 'boundless', 'wavering', 'oscillating', 'spiraling']
+  },
+  Texture: {
+    ubiquitous: ['bright', 'crisp', 'clear', 'smooth', 'warm', 'rich', 'mellow', 'soft', 'dark', 'acoustic', 'natural', 'electronic'],
+    frequent: ['brilliant', 'sparkling', 'crystalline', 'shimmering', 'airy', 'polished', 'pristine', 'refined', 'elegant', 'sophisticated', 'seamless', 'fluid', 'muddy', 'harsh', 'buzzy', 'distorted', 'dissonant', 'full', 'lush', 'creamy', 'golden', 'rounded', 'layered', 'complex', 'rich-density', 'full-bodied', 'intricate', 'detailed', 'dense', 'thick', 'gritty', 'raspy', 'raw', 'grainy', 'rough', 'raw-finish', 'edgy', 'murky', 'muffled', 'organic', 'live', 'authentic', 'woody', 'breathy', 'human', 'intimate', 'resonant', 'textured', 'synthetic', 'digital', 'processed', 'programmed', 'artificial', 'robotic', 'metallic', 'analog', 'sparse', 'minimalistic', 'spacious', 'atmospheric', 'cinematic'],
+    infrequent: ['radiant', 'gleaming', 'shiny', 'sleek', 'graceful', 'wet', 'glassy', 'abrasive', 'glitchy', 'coarse', 'unprocessed', 'jagged', 'unpolished', 'dry', 'shadowy', 'veiled', 'obscured', 'heavy', 'clouded', 'oppressive', 'close-miked', 'hollow', 'earthy', 'intimate-space', 'echoey', 'reverberant', 'computerized', 'futuristic', 'cyber', 'mechanical', 'challenging', 'honeyed', 'enveloping', 'cozy', 'velvety', 'buttery', 'silky', 'orchestrated', 'elaborate'],
+    rare: ['luminous', 'crunchy', 'ratty', 'static', 'fibrous', 'pixelated', 'embracing', 'sumptuous', 'multi-textured', 'stratified', 'polyphonic', 'homophonic', 'heterophonic', 'monophonic', 'gossamer']
+  }
+} as const;
 
 /**
  * Returns a weighted random count for MET categories
