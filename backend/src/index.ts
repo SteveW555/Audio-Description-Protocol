@@ -89,6 +89,7 @@ async function startServer() {
       console.log(`Translate phrase: POST http://localhost:${PORT}/api/translate-phrase`);
       console.log(`Test models: POST http://localhost:${PORT}/api/test-models`);
       console.log(`Generate phrase from structure: POST http://localhost:${PORT}/api/generate-phrase-from-structure`);
+      console.log(`\n🎯 Open the Audio Protocol Wizard: http://localhost:8080\n`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

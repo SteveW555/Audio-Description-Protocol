@@ -1,0 +1,4 @@
+**Run Project Locally** ( Do all SETUP.txt steps first )
+npm start
+
+

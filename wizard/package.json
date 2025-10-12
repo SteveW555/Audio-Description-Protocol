@@ -1,6 +1,7 @@
 {
   "name": "adp-wizard-validation",
   "version": "1.0.0",
+  "type": "module",
   "description": "ADP Wizard TypeScript Client for Python Validation Integration",
   "scripts": {
     "dev": "vite",

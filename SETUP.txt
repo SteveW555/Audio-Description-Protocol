@@ -1,0 +1,22 @@
+*Run Project Locally* (if this fails, you need to update with: npm install)
+npm start
+
+
+
+
+
+
+=======  Setup Problems =======
+
+- Before first launch, rebuild backend with: npm run build 
+  this needs to be done when there's changes to backend code
+
+- Might need to install Node package manager stuff: npm install
+
+- Need to be in .venv  -- might need to rebuild .venv
+
+- "Error: AI service error" The phrase creation might fail if the Groq API key is missing
+  create .env file at backend\.env  and add the key to .env
+
+  *Rebuild Backend*
+  npm run build:backend

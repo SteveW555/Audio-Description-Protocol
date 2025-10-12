@@ -50,6 +50,7 @@ export const WizardLayout = () => {
     const [casualPhrase, setCasualPhrase] = useState('');
     const [casualPhraseLoading, setCasualPhraseLoading] = useState(false);
     const [casualPhraseError, setCasualPhraseError] = useState<string | null>(null);
+    const [casualPhraseAttempted, setCasualPhraseAttempted] = useState(false);
     const [standardizedPhrase, setStandardizedPhrase] = useState('');
     const [standardizedPhraseLoading, setStandardizedPhraseLoading] = useState(false);
     const [standardizedPhraseError, setStandardizedPhraseError] = useState<string | null>(null);
@@ -71,6 +72,7 @@ export const WizardLayout = () => {
     const [structurePhrase, setStructurePhrase] = useState('');
     const [structurePhraseLoading, setStructurePhraseLoading] = useState(false);
     const [structurePhraseError, setStructurePhraseError] = useState<string | null>(null);
+    const [structurePhraseAttempted, setStructurePhraseAttempted] = useState(false);
 
     const handleRandomizeAll = () => {
         setHasRandomized(true);
@@ -139,6 +141,7 @@ export const WizardLayout = () => {
     const handleGenerateCasualPhrase = async () => {
         setCasualPhraseLoading(true);
         setCasualPhraseError(null);
+        setCasualPhraseAttempted(true);
         let generatedPhrase = '';
 
         try {
@@ -473,6 +476,7 @@ export const WizardLayout = () => {
     const handleGeneratePhraseFromStructure = async () => {
         setStructurePhraseLoading(true);
         setStructurePhraseError(null);
+        setStructurePhraseAttempted(true);
 
         try {
             console.log('🎵 Generating phrase from structure with data:', data);
@@ -490,7 +494,10 @@ export const WizardLayout = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to generate phrase from structure');
+                const errorMessage = errorData.details
+                    ? `${errorData.error}: ${errorData.details}`
+                    : (errorData.error || 'Failed to generate phrase from structure');
+                throw new Error(errorMessage);
             }
 
             const result = await response.json();
@@ -500,7 +507,7 @@ export const WizardLayout = () => {
         } catch (error: any) {
             console.error('❌ Error generating phrase from structure:', error);
             setStructurePhraseError(error.message || 'Failed to generate phrase from structure');
-        } finally {
+        } finally{
             setStructurePhraseLoading(false);
         }
     };
@@ -511,6 +518,10 @@ export const WizardLayout = () => {
         // Set flag to prevent useEffect auto-generation from interfering
         isManuallyGeneratingRef.current = true;
         console.log('🔵 [RE-RANDOMIZE] Set isManuallyGeneratingRef.current = true');
+
+        // Reset attempt flags since this is a manual action
+        setStructurePhraseAttempted(false);
+        setCasualPhraseAttempted(false);
 
         // Randomize all wizard terms WITHOUT navigating (inline version of handleRandomizeAll)
         setHasRandomized(true);
@@ -677,8 +688,10 @@ export const WizardLayout = () => {
         console.log('🟡 [USEEFFECT] isFinalStep:', isFinalStep);
         console.log('🟡 [USEEFFECT] structurePhraseLoading:', structurePhraseLoading);
         console.log('🟡 [USEEFFECT] structurePhrase:', structurePhrase);
+        console.log('🟡 [USEEFFECT] structurePhraseAttempted:', structurePhraseAttempted);
         console.log('🟡 [USEEFFECT] casualPhraseLoading:', casualPhraseLoading);
         console.log('🟡 [USEEFFECT] casualPhrase:', casualPhrase);
+        console.log('🟡 [USEEFFECT] casualPhraseAttempted:', casualPhraseAttempted);
 
         // Skip auto-generation if we're manually generating (e.g., from Re-Randomize button)
         if (isManuallyGeneratingRef.current) {
@@ -688,22 +701,23 @@ export const WizardLayout = () => {
 
         if (isFinalStep) {
             console.log('🟡 [USEEFFECT] isFinalStep is true, checking conditions...');
-            if (!structurePhraseLoading && !structurePhrase) {
+            // Only attempt once per session - prevent infinite retries if backend is down
+            if (!structurePhraseLoading && !structurePhrase && !structurePhraseAttempted) {
                 console.log('🟡 [USEEFFECT] ⚠️  Calling handleGeneratePhraseFromStructure() with STALE data');
                 handleGeneratePhraseFromStructure();
             } else {
-                console.log('🟡 [USEEFFECT] NOT calling handleGeneratePhraseFromStructure (loading or phrase exists)');
+                console.log('🟡 [USEEFFECT] NOT calling handleGeneratePhraseFromStructure (loading, phrase exists, or already attempted)');
             }
-            if (!casualPhraseLoading && !casualPhrase) {
+            if (!casualPhraseLoading && !casualPhrase && !casualPhraseAttempted) {
                 console.log('🟡 [USEEFFECT] ⚠️  Calling handleGenerateCasualPhrase() with STALE data');
                 handleGenerateCasualPhrase();
             } else {
-                console.log('🟡 [USEEFFECT] NOT calling handleGenerateCasualPhrase (loading or phrase exists)');
+                console.log('🟡 [USEEFFECT] NOT calling handleGenerateCasualPhrase (loading, phrase exists, or already attempted)');
             }
         } else {
             console.log('🟡 [USEEFFECT] NOT on final step, doing nothing');
         }
-    }, [isFinalStep, structurePhraseLoading, casualPhraseLoading, structurePhrase, casualPhrase]);
+    }, [isFinalStep, structurePhraseLoading, casualPhraseLoading, structurePhrase, casualPhrase, structurePhraseAttempted, casualPhraseAttempted]);
 
     const instrumentationIndex = useMemo(
         () => steps.findIndex((entry) => 'special' in entry && entry.special === StepType.INSTRUMENTATION),
@@ -717,6 +731,13 @@ export const WizardLayout = () => {
 
     const handleRestart = () => {
         resetStore();
+        // Reset attempt flags so auto-generation works on next final step
+        setStructurePhraseAttempted(false);
+        setCasualPhraseAttempted(false);
+        setStructurePhrase('');
+        setCasualPhrase('');
+        setStructurePhraseError(null);
+        setCasualPhraseError(null);
         if (titleInputRef.current) {
             titleInputRef.current.focus();
         }
@@ -734,7 +755,10 @@ export const WizardLayout = () => {
                     casualPhrase={casualPhrase}
                     casualPhraseLoading={casualPhraseLoading}
                     casualPhraseError={casualPhraseError}
-                    onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                    onRegenerateCasualPhrase={() => {
+                        setCasualPhraseAttempted(false);
+                        handleGenerateCasualPhrase();
+                    }}
                     onReRandomizeAll={handleReRandomizeAll}
                 />
             );
@@ -821,7 +845,10 @@ export const WizardLayout = () => {
                             casualPhrase={casualPhrase}
                             casualPhraseLoading={casualPhraseLoading}
                             casualPhraseError={casualPhraseError}
-                            onRegenerateCasualPhrase={handleGenerateCasualPhrase}
+                            onRegenerateCasualPhrase={() => {
+                                setCasualPhraseAttempted(false);
+                                handleGenerateCasualPhrase();
+                            }}
                             onReRandomizeAll={handleReRandomizeAll}
                         />
                     );
@@ -965,7 +992,10 @@ export const WizardLayout = () => {
                             {/* Generate Phrase and AI Tools */}
                             <div className="flex items-center gap-3 scale-[0.7] origin-left">
                                 <button
-                                    onClick={handleGeneratePhraseFromStructure}
+                                    onClick={() => {
+                                        setStructurePhraseAttempted(false);
+                                        handleGeneratePhraseFromStructure();
+                                    }}
                                     disabled={structurePhraseLoading}
                                     title="Uses AI to transform the current structured wizard data into a concise, human-readable phrase using the phrase-prompt.md template"
                                     className="px-4 py-1.5 text-sm font-semibold text-white bg-teal-600 rounded-lg shadow-sm hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1044,7 +1074,10 @@ export const WizardLayout = () => {
                                 <div className="flex items-center gap-3">
                                     <div>
                                         <button
-                                            onClick={handleGenerateCasualPhrase}
+                                            onClick={() => {
+                                                setCasualPhraseAttempted(false);
+                                                handleGenerateCasualPhrase();
+                                            }}
                                             disabled={casualPhraseLoading}
                                             title="Uses AI to generate a random, non-standardized, human-like musical description for testing the phrase translation feature"
                                             className="px-4 py-1.5 text-sm font-semibold text-white bg-orange-600 rounded-lg shadow-sm hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed scale-[0.7] origin-left"
