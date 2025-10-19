@@ -1,6 +1,11 @@
-import { VOCABULARY_MET, TERMS_BY_FREQUENCY } from './taxonomy';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TEXTURE_TERMS_BY_FREQUENCY = exports.ENERGY_TERMS_BY_FREQUENCY = exports.MOOD_TERMS_BY_FREQUENCY = exports.DEFAULT_INSTRUMENT = exports.VOCABULARY = exports.TERM_FREQUENCY_GROUPS = void 0;
+exports.getTermsByFrequency = getTermsByFrequency;
+exports.getAllTermsForCategory = getAllTermsForCategory;
+var taxonomy_1 = require("./taxonomy");
 // Frequency-based term groups for UI organization..
-export const TERM_FREQUENCY_GROUPS = {
+exports.TERM_FREQUENCY_GROUPS = {
     ubiquitous: ['ubiquitous'], // Very common terms
     frequent: ['frequent'], // Common terms
     infrequent: ['infrequent'], // Unusual terms
@@ -8,13 +13,14 @@ export const TERM_FREQUENCY_GROUPS = {
 };
 // MET vocabulary imported from single source of truth (taxonomy.ts)
 // This replaces the previous  hard-coded arrays
-export const VOCABULARY = {
-    mood: VOCABULARY_MET.mood,
-    energy: VOCABULARY_MET.energy,
-    texture: VOCABULARY_MET.texture,
-    primary_genres: ['Electronic', 'Rock', 'Pop', 'Hip-Hop', 'R&B / Soul', 'Jazz', 'Blues', 'Country', 'Classical', 'Folk', 'Latin', 'Reggae', 'World', 'Soundtrack', 'Ambient', 'Spoken Word', 'Sound Effect'],
+exports.VOCABULARY = {
+    mood: taxonomy_1.VOCABULARY_MET.mood,
+    energy: taxonomy_1.VOCABULARY_MET.energy,
+    texture: taxonomy_1.VOCABULARY_MET.texture,
+    primary_genres: ['Electronic', 'Dance', 'Rock', 'Pop', 'Hip-Hop', 'R&B / Soul', 'Jazz', 'Blues', 'Country', 'Classical', 'Folk', 'Latin', 'Reggae', 'World', 'Soundtrack', 'Ambient', 'Spoken Word', 'Sound Effect'],
     secondary_genres: {
-        electronic: ['dance', 'disco', 'downtempo', 'drum_and_bass', 'edm', 'glitch', 'house', 'idm', 'synthwave', 'techno', 'trance', 'chiptune'],
+        electronic: ['disco', 'downtempo', 'drum_and_bass', 'edm', 'glitch', 'house', 'idm', 'synthwave', 'techno', 'trance', 'chiptune'],
+        dance: ['house', 'techno', 'trance', 'edm', 'disco', 'electro', 'dubstep', 'garage', 'hardstyle', 'progressive_house', 'deep_house', 'minimal_techno'],
         rock: ['alternative_rock', 'goth_rock', 'indie_rock', 'metal', 'post-rock', 'progressive_rock', 'psychedelic_rock', 'punk_rock', 'surf_rock'],
         pop: ['art_pop', 'bubblegum_pop', 'dance-pop', 'dream_pop', 'euro_pop', 'hyperpop', 'indie_pop', 'jangle_pop', 'synth-pop'],
         hip_hop: ['abstract_hip_hop', 'boom-bap', 'cloud_rap', 'conscious_hip_hop', 'drill', 'g_funk', 'gangsta_rap', 'lo-fi_hip_hop', 'trap'],
@@ -76,26 +82,26 @@ export const VOCABULARY = {
         vocals: ['breathy', 'powerful', 'operatic', 'raspy', 'autotuned', 'harmonized'],
     },
 };
-export const DEFAULT_INSTRUMENT = {
+exports.DEFAULT_INSTRUMENT = {
     instrument: '',
     role: '',
     descriptors: [],
 };
 // Taxonomy-based term organization by frequency (imported from taxonomy.ts)
-export const MOOD_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Mood;
-export const ENERGY_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Energy;
-export const TEXTURE_TERMS_BY_FREQUENCY = TERMS_BY_FREQUENCY.Texture;
+exports.MOOD_TERMS_BY_FREQUENCY = taxonomy_1.TERMS_BY_FREQUENCY.Mood;
+exports.ENERGY_TERMS_BY_FREQUENCY = taxonomy_1.TERMS_BY_FREQUENCY.Energy;
+exports.TEXTURE_TERMS_BY_FREQUENCY = taxonomy_1.TERMS_BY_FREQUENCY.Texture;
 // Helper functions for taxonomy-based UI
-export function getTermsByFrequency(category, frequency) {
-    const categoryMap = {
-        mood: TERMS_BY_FREQUENCY.Mood,
-        energy: TERMS_BY_FREQUENCY.Energy,
-        texture: TERMS_BY_FREQUENCY.Texture
+function getTermsByFrequency(category, frequency) {
+    var _a;
+    var categoryMap = {
+        mood: taxonomy_1.TERMS_BY_FREQUENCY.Mood,
+        energy: taxonomy_1.TERMS_BY_FREQUENCY.Energy,
+        texture: taxonomy_1.TERMS_BY_FREQUENCY.Texture
     };
-    return categoryMap[category]?.[frequency] || [];
+    return ((_a = categoryMap[category]) === null || _a === void 0 ? void 0 : _a[frequency]) || [];
 }
-export function getAllTermsForCategory(category) {
-    const allFrequencies = ['ubiquitous', 'frequent', 'infrequent', 'rare'];
-    return allFrequencies.flatMap(freq => getTermsByFrequency(category, freq));
+function getAllTermsForCategory(category) {
+    var allFrequencies = ['ubiquitous', 'frequent', 'infrequent', 'rare'];
+    return allFrequencies.flatMap(function (freq) { return getTermsByFrequency(category, freq); });
 }
-//# sourceMappingURL=vocabulary.js.map

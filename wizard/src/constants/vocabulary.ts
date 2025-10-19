@@ -26,9 +26,10 @@ export const VOCABULARY = {
     energy: VOCABULARY_MET.energy as readonly string[],
     texture: VOCABULARY_MET.texture as readonly string[],
 
-    primary_genres: ['Electronic', 'Rock', 'Pop', 'Hip-Hop', 'R&B / Soul', 'Jazz', 'Blues', 'Country', 'Classical', 'Folk', 'Latin', 'Reggae', 'World', 'Soundtrack', 'Ambient', 'Spoken Word', 'Sound Effect'] as const,
+    primary_genres: ['Dance', 'Electronic', 'Rock', 'Pop', 'Hip-Hop', 'R&B / Soul', 'Jazz', 'Blues', 'Country', 'Classical', 'Folk', 'Latin', 'Reggae', 'World', 'Soundtrack', 'Ambient', 'Spoken Word', 'Sound Effect'] as const,
     secondary_genres: {
-        electronic: ['dance', 'disco', 'downtempo', 'drum_and_bass', 'edm', 'glitch', 'house', 'idm', 'synthwave', 'techno', 'trance', 'chiptune'],
+        dance: ['house', 'tech_house', 'techno', 'trance', 'edm', 'disco', 'electro', 'dubstep', 'garage', 'hardstyle', 'progressive_house', 'deep_house', 'minimal_techno'],
+        electronic: ['downtempo', 'drum_and_bass', 'glitch', 'idm', 'synthwave', 'chiptune'],
         rock: ['alternative_rock', 'goth_rock', 'indie_rock', 'metal', 'post-rock', 'progressive_rock', 'psychedelic_rock', 'punk_rock', 'surf_rock'],
         pop: ['art_pop', 'bubblegum_pop', 'dance-pop', 'dream_pop', 'euro_pop', 'hyperpop', 'indie_pop', 'jangle_pop', 'synth-pop'],
         hip_hop: ['abstract_hip_hop', 'boom-bap', 'cloud_rap', 'conscious_hip_hop', 'drill', 'g_funk', 'gangsta_rap', 'lo-fi_hip_hop', 'trap'],

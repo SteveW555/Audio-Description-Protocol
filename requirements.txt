@@ -21,6 +21,6 @@ black>=23.0.0
 flake8>=6.0.0
 ruff>=0.1.0
 mypy>=1.0.0
-isort>=5.0.0
+isort>=5.0.0co
 pre-commit>=3.0.0
 hypothesis>=6.0.0

@@ -245,8 +245,14 @@ export const WizardLayout = () => {
             setTranslatedPhrase(standardized);
 
             // Parse and populate wizard with terms from standardized phrase
-            // This will be implemented next
+            console.log('🎯 About to parse and populate terms...');
             parseAndPopulateTerms(standardized);
+            console.log('✅ Parsing complete!');
+
+            // After parsing, estimate BPM based on the structured data
+            console.log('🎵 Estimating BPM...');
+            await estimateBpm(inputPhrase, standardized);
+            console.log('✅ BPM estimation complete!');
         } catch (error: any) {
             console.error('❌ Error translating phrase:', error);
             setTranslateError(error.message || 'Failed to translate phrase');
@@ -259,16 +265,115 @@ export const WizardLayout = () => {
         }
     };
 
+    const estimateBpm = async (inputPhrase: string, standardizedPhrase: string) => {
+        try {
+            const response = await fetch(buildApiUrl('/api/estimate-bpm'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inputPhrase,
+                    standardizedPhrase,
+                    genre: data.semantic_description.genre.primary,
+                    subgenres: data.semantic_description.genre.primary_subgenres,
+                    mood: data.semantic_description.attributes.mood,
+                    energy: data.semantic_description.attributes.energy,
+                    texture: data.semantic_description.attributes.texture,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to estimate BPM');
+            }
+
+            const result = await response.json();
+            console.log('🎵 BPM estimated:', result.bpm);
+
+            // Update the BPM in the data structure
+            updateData('theory.bpm', result.bpm);
+        } catch (error: any) {
+            console.error('❌ Error estimating BPM:', error);
+            // Don't throw - BPM estimation is optional, don't block the translation flow
+        }
+    };
+
     const parseAndPopulateTerms = (standardizedPhrase: string) => {
-        console.log('Parsing phrase:', standardizedPhrase);
+        console.log('🔍 === Starting parseAndPopulateTerms ===');
+        console.log('🔍 Input phrase:', standardizedPhrase);
+        console.log('📊 Current genre before:', data.semantic_description.genre);
         const lowerPhrase = standardizedPhrase.toLowerCase();
 
-        // Extract Genre
+        // Extract Genre - First try to find exact primary genre match
+        let foundPrimaryGenre: string | null = null;
         for (const genre of VOCABULARY.primary_genres) {
             if (lowerPhrase.includes(genre.toLowerCase())) {
+                foundPrimaryGenre = genre;
+                console.log('✅ Found primary genre directly:', genre);
                 updateData('semantic_description.genre.primary', genre);
-                console.log('Found genre:', genre);
                 break;
+            }
+        }
+
+        // If no primary genre found, try to infer from subgenres
+        if (!foundPrimaryGenre) {
+            console.log('🔎 No primary genre found, checking subgenres...');
+            // Check all subgenres across all primary genres
+            for (const [genreKey, subgenreList] of Object.entries(VOCABULARY.secondary_genres)) {
+                for (const subgenre of subgenreList) {
+                    const subgenrePattern = subgenre.toLowerCase().replace(/_/g, ' ').replace(/-/g, ' ');
+                    if (lowerPhrase.includes(subgenrePattern)) {
+                        // Found a subgenre match! Infer the primary genre
+                        // Map the genreKey back to the display name
+                        const genreMapping: Record<string, string> = {
+                            'electronic': 'Electronic',
+                            'dance': 'Dance',
+                            'rock': 'Rock',
+                            'pop': 'Pop',
+                            'hip_hop': 'Hip-Hop',
+                            'rnb_soul': 'R&B / Soul',
+                            'jazz': 'Jazz',
+                            'blues': 'Blues',
+                            'country': 'Country',
+                            'classical': 'Classical',
+                            'folk': 'Folk',
+                            'latin': 'Latin',
+                            'reggae': 'Reggae',
+                            'world': 'World',
+                            'soundtrack': 'Soundtrack',
+                            'ambient': 'Ambient',
+                            'spoken_word': 'Spoken Word',
+                            'sound_effect': 'Sound Effect',
+                        };
+                        foundPrimaryGenre = genreMapping[genreKey] || null;
+                        if (foundPrimaryGenre) {
+                            console.log('✅ Inferred primary genre from subgenre:', foundPrimaryGenre, 'from', subgenre);
+                            updateData('semantic_description.genre.primary', foundPrimaryGenre);
+                            break;
+                        }
+                    }
+                }
+                if (foundPrimaryGenre) break;
+            }
+        }
+
+        // Extract Subgenres (if primary genre was found or inferred)
+        if (foundPrimaryGenre) {
+            const genreKey = foundPrimaryGenre.toLowerCase().replace(/\s*\/\s*/g, '_').replace(/\s+/g, '_').replace(/-/g, '_');
+            const subgenreList = (VOCABULARY.secondary_genres as any)[genreKey] || [];
+            const foundSubgenres: string[] = [];
+
+            for (const subgenre of subgenreList) {
+                const subgenrePattern = subgenre.toLowerCase().replace(/_/g, ' ').replace(/-/g, ' ');
+                if (lowerPhrase.includes(subgenrePattern)) {
+                    foundSubgenres.push(subgenre);
+                }
+            }
+
+            if (foundSubgenres.length > 0) {
+                updateData('semantic_description.genre.primary_subgenres', foundSubgenres);
+                console.log('✅ Found subgenres:', foundSubgenres);
             }
         }
 
@@ -311,9 +416,58 @@ export const WizardLayout = () => {
             console.log('Found texture:', foundTexture);
         }
 
-        // Extract Instruments with roles and descriptors
+        // Extract Vocals (handle separately from instruments)
+        if (lowerPhrase.includes('vocal')) {
+            const vocalContext = lowerPhrase;
+
+            // Detect presence
+            let presence = 'lead';
+            if (vocalContext.includes('backing')) presence = 'backing';
+            else if (vocalContext.includes('choir')) presence = 'choir';
+            else if (vocalContext.includes('sampled')) presence = 'sampled';
+            else if (vocalContext.includes('spoken word')) presence = 'spoken_word';
+            else if (vocalContext.includes('ad-lib') || vocalContext.includes('ad lib')) presence = 'ad-libs';
+
+            // Detect gender
+            let gender = null;
+            if (vocalContext.includes('female')) gender = 'female';
+            else if (vocalContext.includes('male')) gender = 'male';
+            else if (vocalContext.includes('mixed')) gender = 'mixed';
+            else if (vocalContext.includes('androgynous')) gender = 'androgynous';
+
+            // Detect style
+            let style = 'singing';
+            if (vocalContext.includes('rapping')) style = 'rapping';
+            else if (vocalContext.includes('screaming')) style = 'screaming';
+            else if (vocalContext.includes('growling')) style = 'growling';
+            else if (vocalContext.includes('falsetto')) style = 'falsetto';
+            else if (vocalContext.includes('whispering')) style = 'whispering';
+            else if (vocalContext.includes('operatic')) style = 'operatic';
+
+            // Detect descriptors
+            const vocalDescriptors: string[] = [];
+            const possibleDescriptors = ['breathy', 'powerful', 'operatic', 'raspy', 'autotuned', 'harmonized', 'ethereal', 'wordless', 'clear', 'rhythmic', 'soulful'];
+            for (const desc of possibleDescriptors) {
+                if (vocalContext.includes(desc)) {
+                    vocalDescriptors.push(desc);
+                }
+            }
+
+            updateData('semantic_description.vocals', {
+                presence,
+                gender,
+                style,
+                descriptors: vocalDescriptors
+            });
+            console.log('✅ Found vocals:', { presence, gender, style, descriptors: vocalDescriptors });
+        }
+
+        // Extract Instruments with roles and descriptors (skip 'vocals' as it's handled above)
         const foundInstruments: any[] = [];
         for (const instrument of VOCABULARY.instrument) {
+            // Skip vocals - we handle it separately
+            if (instrument === 'vocals') continue;
+
             const instrumentName = instrument.toLowerCase().replace(/_/g, ' ');
             if (lowerPhrase.includes(instrumentName)) {
                 // Find the context around this instrument mention
@@ -387,6 +541,14 @@ export const WizardLayout = () => {
                 console.log('Found scale:', scale);
             }
         }
+
+        console.log('✅ === Parsing complete ===');
+        console.log('📊 Summary of extracted terms:');
+        console.log('  - Genre:', foundPrimaryGenre || 'none');
+        console.log('  - Moods:', foundMoods.length, foundMoods);
+        console.log('  - Energy:', foundEnergy.length, foundEnergy);
+        console.log('  - Texture:', foundTexture.length, foundTexture);
+        console.log('  - Instruments:', foundInstruments.length);
     };
 
     const handleGenerateStandardizedPhrase = () => {

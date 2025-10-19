@@ -6,6 +6,7 @@ import generateCasualPhraseRouter from './routes/generate-casual-phrase.js';
 import translatePhraseRouter from './routes/translate-phrase.js';
 import testModelsRouter from './routes/test-models.js';
 import generatePhraseFromStructureRouter from './routes/generate-phrase-from-structure.js';
+import estimateBpmRouter from './routes/estimate-bpm.js';
 import { costTracker } from './services/cost-tracker.js';
 // Email temporarily disabled for simplicity
 // import { emailNotifier } from './services/email-notifier.js';
@@ -36,6 +37,7 @@ app.use('/api', generateCasualPhraseRouter);
 app.use('/api', translatePhraseRouter);
 app.use('/api', testModelsRouter);
 app.use('/api', generatePhraseFromStructureRouter);
+app.use('/api', estimateBpmRouter);
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
@@ -87,6 +89,7 @@ async function startServer() {
       console.log(`Generate standardized phrase: POST http://localhost:${PORT}/api/generate-phrase`);
       console.log(`Generate casual phrase: POST http://localhost:${PORT}/api/generate-casual-phrase`);
       console.log(`Translate phrase: POST http://localhost:${PORT}/api/translate-phrase`);
+      console.log(`Estimate BPM: POST http://localhost:${PORT}/api/estimate-bpm`);
       console.log(`Test models: POST http://localhost:${PORT}/api/test-models`);
       console.log(`Generate phrase from structure: POST http://localhost:${PORT}/api/generate-phrase-from-structure`);
       console.log(`\n🎯 Open the Audio Protocol Wizard: http://localhost:8080\n`);

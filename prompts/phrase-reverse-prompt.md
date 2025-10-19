@@ -38,7 +38,7 @@ Your output **must** be a valid JSON object. The keys and values you use must co
 
 You **must** choose values from the allowed terms. Here is a reference for the most important categories:
 
-  * **`Genre`**: Must be one of `electronic`, `rock`, `pop`, `hip_hop`, `jazz`, `classical`, `folk`, `world`, `soundtrack`, `ambient`.
+  * **`Genre`**: Must be one of `Electronic`, `Dance`, `Rock`, `Pop`, `Hip-Hop`, `R&B / Soul`, `Jazz`, `Blues`, `Country`, `Classical`, `Folk`, `Latin`, `Reggae`, `World`, `Soundtrack`, `Ambient`, `Spoken Word`, `Sound Effect`.
   * **`Sub-genre`**: The sub-genre must be logically related to the main `Genre`. For example, if `Genre` is `rock`, `Sub-genre` could be `progressive_metal`.
   * **`Mood`**: Choose from terms like `nostalgic`, `dreamy`, `intense`, `epic`, `relaxed`, `intimate`, `pensive`, `ethereal`, `mysterious`, `contemplative`, `confident`, `reflective`, `uplifting`.
   * **`Energy`**: Choose from terms like `propulsive`, `steady`, `frenetic`, `dynamic-energy`, `laid-back`, `unhurried`, `static-energy`, `gradual`, `groovy`, `mid-tempo`.

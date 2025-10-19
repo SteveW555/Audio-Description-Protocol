@@ -31,6 +31,7 @@ type SecondaryGenreKey = keyof typeof VOCABULARY.secondary_genres;
 function genreToKey(primary: PrimaryGenre): SecondaryGenreKey {
   const mapping: Record<PrimaryGenre, SecondaryGenreKey> = {
     'Electronic': 'electronic',
+    'Dance': 'dance',
     'Rock': 'rock',
     'Pop': 'pop',
     'Hip-Hop': 'hip_hop',

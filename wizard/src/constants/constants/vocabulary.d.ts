@@ -17,9 +17,10 @@ export declare const VOCABULARY: {
     readonly mood: readonly string[];
     readonly energy: readonly string[];
     readonly texture: readonly string[];
-    readonly primary_genres: readonly ["Electronic", "Rock", "Pop", "Hip-Hop", "R&B / Soul", "Jazz", "Blues", "Country", "Classical", "Folk", "Latin", "Reggae", "World", "Soundtrack", "Ambient", "Spoken Word", "Sound Effect"];
+    readonly primary_genres: readonly ["Electronic", "Dance", "Rock", "Pop", "Hip-Hop", "R&B / Soul", "Jazz", "Blues", "Country", "Classical", "Folk", "Latin", "Reggae", "World", "Soundtrack", "Ambient", "Spoken Word", "Sound Effect"];
     readonly secondary_genres: {
-        readonly electronic: readonly ["dance", "disco", "downtempo", "drum_and_bass", "edm", "glitch", "house", "idm", "synthwave", "techno", "trance", "chiptune"];
+        readonly electronic: readonly ["disco", "downtempo", "drum_and_bass", "edm", "glitch", "house", "idm", "synthwave", "techno", "trance", "chiptune"];
+        readonly dance: readonly ["house", "techno", "trance", "edm", "disco", "electro", "dubstep", "garage", "hardstyle", "progressive_house", "deep_house", "minimal_techno"];
         readonly rock: readonly ["alternative_rock", "goth_rock", "indie_rock", "metal", "post-rock", "progressive_rock", "psychedelic_rock", "punk_rock", "surf_rock"];
         readonly pop: readonly ["art_pop", "bubblegum_pop", "dance-pop", "dream_pop", "euro_pop", "hyperpop", "indie_pop", "jangle_pop", "synth-pop"];
         readonly hip_hop: readonly ["abstract_hip_hop", "boom-bap", "cloud_rap", "conscious_hip_hop", "drill", "g_funk", "gangsta_rap", "lo-fi_hip_hop", "trap"];
@@ -90,4 +91,3 @@ export declare const ENERGY_TERMS_BY_FREQUENCY: Record<import("./taxonomy").Freq
 export declare const TEXTURE_TERMS_BY_FREQUENCY: Record<import("./taxonomy").FrequencyLevel, string[]>;
 export declare function getTermsByFrequency(category: 'mood' | 'energy' | 'texture', frequency: 'ubiquitous' | 'frequent' | 'infrequent' | 'rare'): readonly string[];
 export declare function getAllTermsForCategory(category: 'mood' | 'energy' | 'texture'): string[];
-//# sourceMappingURL=vocabulary.d.ts.map
