@@ -9,10 +9,11 @@ interface VocalsStepProps {
     stepNumber: number;
     title: string;
     onNext: () => void;
+    onPrev?: () => void;
     onRandomizeAll?: () => void;
 }
 
-export const VocalsStep = ({ stepNumber, title, onNext, onRandomizeAll }: VocalsStepProps) => {
+export const VocalsStep = ({ stepNumber, title, onNext, onPrev, onRandomizeAll }: VocalsStepProps) => {
     const presence = useWizardStore(
         (state) => state.data.semantic_description.vocals.presence,
     );
@@ -143,6 +144,24 @@ export const VocalsStep = ({ stepNumber, title, onNext, onRandomizeAll }: Vocals
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     Select vocal presence first, then add gender, style, and descriptors.
                 </p>
+            </div>
+
+            {/* Prev/Next Navigation Buttons */}
+            <div className="mb-3 flex gap-2">
+                {onPrev && (
+                    <button
+                        onClick={onPrev}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-slate-800 dark:text-gray-200 dark:border-slate-600 dark:hover:bg-slate-700 transition-colors"
+                    >
+                        ← Prev
+                    </button>
+                )}
+                <button
+                    onClick={handleContinue}
+                    className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                >
+                    Next →
+                </button>
             </div>
 
             {/* Vocal Presence */}

@@ -244,6 +244,12 @@ export const WizardLayout = () => {
             standardized = result.standardizedPhrase;
             setTranslatedPhrase(standardized);
 
+            // Also set the structure phrase for display on final page
+            setStructurePhrase(standardized);
+
+            // Set the original input phrase as the casual phrase for display on final page
+            setCasualPhrase(inputPhrase);
+
             // Parse and populate wizard with terms from standardized phrase
             console.log('🎯 About to parse and populate terms...');
             parseAndPopulateTerms(standardized);
@@ -983,6 +989,7 @@ export const WizardLayout = () => {
                             stepNumber={stepNumber}
                             title={currentStepConfig.title}
                             onNext={goToNextStep}
+                            onPrev={stepNumber > 1 ? goToPreviousStep : undefined}
                             onRandomizeAll={handleRandomizeAll}
                         />
                     );
@@ -995,6 +1002,7 @@ export const WizardLayout = () => {
                                 setCurrentInstrumentIndex(0);
                                 goToNextStep();
                             }}
+                            onPrev={stepNumber > 1 ? goToPreviousStep : undefined}
                         />
                     );
                 case StepType.FINAL:
@@ -1023,6 +1031,7 @@ export const WizardLayout = () => {
                             placeholder={currentStepConfig.placeholder}
                             stepNumber={stepNumber}
                             onNext={goToNextStep}
+                            onPrev={stepNumber > 1 ? goToPreviousStep : undefined}
                             numericOnly={currentStepConfig.path === 'theory.bpm'}
                         />
                     );

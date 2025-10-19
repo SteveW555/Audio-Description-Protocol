@@ -1,5 +1,4 @@
-import React from 'react';
-import { AskStep } from './AskStep';
+import React, { useEffect } from 'react';
 import { TermSelector } from './TermSelector';
 import {
     MAX_NUM_INSTRUMENTS,
@@ -11,10 +10,12 @@ import { generateRandomInstrument } from '../utils/randomMET';
 interface InstrumentationWizardProps {
     stepNumber: number;
     onNext: () => void;
+    onPrev?: () => void;
 }
 export const InstrumentationWizard = ({
     stepNumber,
     onNext,
+    onPrev,
 }: InstrumentationWizardProps) => {
     const {
         instrumentStep,
@@ -29,31 +30,22 @@ export const InstrumentationWizard = ({
         roleOptions,
         instrumentOptions,
     } = useInstrumentationFlow();
-    if (instrumentStep === 0) {
-        if (instrumentation.length >= MAX_NUM_INSTRUMENTS) {
-            onNext();
-            return null;
+
+    // Auto-add first instrument on mount if none exist
+    useEffect(() => {
+        if (instrumentation.length === 0 && instrumentStep === 0) {
+            addInstrument();
         }
-        const promptText =
-            instrumentation.length > 0
-                ? 'Would you like to add more instrument details?'
-                : 'Would you like to add some instrument details?';
-        const handleAddInstrument = () => {
-            const added = addInstrument();
-            if (!added) {
-                onNext();
-            }
-        };
-        return (
-            <AskStep
-                title={`Step ${stepNumber}: Instrumentation`}
-                prompt={promptText}
-                onYes={handleAddInstrument}
-                onNo={onNext}
-            />
-        );
+    }, []);
+
+    // If we've reached max instruments, move to next step
+    if (instrumentation.length >= MAX_NUM_INSTRUMENTS && instrumentStep === 0) {
+        onNext();
+        return null;
     }
-    if (instrumentStep === 1) {
+
+    // Show instrument editing screen
+    if (instrumentStep === 1 || (instrumentStep === 0 && instrumentation.length > 0)) {
         const markInstrumentUnknown = () =>
             updateInstrumentField('instrument', 'tbc');
         const markRoleUnknown = () => updateInstrumentField('role', 'tbc');
@@ -75,7 +67,28 @@ export const InstrumentationWizard = ({
                         : ['tbc'],
             };
             overwriteCurrentInstrument(nextInstrument);
-            setInstrumentStep(0);
+
+            // Try to add another instrument
+            const added = addInstrument();
+            if (!added) {
+                // Max reached, go to next step
+                onNext();
+            }
+        };
+
+        const handleSkipAddingMore = () => {
+            // Save current instrument with tbc values and move to next step
+            const nextInstrument: InstrumentationEntry = {
+                instrument: currentInstrument.instrument || 'tbc',
+                role: currentInstrument.role || 'tbc',
+                descriptors:
+                    currentInstrument.descriptors &&
+                    currentInstrument.descriptors.length > 0
+                        ? [...currentInstrument.descriptors]
+                        : ['tbc'],
+            };
+            overwriteCurrentInstrument(nextInstrument);
+            onNext();
         };
 
         const handleRandomize = () => {
@@ -86,7 +99,13 @@ export const InstrumentationWizard = ({
                 descriptors: randomInst.descriptors,
             };
             overwriteCurrentInstrument(nextInstrument);
-            setInstrumentStep(0);
+
+            // Try to add another instrument
+            const added = addInstrument();
+            if (!added) {
+                // Max reached, go to next step
+                onNext();
+            }
         };
         return (
             <div className="p-1 space-y-6">
@@ -99,6 +118,25 @@ export const InstrumentationWizard = ({
                         in one pass.
                     </p>
                 </div>
+
+                {/* Prev/Next Navigation Buttons */}
+                <div className="mb-3 flex gap-2">
+                    {onPrev && (
+                        <button
+                            onClick={onPrev}
+                            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-slate-800 dark:text-gray-200 dark:border-slate-600 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            ← Prev
+                        </button>
+                    )}
+                    <button
+                        onClick={handleSkipAddingMore}
+                        className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                    >
+                        Next →
+                    </button>
+                </div>
+
                 <section className="space-y-2">
                     <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         Instrument Name
@@ -155,18 +193,12 @@ export const InstrumentationWizard = ({
                     />
                 </section>
                 <div className="relative flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center scale-[0.7] origin-center">
-                    {!isNameSelected && (
-                        <p className="text-xs text-amber-600 dark:text-amber-400">
-                            Choose an instrument name to enable saving.
-                        </p>
-                    )}
                     <button
                         type="button"
                         onClick={handleSaveInstrument}
-                        disabled={disableSave}
-                        className="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+                        className="px-5 py-1.5 text-sm font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-slate-900"
                     >
-                        Save Instrument
+                        Add Another Instrument
                     </button>
                     <button
                         type="button"

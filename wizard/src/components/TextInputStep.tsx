@@ -11,10 +11,11 @@ interface TextInputStepProps {
     placeholder?: string;
     stepNumber: number;
     onNext: () => void;
+    onPrev?: () => void;
     numericOnly?: boolean;
 }
 
-export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, numericOnly }: TextInputStepProps) => {
+export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, onPrev, numericOnly }: TextInputStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
 
@@ -46,6 +47,30 @@ export const TextInputStep = ({ title, path, placeholder, stepNumber, onNext, nu
                 Step {stepNumber}: {title}
             </h2>
             <p className="text-gray-500 dark:text-slate-400 mb-4">Enter a value, or leave blank to skip.</p>
+
+            {/* Prev/Next Navigation Buttons */}
+            <div className="mb-3 flex gap-2">
+                {onPrev && (
+                    <button
+                        onClick={onPrev}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-slate-800 dark:text-gray-200 dark:border-slate-600 dark:hover:bg-slate-700 transition-colors"
+                    >
+                        ← Prev
+                    </button>
+                )}
+                <button
+                    onClick={() => {
+                        if (currentValue === '') {
+                            updateData(path, 'tbc');
+                        }
+                        onNext();
+                    }}
+                    className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                >
+                    Next →
+                </button>
+            </div>
+
             <input
                 type="text"
                 value={currentValue === 'tbc' ? '' : (currentValue ?? '')}

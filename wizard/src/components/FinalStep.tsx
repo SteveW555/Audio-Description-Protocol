@@ -123,8 +123,7 @@ export const FinalStep = ({
                 <button
                     type="button"
                     onClick={onRestart}
-                    disabled={!actionTaken}
-                    className="h-12 px-6 w-full font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-12 px-6 w-full font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-600 transition-colors"
                 >
                     Create New Record
                 </button>
