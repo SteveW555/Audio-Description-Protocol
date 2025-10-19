@@ -181,6 +181,7 @@ Thumbs.db
 *.temp
 temp/
 tmp/
+nul
 
 # Logs
 *.log

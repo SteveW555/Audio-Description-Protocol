@@ -11,6 +11,11 @@ let openai: OpenAI | null = null;
 
 function getOpenAIClient(): OpenAI {
   if (!openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY environment variable is not set');
+    }
+
+    console.log('[phrase-translator] Initializing OpenAI client');
     openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -24,7 +29,26 @@ let cachedPrompt: string | null = null;
 function loadTranslatorPrompt(): string {
   if (!cachedPrompt) {
     const promptPath = path.join(__dirname, '../../../prompts/phrase-translator-prompt.md');
-    cachedPrompt = fs.readFileSync(promptPath, 'utf-8').trim();
+
+    try {
+      console.log('[phrase-translator] Loading prompt from:', promptPath);
+      console.log('[phrase-translator] __dirname:', __dirname);
+      console.log('[phrase-translator] Resolved path:', path.resolve(promptPath));
+
+      // Check if file exists
+      if (!fs.existsSync(promptPath)) {
+        throw new Error(`Prompt file not found at: ${promptPath}`);
+      }
+
+      cachedPrompt = fs.readFileSync(promptPath, 'utf-8').trim();
+      console.log('[phrase-translator] ✅ Prompt loaded successfully, length:', cachedPrompt.length);
+    } catch (error: any) {
+      console.error('[phrase-translator] ❌ Error loading prompt file:');
+      console.error('[phrase-translator] Attempted path:', promptPath);
+      console.error('[phrase-translator] Error:', error.message);
+      console.error('[phrase-translator] Stack:', error.stack);
+      throw new Error(`Failed to load translator prompt: ${error.message}`);
+    }
   }
   return cachedPrompt;
 }
