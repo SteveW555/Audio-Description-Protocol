@@ -1,23 +1,23 @@
 /**
  * Backend Vocabulary Constants
  *
- * Re-exports vocabulary from wizard/src/constants/vocabulary.ts (single source of truth)
- * with necessary adaptations for backend usage.
+ * Vocabulary data copied from wizard/src/constants/vocabulary.ts to avoid cross-folder imports.
+ * This makes the backend self-contained for Railway deployment.
  *
- * NOTE: This file imports from the wizard module. If the import path breaks,
- * you may need to copy vocabulary data temporarily or set up a monorepo structure.
+ * NOTE: If wizard vocabulary changes, this file needs to be updated manually.
  */
 /**
  * Vocabulary for random description generation
- * Sourced from wizard/src/constants/vocabulary.ts
+ * Copied from wizard/src/constants/vocabulary.ts (with MET terms from taxonomy.ts)
  */
 export declare const VOCABULARY: {
-    readonly mood: string[];
-    readonly energy: string[];
-    readonly texture: string[];
-    readonly primary_genre: ("Electronic" | "Rock" | "Pop" | "Hip-Hop" | "R&B / Soul" | "Jazz" | "Blues" | "Country" | "Classical" | "Folk" | "Latin" | "Reggae" | "World" | "Soundtrack" | "Ambient" | "Spoken Word" | "Sound Effect")[];
+    readonly mood: readonly ["upbeat", "energetic", "joyful", "positive", "happy", "cheerful", "uplifting", "hopeful", "playful", "romantic", "sentimental", "triumphant", "heroic", "optimistic", "euphoric", "exuberant", "ecstatic", "elated", "celebratory", "festive", "inspiring", "proud", "sparkly", "thrilling", "peaceful", "calm", "relaxed", "serene", "dreamy", "tranquil", "meditative", "soothing", "gentle", "contemplative", "restful", "ethereal", "atmospheric", "flowing", "smooth", "gossamer", "dark", "melancholic", "sad", "somber", "brooding", "chilling", "fearful", "mournful", "gloomy", "haunting", "moody", "desolate", "forlorn", "wistful", "tragic", "lonely", "nauseating", "ominous", "painful", "disturbing", "shadowy", "plaintive", "negative", "intense", "aggressive", "driving", "powerful", "forceful", "fierce", "raw", "edgy", "explosive", "menacing", "angry", "violent", "furious", "tense", "harsh", "thunderous", "blistering", "snarling", "annoying", "anxious", "agitated", "defiant", "unsettling", "restless", "chaotic", "mysterious", "enigmatic", "ethereal-ambience", "otherworldly", "mystical", "cryptic", "elusive", "veiled", "obscure", "twilight", "liminal", "awe-inspiring", "entrancing", "majestic", "puzzling", "spine-tingling", "epic", "strange", "transcendent", "cosmic", "panoramic", "tender", "affectionate", "compassionate", "intimate", "loving", "sensual", "warm-hearted", "sultry", "passionate", "yearning", "longing", "nostalgic", "reflective", "bittersweet", "reminiscent", "pensive", "poignant", "memory-laden", "retrospective"];
+    readonly energy: readonly ["high-energy", "energetic", "driving", "vigorous", "propulsive", "pumping", "dynamic", "explosive", "kinetic", "punchy", "pulsating", "frenetic", "relentless", "urgent", "vibrant", "bouncy", "brisk", "electrifying", "exciting", "high-octane", "strong", "turbocharged", "thumping", "flowing", "steady", "moderate", "balanced", "measured", "rolling", "rhythmic", "groovy", "medium-energy", "cascading", "undulating", "swinging", "pulsing", "unhurried", "cruising", "mid-tempo", "paced", "laid-back", "low-energy", "ambient", "boring", "chill", "mellow", "gentle", "subdued", "restrained", "placid", "still", "relaxed", "downtempo", "languid", "serene", "hushed", "delicate", "soft", "sedate", "hypnotic", "tense", "anxious", "chaotic", "agitated", "erratic", "unstable", "jarring", "dissonant", "turbulent", "unsettling", "fragmented", "static", "restless", "jittery", "hectic", "disjointed", "expansive", "soaring", "lifting", "transcendent", "boundless", "sweeping", "majestic", "panoramic", "vast", "cosmic", "breathless", "gradual", "crescendoing", "swelling", "decaying", "wavering", "oscillating", "spiraling"];
+    readonly texture: readonly ["bright", "crisp", "clear", "brilliant", "sparkling", "crystalline", "shimmering", "radiant", "gleaming", "airy", "polished", "pristine", "shiny", "luminous", "refined", "sleek", "elegant", "sophisticated", "seamless", "effortless", "fluid", "graceful", "smooth", "wet", "glassy", "muddy", "harsh", "buzzy", "distorted", "abrasive", "dissonant", "static", "glitchy", "crunchy", "ratty", "warm", "rich", "full", "lush", "creamy", "honeyed", "golden", "mellow", "rounded", "embracing", "enveloping", "cozy", "sumptuous", "velvety", "buttery", "silky", "soft", "layered", "complex", "rich-density", "full-bodied", "orchestrated", "intricate", "detailed", "multi-textured", "stratified", "elaborate", "polyphonic", "homophonic", "heterophonic", "dense", "thick", "gritty", "raspy", "coarse", "raw", "unprocessed", "grainy", "rough", "jagged", "raw-finish", "unpolished", "edgy", "dry", "dark", "murky", "shadowy", "veiled", "obscured", "heavy", "clouded", "muffled", "oppressive", "acoustic", "organic", "natural", "live", "authentic", "woody", "breathy", "human", "intimate", "close-miked", "hollow", "earthy", "fibrous", "resonant", "textured", "electronic", "synthetic", "digital", "processed", "programmed", "artificial", "computerized", "robotic", "futuristic", "modern", "cyber", "pixelated", "metallic", "analog", "mechanical", "challenging", "sparse", "minimalistic", "monophonic", "spacious", "reverberant", "intimate-space", "echoey", "atmospheric", "cinematic"];
+    readonly primary_genre: readonly ["Dance", "Electronic", "Rock", "Pop", "Hip-Hop", "R&B / Soul", "Jazz", "Blues", "Country", "Classical", "Folk", "Latin", "Reggae", "World", "Soundtrack", "Ambient", "Spoken Word", "Sound Effect"];
     readonly subgenres: {
-        readonly electronic: readonly ["dance", "disco", "downtempo", "drum_and_bass", "edm", "glitch", "house", "idm", "synthwave", "techno", "trance", "chiptune"];
+        readonly dance: readonly ["house", "tech_house", "techno", "trance", "edm", "disco", "electro", "dubstep", "garage", "hardstyle", "progressive_house", "deep_house", "minimal_techno"];
+        readonly electronic: readonly ["downtempo", "drum_and_bass", "glitch", "idm", "synthwave", "chiptune"];
         readonly rock: readonly ["alternative_rock", "goth_rock", "indie_rock", "metal", "post-rock", "progressive_rock", "psychedelic_rock", "punk_rock", "surf_rock"];
         readonly pop: readonly ["art_pop", "bubblegum_pop", "dance-pop", "dream_pop", "euro_pop", "hyperpop", "indie_pop", "jangle_pop", "synth-pop"];
         readonly hip_hop: readonly ["abstract_hip_hop", "boom-bap", "cloud_rap", "conscious_hip_hop", "drill", "g_funk", "gangsta_rap", "lo-fi_hip_hop", "trap"];
@@ -35,7 +35,7 @@ export declare const VOCABULARY: {
         readonly spoken_word: readonly ["audiobook", "comedy", "podcast", "poetry"];
         readonly sound_effect: readonly ["abstract_sound", "creature_sound", "field_recording", "foley", "weather"];
     };
-    readonly instrument: ("electric_guitar" | "acoustic_guitar" | "bass_guitar" | "double_bass" | "synthesizer" | "bass_synthesizer" | "piano" | "electric_piano" | "organ" | "drums" | "kick_drum" | "snare_drum" | "hi-hat" | "cymbals" | "drum_machine" | "sampler" | "strings" | "violin" | "cello" | "brass" | "trumpet" | "saxophone" | "flute" | "vocals")[];
+    readonly instrument: readonly ["electric_guitar", "acoustic_guitar", "bass_guitar", "double_bass", "synthesizer", "bass_synthesizer", "piano", "electric_piano", "organ", "drums", "kick_drum", "snare_drum", "hi-hat", "cymbals", "drum_machine", "sampler", "strings", "violin", "cello", "brass", "trumpet", "saxophone", "flute", "vocals"];
     readonly instrument_roles: {
         readonly electric_guitar: readonly ["lead", "rhythm", "fill", "melody", "solo", "riffs"];
         readonly acoustic_guitar: readonly ["rhythm", "melody", "fingerpicked", "chordal"];
@@ -71,8 +71,7 @@ export declare const VOCABULARY: {
         readonly brass: readonly ["blaring", "muted", "majestic", "jazzy"];
         readonly vocals: readonly ["breathy", "powerful", "operatic", "raspy", "autotuned", "harmonized"];
     };
-    readonly vocals_presence: ("lead" | "backing" | "choir" | "sampled" | "spoken_word" | "ad-libs")[];
-    readonly vocals_gender: ("male" | "female" | "mixed" | "androgynous")[];
-    readonly vocals_style: ("singing" | "rapping" | "screaming" | "growling" | "falsetto" | "whispering" | "operatic")[];
+    readonly vocals_presence: readonly ["lead", "backing", "choir", "sampled", "spoken_word", "ad-libs"];
+    readonly vocals_gender: readonly ["male", "female", "mixed", "androgynous"];
+    readonly vocals_style: readonly ["singing", "rapping", "screaming", "growling", "falsetto", "whispering", "operatic"];
 };
-//# sourceMappingURL=vocabulary.d.ts.map

@@ -1044,6 +1044,7 @@ export const WizardLayout = () => {
                 multi={'multi' in currentStepConfig ? currentStepConfig.multi : undefined}
                 stepNumber={stepNumber}
                 onNext={goToNextStep}
+                onPrev={stepNumber > 1 ? goToPreviousStep : undefined}
                 isMusicTheoryStep={isMusicTheoryStep}
                 onRandomizeAll={handleRandomizeAll}
             />
@@ -1376,7 +1377,7 @@ export const WizardLayout = () => {
                                             onChange={(e) => setInputPhrase(e.target.value)}
                                             placeholder="Enter any musical description"
                                             className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 resize-none"
-                                            rows={3}
+                                            rows={5}
                                         />
                                         <button
                                             onClick={handleTranslatePhrase}
@@ -1394,7 +1395,7 @@ export const WizardLayout = () => {
                                             readOnly
                                             placeholder="Standardized phrase will appear here"
                                             className="flex-1 px-3 py-2 text-xs border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
-                                            rows={3}
+                                            rows={5}
                                         />
                                     </div>
                                     <p className="text-[11px] text-gray-500 dark:text-gray-400">

@@ -19,11 +19,12 @@ interface WizardStepProps {
     multi?: boolean;
     stepNumber: number;
     onNext: () => void;
+    onPrev?: () => void;
     isMusicTheoryStep?: boolean;
     onRandomizeAll?: () => void;
 }
 
-export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, isMusicTheoryStep, onRandomizeAll }: WizardStepProps) => {
+export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext, onPrev, isMusicTheoryStep, onRandomizeAll }: WizardStepProps) => {
     const data = useWizardStore((state) => state.data);
     const updateData = useWizardStore((state) => state.updateData);
     const { filterTerms } = useFrequencyFilter();
@@ -89,9 +90,28 @@ export const WizardStep = ({ title, path, terms = [], multi, stepNumber, onNext,
         <div className="p-1 flex flex-col h-full">
             <div className="flex-shrink-0">
                 <h2 className="text-base font-bold text-gray-800 dark:text-white mb-1">Step {stepNumber}: {title}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                     {multi ? 'Select one or more terms, or skip.' : 'Select a term, or skip.'}
                 </p>
+
+                {/* Prev/Next Navigation Buttons */}
+                <div className="mb-3 flex gap-2">
+                    {onPrev && (
+                        <button
+                            onClick={onPrev}
+                            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-slate-800 dark:text-gray-200 dark:border-slate-600 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            ← Prev
+                        </button>
+                    )}
+                    <button
+                        onClick={onNext}
+                        className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                    >
+                        Next →
+                    </button>
+                </div>
+
                 {resolvedTerms && resolvedTerms.length > 0 && !isMusicTheoryStep && (
                     <div className="mb-2 flex flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-2 py-1 dark:border-slate-700 dark:bg-slate-900/50">
                         <FrequencyFilter terms={termsWithFrequency} className="mb-0 bg-transparent dark:bg-transparent" />
