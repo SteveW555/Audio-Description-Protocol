@@ -973,6 +973,7 @@ export const WizardLayout = () => {
                             stepNumber={stepNumber}
                             title={currentStepConfig.title}
                             onNext={goToNextStep}
+                            onPrev={stepNumber > 1 ? goToPreviousStep : undefined}
                             onRandomizeAll={handleRandomizeAll}
                         />
                     );
